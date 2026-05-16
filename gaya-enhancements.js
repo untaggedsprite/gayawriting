@@ -5,10 +5,12 @@
 
   function available(){
     try{
-      return typeof renderThread==='function' &&
+      return typeof renderThreads==='function' &&
+        typeof renderThread==='function' &&
         typeof renderPosts==='function' &&
         typeof loadThreads==='function' &&
         typeof loadPosts==='function' &&
+        typeof go==='function' &&
         typeof toast==='function' &&
         typeof esc==='function' &&
         typeof state!=='undefined' &&
@@ -25,6 +27,23 @@
 
   function findCurrentThread(){
     return state.threads.find(t=>String(t.id)===String(state.threadId));
+  }
+
+  function hardenThreadLinks(){
+    document.querySelectorAll('a.thread[data-id]').forEach(link=>{
+      link.onclick=e=>{
+        e.preventDefault();
+        e.stopPropagation();
+        const id=link.dataset.id;
+        if(!id)return;
+        const main=document.getElementById('main');
+        if(main){
+          const title=link.querySelector('h3')?.textContent||'thread';
+          main.innerHTML='<a class="back" href="#threads">← back to threads</a><div class="empty"><div><h2>opening '+esc(title)+'</h2><p class="muted">gathering the little papers…</p></div></div>';
+        }
+        go('thread/'+id);
+      };
+    });
   }
 
   async function updateThreadDetails(id,title,summary){
@@ -119,6 +138,11 @@
     if(window[MARK])return true;
     if(!available())return false;
     window[MARK]=true;
+    const originalRenderThreads=renderThreads;
+    renderThreads=function(){
+      originalRenderThreads();
+      hardenThreadLinks();
+    };
     const originalRenderThread=renderThread;
     renderThread=function(){
       originalRenderThread();
@@ -141,7 +165,10 @@
     window.updateThreadDetails=updateThreadDetails;
     window.renderEditPostModal=renderEditPostModal;
     window.updatePostBody=updatePostBody;
-    try{if(state.session&&state.view==='thread')renderThread();}catch(e){console.warn('enhancement refresh skipped',e);}
+    try{
+      if(state.session&&state.view==='thread')renderThread();
+      else if(state.session&&state.view==='threads')hardenThreadLinks();
+    }catch(e){console.warn('enhancement refresh skipped',e);}
     return true;
   }
 
