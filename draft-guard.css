@@ -1,0 +1,17 @@
+/* Local draft-save status for the thread composer. */
+
+.draft-status{
+  display:inline-flex;
+  align-items:center;
+  margin-left:.45rem;
+  color:rgba(102,95,91,.72);
+  font-size:.78em;
+  font-style:italic;
+}
+
+.draft-status:not(:empty):before{
+  content:"·";
+  margin-right:.45rem;
+  color:var(--gold);
+  font-style:normal;
+}
