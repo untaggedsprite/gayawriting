@@ -1,7 +1,6 @@
 /*
-  GAYA theme pass: grey natural history.
-  Bone paper layered over river-stone grey, moth-wing pastel, dried sage, and specimen-card softness.
-  Loaded after styles.css as an override layer.
+  GAYA theme: grey natural history + contained greenhouse masthead.
+  This file is intentionally an override layer loaded after styles.css.
 */
 
 :root{
@@ -36,16 +35,7 @@ body{
     radial-gradient(circle at 82% 86%,rgba(190,201,189,.18),transparent 30rem),
     radial-gradient(circle at 50% 50%,rgba(238,231,220,.18),transparent 38rem);
 }
-
-body:before{
-  opacity:.25;
-  background-image:repeating-linear-gradient(90deg,rgba(47,42,39,.026) 0 1px,transparent 1px 4px);
-}
-
-.top{
-  background:rgba(238,231,220,.80);
-  border-bottom-color:rgba(200,192,183,.80);
-}
+body:before{opacity:.25;background-image:repeating-linear-gradient(90deg,rgba(47,42,39,.026) 0 1px,transparent 1px 4px)}
 
 button{background:var(--deep);border-color:var(--deep)}
 button:hover{background:var(--moss);border-color:var(--moss)}
@@ -53,145 +43,66 @@ button:hover{background:var(--moss);border-color:var(--moss)}
 .ghost:hover{background:rgba(232,225,215,.72);border-color:var(--gold)}
 .danger{background:var(--wine);border-color:var(--wine)}
 
-input,textarea,select{
-  background:rgba(244,239,231,.78);
-  color:var(--ink);
-  border-color:rgba(200,192,183,.86);
-}
-input:focus,textarea:focus,select:focus{
-  border-color:var(--gold);
-  box-shadow:0 0 0 3px rgba(168,144,107,.13);
-}
-
-.kicker,.thread-summary:before,.composer h3:before,.editor h2:after{
-  color:var(--gold);
-}
+input,textarea,select{background:rgba(244,239,231,.78);color:var(--ink);border-color:rgba(200,192,183,.86)}
+input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(168,144,107,.13)}
+.kicker,.thread-summary:before,.composer h3:before,.editor h2:after{color:var(--gold)}
 
 .main:before{
   border-left-color:rgba(168,144,107,.13);
   border-right-color:rgba(168,144,107,.13);
   background:
-    linear-gradient(90deg,
-      rgba(203,200,193,.08),
-      rgba(238,231,220,.22) 15%,
-      rgba(244,239,231,.36) 50%,
-      rgba(238,231,220,.22) 85%,
-      rgba(203,200,193,.08)),
+    linear-gradient(90deg,rgba(203,200,193,.08),rgba(238,231,220,.22) 15%,rgba(244,239,231,.36) 50%,rgba(238,231,220,.22) 85%,rgba(203,200,193,.08)),
     radial-gradient(circle at 18% 25%,rgba(201,194,207,.10),transparent 24rem),
     radial-gradient(circle at 82% 70%,rgba(174,187,195,.10),transparent 26rem),
     linear-gradient(180deg,rgba(184,180,173,.10),rgba(244,239,231,.18));
-  box-shadow:
-    inset 18px 0 48px rgba(47,42,39,.035),
-    inset -18px 0 48px rgba(47,42,39,.035);
+  box-shadow:inset 18px 0 48px rgba(47,42,39,.035),inset -18px 0 48px rgba(47,42,39,.035);
 }
 
 .card,.thread,.post,.composer,.error,.editor,.persona-card{
-  background:
-    linear-gradient(180deg,rgba(244,239,231,.86),rgba(232,225,215,.76)),
-    radial-gradient(circle at 12% 0%,rgba(238,231,220,.20),transparent 20rem);
+  background:linear-gradient(180deg,rgba(244,239,231,.86),rgba(232,225,215,.76)),radial-gradient(circle at 12% 0%,rgba(238,231,220,.20),transparent 20rem);
   border-color:rgba(200,192,183,.82);
 }
-.card:before,.editor:before,.post:before,.composer:before,.thread:before{
-  border-color:rgba(168,144,107,.17);
-}
-.card:after,.editor:after,.post:after,.composer:after,.thread:after,.empty:after,.modal:after{
-  color:var(--gold);
-}
+.card:before,.editor:before,.post:before,.composer:before,.thread:before{border-color:rgba(168,144,107,.17)}
+.card:after,.editor:after,.post:after,.composer:after,.thread:after,.empty:after,.modal:after{color:var(--gold)}
 
-.thread{
-  background:
-    linear-gradient(180deg,rgba(244,239,231,.84),rgba(232,225,215,.72)),
-    linear-gradient(90deg,rgba(174,187,195,.08),transparent 38%,rgba(222,194,202,.06));
-  border-color:rgba(168,144,107,.26);
-  box-shadow:0 1px 0 rgba(244,239,231,.72) inset,0 8px 24px rgba(47,42,39,.07);
-}
+.thread{background:linear-gradient(180deg,rgba(244,239,231,.84),rgba(232,225,215,.72)),linear-gradient(90deg,rgba(174,187,195,.08),transparent 38%,rgba(222,194,202,.06));border-color:rgba(168,144,107,.26);box-shadow:0 1px 0 rgba(244,239,231,.72) inset,0 8px 24px rgba(47,42,39,.07)}
 .thread:before{border-color:rgba(168,144,107,.15)}
 .thread h3{color:var(--deep)}
 .thread h3:before{color:var(--gold)}
 .thread .summary{color:var(--soft)}
-.thread .meta{
-  border-color:rgba(168,144,107,.22);
-  background:rgba(174,187,195,.22);
-  color:var(--soft);
-}
-.thread:hover{
-  box-shadow:0 1px 0 rgba(244,239,231,.82) inset,0 16px 42px rgba(47,42,39,.115);
-}
+.thread .meta{border-color:rgba(168,144,107,.22);background:rgba(174,187,195,.22);color:var(--soft)}
+.thread:hover{box-shadow:0 1px 0 rgba(244,239,231,.82) inset,0 16px 42px rgba(47,42,39,.115)}
+.thread-summary{border-top-color:rgba(168,144,107,.25);border-bottom-color:rgba(168,144,107,.15);background:linear-gradient(180deg,rgba(201,194,207,.14),rgba(190,201,189,.13)),linear-gradient(180deg,rgba(244,239,231,.54),rgba(232,225,215,.42))}
 
-.thread-summary{
-  border-top-color:rgba(168,144,107,.25);
-  border-bottom-color:rgba(168,144,107,.15);
-  background:
-    linear-gradient(180deg,rgba(201,194,207,.14),rgba(190,201,189,.13)),
-    linear-gradient(180deg,rgba(244,239,231,.54),rgba(232,225,215,.42));
-}
-
-.post{
-  background:
-    linear-gradient(180deg,rgba(244,239,231,.86),rgba(232,225,215,.74)),
-    linear-gradient(90deg,rgba(203,200,193,.13),transparent 20%);
-  box-shadow:0 1px 0 rgba(244,239,231,.66) inset,0 16px 52px rgba(47,42,39,.105);
-}
-.post-head{
-  border-bottom-color:rgba(47,42,39,.16);
-  background:
-    linear-gradient(90deg,rgba(222,194,202,.12),rgba(238,231,220,.32),rgba(174,187,195,.12)),
-    linear-gradient(180deg,rgba(203,200,193,.12),rgba(244,239,231,.16));
-}
-.post-body blockquote{
-  background:rgba(190,201,189,.18);
-}
-.signature-block{
-  opacity:.80;
-}
-
-.composer{
-  background:
-    linear-gradient(180deg,rgba(244,239,231,.68),rgba(232,225,215,.54)),
-    linear-gradient(90deg,rgba(174,187,195,.08),rgba(222,194,202,.06));
-}
-
-.persona-card{
-  border-color:rgba(168,144,107,.22);
-  background:linear-gradient(180deg,rgba(244,239,231,.62),rgba(201,194,207,.09));
-}
-.persona-card.active{
-  box-shadow:inset 4px 0 0 var(--gold);
-  background:linear-gradient(180deg,rgba(232,225,215,.74),rgba(190,201,189,.13));
-}
-
-.empty{
-  background:linear-gradient(180deg,rgba(244,239,231,.24),rgba(203,200,193,.18));
-  border-color:rgba(168,144,107,.30);
-}
-
+.post{background:linear-gradient(180deg,rgba(244,239,231,.86),rgba(232,225,215,.74)),linear-gradient(90deg,rgba(203,200,193,.13),transparent 20%);box-shadow:0 1px 0 rgba(244,239,231,.66) inset,0 16px 52px rgba(47,42,39,.105)}
+.post-head{border-bottom-color:rgba(47,42,39,.16);background:linear-gradient(90deg,rgba(222,194,202,.12),rgba(238,231,220,.32),rgba(174,187,195,.12)),linear-gradient(180deg,rgba(203,200,193,.12),rgba(244,239,231,.16))}
+.post-body blockquote{background:rgba(190,201,189,.18)}
+.signature-block{opacity:.80}
+.composer{background:linear-gradient(180deg,rgba(244,239,231,.68),rgba(232,225,215,.54)),linear-gradient(90deg,rgba(174,187,195,.08),rgba(222,194,202,.06))}
+.persona-card{border-color:rgba(168,144,107,.22);background:linear-gradient(180deg,rgba(244,239,231,.62),rgba(201,194,207,.09))}
+.persona-card.active{box-shadow:inset 4px 0 0 var(--gold);background:linear-gradient(180deg,rgba(232,225,215,.74),rgba(190,201,189,.13))}
+.empty{background:linear-gradient(180deg,rgba(244,239,231,.24),rgba(203,200,193,.18));border-color:rgba(168,144,107,.30)}
 .toast{background:var(--deep);color:var(--paper)}
 .toast.err{background:var(--wine)}
+.login .card{background:linear-gradient(180deg,rgba(244,239,231,.90),rgba(232,225,215,.78)),radial-gradient(circle at 20% 10%,rgba(174,187,195,.12),transparent 18rem)}
 
-.login .card{
-  background:
-    linear-gradient(180deg,rgba(244,239,231,.90),rgba(232,225,215,.78)),
-    radial-gradient(circle at 20% 10%,rgba(174,187,195,.12),transparent 18rem);
-}
-
-/* Asset pass: Gaia-style greenhouse masthead + tiny botanical objects. */
+/* Contained Gaia-style greenhouse masthead. The art is now a centered board banner, not full-browser wallpaper. */
 .top{
-  min-height:clamp(150px,14vw,230px);
+  --masthead-w:min(1040px,calc(100% - 2rem));
+  --masthead-h:clamp(122px,12vw,170px);
+  position:sticky;
+  top:0;
+  z-index:5;
+  min-height:calc(var(--masthead-h) + 1.7rem);
   padding:0;
   gap:0;
   overflow:hidden;
   isolation:isolate;
+  display:grid;
+  grid-template-columns:1fr;
+  grid-template-rows:var(--masthead-h) 1.7rem;
   align-items:stretch;
-  grid-template-columns:minmax(9rem,1fr) auto minmax(9rem,1fr);
-  grid-template-rows:minmax(122px,1fr) 1.7rem;
-  background-color:var(--stone);
-  background-image:
-    linear-gradient(180deg,rgba(47,42,39,.04),rgba(47,42,39,.12)),
-    url("assets/ornaments/gayabanner.png");
-  background-position:center center;
-  background-repeat:no-repeat;
-  background-size:cover;
-  image-rendering:auto;
+  background:linear-gradient(180deg,rgba(203,200,193,.94),rgba(184,180,173,.92));
   border-bottom:1px solid rgba(47,42,39,.28);
   box-shadow:0 2px 0 rgba(244,239,231,.32) inset,0 12px 28px rgba(47,42,39,.10);
   backdrop-filter:none;
@@ -200,83 +111,75 @@ input:focus,textarea:focus,select:focus{
   content:"";
   position:absolute;
   inset:0;
-  z-index:-1;
+  z-index:-2;
   pointer-events:none;
-  background:
-    linear-gradient(90deg,rgba(244,239,231,.18),transparent 22%,transparent 76%,rgba(47,42,39,.08)),
-    repeating-linear-gradient(90deg,rgba(47,42,39,.055) 0 1px,transparent 1px 5px);
-  mix-blend-mode:multiply;
-  opacity:.32;
+  background:repeating-linear-gradient(90deg,rgba(47,42,39,.035) 0 1px,transparent 1px 5px),linear-gradient(90deg,rgba(47,42,39,.08),transparent 22%,transparent 78%,rgba(47,42,39,.08));
+}
+.top:after{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  top:0;
+  left:50%;
+  width:var(--masthead-w);
+  height:var(--masthead-h);
+  transform:translateX(-50%);
+  background-image:linear-gradient(180deg,rgba(47,42,39,.02),rgba(47,42,39,.10)),url("assets/ornaments/gayabanner.png");
+  background-position:center center;
+  background-repeat:no-repeat;
+  background-size:cover;
+  border-left:1px solid rgba(47,42,39,.24);
+  border-right:1px solid rgba(47,42,39,.24);
+  box-shadow:0 1px 0 rgba(244,239,231,.28) inset,0 0 28px rgba(47,42,39,.13);
 }
 .top .brand{
-  grid-column:1;
-  grid-row:1;
-  align-self:stretch;
-  justify-self:start;
-  width:min(260px,34vw);
-  min-height:100%;
+  position:absolute;
+  z-index:2;
+  top:0;
+  left:calc((100% - var(--masthead-w))/2);
+  width:clamp(150px,20vw,300px);
+  height:var(--masthead-h);
   padding:0;
   font-size:0;
-  border:0;
   color:transparent;
-  z-index:2;
+  border:0;
 }
 .top .brand .leaf{display:none}
 .top .brand:hover{border-bottom-color:transparent}
 .top .tabs{
-  grid-column:1 / -1;
+  grid-column:1;
   grid-row:2;
   align-self:stretch;
-  justify-self:stretch;
+  justify-self:center;
+  width:var(--masthead-w);
   display:flex;
   justify-content:flex-start;
   align-items:center;
   gap:0;
-  padding:0 clamp(.65rem,2.2vw,2.2rem);
-  background:rgba(51,60,54,.72);
+  padding:0 .7rem;
+  background:rgba(51,60,54,.74);
   border-top:1px solid rgba(244,239,231,.28);
+  border-left:1px solid rgba(47,42,39,.24);
+  border-right:1px solid rgba(47,42,39,.24);
   box-shadow:0 -1px 0 rgba(47,42,39,.20) inset;
 }
-.top .tabs a{
-  height:100%;
-  display:inline-flex;
-  align-items:center;
-  padding:0 .9rem;
-  color:rgba(244,239,231,.92);
-  font-family:var(--fell);
-  font-size:.72rem;
-  letter-spacing:.04em;
-  text-shadow:0 1px 0 rgba(47,42,39,.55);
-  border:0;
-  border-right:1px solid rgba(244,239,231,.18);
-}
+.top .tabs a{height:100%;display:inline-flex;align-items:center;padding:0 .9rem;color:rgba(244,239,231,.92);font-family:var(--fell);font-size:.72rem;letter-spacing:.04em;text-shadow:0 1px 0 rgba(47,42,39,.55);border:0;border-right:1px solid rgba(244,239,231,.18)}
 .top .tabs a:first-child{border-left:1px solid rgba(244,239,231,.18)}
-.top .tabs a:hover,
-.top .tabs a.active{
-  color:#fff;
-  background:rgba(244,239,231,.18);
-  box-shadow:inset 0 -2px 0 var(--gold);
-}
-.top .tabs a[href="#personas"]{
-  font-size:0;
-}
-.top .tabs a[href="#personas"]:after{
-  content:"post styles";
-  font-size:.72rem;
-}
+.top .tabs a:hover,.top .tabs a.active{color:#fff;background:rgba(244,239,231,.18);box-shadow:inset 0 -2px 0 var(--gold)}
+.top .tabs a[href="#personas"]{font-size:0}
+.top .tabs a[href="#personas"]:after{content:"post styles";font-size:.72rem}
 .top .user{
-  grid-column:3;
-  grid-row:1;
-  position:relative;
-  justify-self:end;
-  align-self:start;
+  position:absolute;
+  z-index:3;
+  top:.45rem;
+  right:calc((100% - var(--masthead-w))/2 + .55rem);
   display:flex;
   gap:.45rem;
   align-items:center;
-  margin:.45rem .55rem 0 0;
+  margin:0;
   padding:.34rem .42rem .34rem .58rem;
   color:rgba(47,42,39,.78);
-  background:rgba(244,239,231,.62);
+  background:rgba(244,239,231,.68);
   border:1px solid rgba(200,192,183,.72);
   border-radius:0 0 0 12px;
   box-shadow:0 6px 18px rgba(47,42,39,.10);
@@ -284,52 +187,16 @@ input:focus,textarea:focus,select:focus{
   line-height:1;
   backdrop-filter:blur(2px);
 }
-.top .user:before{
-  content:"";
-  width:22px;
-  height:22px;
-  display:block;
-  flex:0 0 auto;
-  background:url("assets/ornaments/junebugcursor.png") center/contain no-repeat;
-  opacity:.86;
-}
-.top .user span{
-  max-width:32ch;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-.top .user .ghost{
-  padding:.28rem .55rem;
-  border-radius:8px;
-  font-size:.7rem;
-  background:rgba(244,239,231,.48);
-}
-.thread h3:before{
-  content:"";
-  display:inline-block;
-  width:1.05em;
-  height:1.05em;
-  margin-right:.45rem;
-  vertical-align:-.16em;
-  background:url("assets/ornaments/wilting_purple_leafbullet.png") center/contain no-repeat;
-}
+.top .user:before{content:"";width:22px;height:22px;display:block;flex:0 0 auto;background:url("assets/ornaments/junebugcursor.png") center/contain no-repeat;opacity:.86}
+.top .user span{max-width:32ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top .user .ghost{padding:.28rem .55rem;border-radius:8px;font-size:.7rem;background:rgba(244,239,231,.48)}
+.thread h3:before{content:"";display:inline-block;width:1.05em;height:1.05em;margin-right:.45rem;vertical-align:-.16em;background:url("assets/ornaments/wilting_purple_leafbullet.png") center/contain no-repeat}
 
 @media(max-width:760px){
-  .top{
-    min-height:136px;
-    grid-template-columns:1fr;
-    grid-template-rows:1fr 1.7rem;
-    background-size:cover;
-    background-position:center center;
-  }
-  .top .brand{width:44vw;min-width:130px}
-  .top .user{
-    grid-column:1;
-    max-width:calc(100vw - .8rem);
-    margin:.38rem .4rem 0 0;
-    font-size:.64rem;
-  }
+  .top{--masthead-w:calc(100% - .7rem);--masthead-h:118px;min-height:calc(var(--masthead-h) + 1.7rem)}
+  .top:after{background-size:cover;background-position:center center}
+  .top .brand{left:calc((100% - var(--masthead-w))/2);width:44vw;min-width:130px}
+  .top .user{right:calc((100% - var(--masthead-w))/2 + .35rem);max-width:calc(var(--masthead-w) - .8rem);font-size:.64rem}
   .top .user:before{display:none}
   .top .tabs{padding:0 .45rem;overflow-x:auto}
   .top .tabs a{padding:0 .7rem;white-space:nowrap}
