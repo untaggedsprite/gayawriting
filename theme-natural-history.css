@@ -89,7 +89,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 
 /* Contained Gaia-style greenhouse masthead. No stretch: the art keeps its own proportions. */
 .top{
   --masthead-w:min(1040px,calc(100% - 2rem));
-  --masthead-h:clamp(170px,33vw,347px);
+  --masthead-h:clamp(138px,25vw,260px);
   position:sticky;
   top:0;
   z-index:5;
@@ -193,7 +193,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 
 .top .user .ghost{padding:.28rem .55rem;border-radius:8px;font-size:.7rem;background:rgba(244,239,231,.48)}
 
 @media(max-width:760px){
-  .top{--masthead-w:calc(100% - .7rem);--masthead-h:clamp(130px,33vw,250px);min-height:calc(var(--masthead-h) + 1.7rem)}
+  .top{--masthead-w:calc(100% - .7rem);--masthead-h:clamp(105px,25vw,190px);min-height:calc(var(--masthead-h) + 1.7rem)}
   .top:after{background-size:contain;background-position:center center}
   .top .brand{left:calc((100% - var(--masthead-w))/2);width:44vw;min-width:130px}
   .top .user{right:calc((100% - var(--masthead-w))/2 + .35rem);max-width:calc(var(--masthead-w) - .8rem);font-size:.64rem}
