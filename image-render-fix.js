@@ -23,6 +23,11 @@ function gayaLayoutMatch(css){
   return String(css||'').match(/\/\* GAYA_LAYOUT_START side=(left|right) banner=(top|bottom|both|none) \*\//i);
 }
 
+function gayaLayoutSide(css){
+  const match=gayaLayoutMatch(css);
+  return match?match[1]:'left';
+}
+
 function gayaBannerMode(css){
   const match=gayaLayoutMatch(css);
   return match?match[2]:'top';
@@ -41,9 +46,9 @@ function gayaBanners(url,mode){
   };
 }
 
-function gayaImageHtml(per,className){
+function gayaImageHtml(per,className,extraAttrs=''){
   const av=esc(gayaBgStyle(per.avatar_url));
-  return '<div class="'+esc(className)+'" style="background-color:'+esc(per.accent_color||'#a8854f')+';'+av+'"></div>';
+  return '<div class="'+esc(className)+'" '+extraAttrs+' style="background-color:'+esc(per.accent_color||'#a8854f')+';'+av+'"></div>';
 }
 
 renderPosts=function(){
@@ -58,15 +63,16 @@ renderPosts=function(){
     const per=p.persona||{};
     const f=fontStyle(per.font_family);
     const gaia=isGaiaPortraitLayout(per.custom_css);
+    const side=gayaLayoutSide(per.custom_css);
     const bannerMode=gayaBannerMode(per.custom_css);
     const banners=gayaBanners(per.banner_url,bannerMode);
     const scopeId=cssScopeId(per.id||p.persona_id||('post-'+i));
     const scope='[data-persona-style="'+scopeId+'"]';
     const custom=customCssTag(per.custom_css,scope);
     const headAvatar=gaia?'':gayaImageHtml(per,'avatar small-avatar');
-    const portrait=gaia?gayaImageHtml(per,'gaya-portrait'):'';
+    const portrait=gaia?gayaImageHtml(per,'gaya-portrait','data-side="'+esc(side)+'"'):'';
 
-    return custom+'<article class="post" data-persona-style="'+esc(scopeId)+'" style="'+
+    return custom+'<article class="post" data-persona-style="'+esc(scopeId)+'" data-gaya-layout="'+(gaia?'1':'0')+'" data-gaya-side="'+esc(side)+'" style="'+
       (per.bg_color?'background:'+esc(per.bg_color)+';':'')+
       (per.text_color?'color:'+esc(per.text_color)+';':'')+
       (per.border_color?'border-color:'+esc(per.border_color)+';':'')+
@@ -89,15 +95,16 @@ updatePersonaPreview=function(){
   const p=readPersonaForm();
   const f=fontStyle(p.font_family);
   const gaia=isGaiaPortraitLayout(p.custom_css);
+  const side=gayaLayoutSide(p.custom_css);
   const bannerMode=gayaBannerMode(p.custom_css);
   const banners=gayaBanners(p.banner_url,bannerMode);
   const scopeId='persona-preview';
   const scope='[data-persona-style="'+scopeId+'"]';
   const custom=customCssTag(p.custom_css,scope);
   const headAvatar=gaia?'':gayaImageHtml(p,'avatar small-avatar');
-  const portrait=gaia?gayaImageHtml(p,'gaya-portrait'):'';
+  const portrait=gaia?gayaImageHtml(p,'gaya-portrait','data-side="'+esc(side)+'"'):'';
 
-  box.innerHTML=custom+'<article class="post" data-persona-style="'+scopeId+'" style="background:'+esc(p.bg_color)+';color:'+esc(p.text_color)+';border-color:'+esc(p.border_color)+';'+f+'">'+
+  box.innerHTML=custom+'<article class="post" data-persona-style="'+scopeId+'" data-gaya-layout="'+(gaia?'1':'0')+'" data-gaya-side="'+esc(side)+'" style="background:'+esc(p.bg_color)+';color:'+esc(p.text_color)+';border-color:'+esc(p.border_color)+';'+f+'">'+
     banners.top+
     '<div class="post-head">'+headAvatar+'<div class="post-name" style="'+f+'">'+esc(p.name||'unnamed')+'</div><div class="post-meta">preview</div></div>'+
     portrait+
