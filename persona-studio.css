@@ -1,0 +1,113 @@
+/* Friendlier controls for the persona/post-style editor. */
+
+.persona-studio .preset-field{
+  margin-top:.35rem;
+}
+
+.persona-preset-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(155px,1fr));
+  gap:.7rem;
+  margin-top:.65rem;
+}
+
+.persona-preset{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  grid-template-rows:auto auto;
+  gap:.15rem .55rem;
+  align-items:center;
+  min-height:74px;
+  padding:.7rem .75rem;
+  text-align:left;
+  color:var(--ink);
+  background:linear-gradient(180deg,rgba(255,250,241,.76),rgba(239,229,211,.56));
+  border:1px solid rgba(168,144,107,.28);
+  border-radius:18px;
+  box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 8px 20px rgba(47,42,39,.055);
+  cursor:pointer;
+}
+
+.persona-preset:hover,
+.persona-preset:focus-visible{
+  background:linear-gradient(180deg,rgba(255,253,247,.88),rgba(239,229,211,.68));
+  border-color:rgba(168,144,107,.56);
+  transform:translateY(-1px);
+  box-shadow:0 1px 0 rgba(255,255,255,.70) inset,0 12px 26px rgba(47,42,39,.085);
+}
+
+.persona-preset strong{
+  display:block;
+  font-family:var(--fell);
+  font-size:1rem;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  font-weight:400;
+}
+
+.persona-preset small{
+  grid-column:2;
+  display:block;
+  color:var(--soft);
+  font-size:.82rem;
+  line-height:1.25;
+}
+
+.preset-swatch{
+  grid-row:1 / span 2;
+  display:grid;
+  grid-template-columns:repeat(2,14px);
+  grid-auto-rows:14px;
+  gap:3px;
+  padding:5px;
+  border:1px solid rgba(47,42,39,.14);
+  border-radius:12px;
+  background:rgba(255,253,247,.54);
+}
+
+.preset-swatch i{
+  display:block;
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  border:1px solid rgba(47,42,39,.18);
+}
+
+.persona-font-select{
+  width:100%;
+}
+
+.advanced-css{
+  padding:.85rem 1rem;
+  border:1px dashed rgba(168,144,107,.34);
+  border-radius:18px;
+  background:rgba(255,250,241,.34);
+}
+
+.advanced-css summary{
+  cursor:pointer;
+  font-family:var(--fell);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--soft);
+}
+
+.advanced-css[open] summary{
+  margin-bottom:.7rem;
+  color:var(--ink);
+}
+
+.advanced-css textarea{
+  margin-top:.4rem;
+}
+
+.persona-preview-wrap{
+  position:sticky;
+  bottom:1rem;
+  z-index:2;
+}
+
+@media(max-width:860px){
+  .persona-preview-wrap{position:static}
+  .persona-preset-grid{grid-template-columns:1fr}
+}
