@@ -104,6 +104,12 @@ function gaiaLayoutCss(side,banner){
   line-height: 1.58;
 }
 
+.post-body blockquote,
+.post-body pre,
+.post-body table {
+  clear: both;
+}
+
 .post-body:after {
   content: "";
   display: block;
