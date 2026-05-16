@@ -24,7 +24,6 @@ function getGayaLayoutOptions(){
 
 function gaiaLayoutCss(side,banner){
   const floatSide=side==='right'?'right':'left';
-  const opposite=side==='right'?'left':'right';
   const nameAlign=side==='right'?'left':'right';
   const bannerDisplay=banner==='none'||banner==='bottom'?'none':'block';
 
@@ -35,18 +34,22 @@ function gaiaLayoutCss(side,banner){
 
 .banner {
   display: ${bannerDisplay};
-  height: 185px;
+  height: 278px;
   margin: 0 0 1rem;
   border-radius: 14px 14px 0 0;
   opacity: 1;
+  background-size: cover;
+  background-position: center;
 }
 
 .banner.bottom-banner {
   display: ${banner==='bottom'||banner==='both'?'block':'none'};
   clear: both;
-  height: 150px;
-  margin: 1.15rem 1.45rem 1.2rem;
-  border-radius: 14px;
+  height: 225px;
+  margin: 1.15rem 0 0;
+  border-radius: 0 0 14px 14px;
+  background-size: cover;
+  background-position: center;
 }
 
 .post-head {
