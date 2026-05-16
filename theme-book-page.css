@@ -5,36 +5,36 @@
 */
 
 :root{
-  --bg:#eee8dc;
-  --paper:#f8f1e5;
-  --paper2:#ede1cf;
-  --bone:#fbf4e7;
-  --stone:#ded2bf;
-  --ash:#cfc2af;
-  --fog:#d7c9b8;
+  --bg:#f6f0e5;
+  --paper:#fbf6ec;
+  --paper2:#f2e8d7;
+  --bone:#fffaf0;
+  --stone:#e8dcc8;
+  --ash:#d9cab4;
+  --fog:#e2d4c0;
 }
 
 body{
   background:var(--bg);
   background-image:
-    linear-gradient(115deg,rgba(251,244,231,.50),transparent 46%),
-    radial-gradient(circle at 14% 10%,rgba(218,199,158,.16),transparent 25rem),
-    radial-gradient(circle at 86% 18%,rgba(222,194,202,.10),transparent 23rem),
-    radial-gradient(circle at 82% 86%,rgba(190,201,189,.14),transparent 30rem),
-    radial-gradient(circle at 50% 50%,rgba(255,250,239,.28),transparent 38rem);
+    linear-gradient(115deg,rgba(255,250,239,.62),transparent 46%),
+    radial-gradient(circle at 14% 10%,rgba(226,210,174,.12),transparent 25rem),
+    radial-gradient(circle at 86% 18%,rgba(222,194,202,.08),transparent 23rem),
+    radial-gradient(circle at 82% 86%,rgba(190,201,189,.10),transparent 30rem),
+    radial-gradient(circle at 50% 50%,rgba(255,252,245,.36),transparent 38rem);
 }
 
 body:before{
-  opacity:.18;
-  background-image:repeating-linear-gradient(90deg,rgba(47,42,39,.020) 0 1px,transparent 1px 4px);
+  opacity:.14;
+  background-image:repeating-linear-gradient(90deg,rgba(47,42,39,.016) 0 1px,transparent 1px 4px);
 }
 
 .main:before{
-  border-left-color:rgba(168,144,107,.12);
-  border-right-color:rgba(168,144,107,.12);
+  border-left-color:rgba(168,144,107,.09);
+  border-right-color:rgba(168,144,107,.09);
   background:
-    linear-gradient(90deg,rgba(222,210,191,.10),rgba(251,244,231,.28) 15%,rgba(255,250,240,.44) 50%,rgba(251,244,231,.28) 85%,rgba(222,210,191,.10)),
-    radial-gradient(circle at 18% 25%,rgba(218,199,158,.09),transparent 24rem),
-    radial-gradient(circle at 82% 70%,rgba(174,187,195,.08),transparent 26rem),
-    linear-gradient(180deg,rgba(232,218,194,.12),rgba(255,250,240,.22));
+    linear-gradient(90deg,rgba(232,220,200,.08),rgba(255,250,239,.34) 15%,rgba(255,253,247,.54) 50%,rgba(255,250,239,.34) 85%,rgba(232,220,200,.08)),
+    radial-gradient(circle at 18% 25%,rgba(226,210,174,.07),transparent 24rem),
+    radial-gradient(circle at 82% 70%,rgba(174,187,195,.06),transparent 26rem),
+    linear-gradient(180deg,rgba(238,226,205,.09),rgba(255,253,247,.30));
 }
