@@ -1,0 +1,168 @@
+/*
+  GAYA Image Uploads
+  Adds easy avatar/banner uploads to the persona editor.
+  Files go to the public Supabase Storage bucket: gaya-images.
+*/
+
+const GAYA_IMAGE_BUCKET='gaya-images';
+
+function imageUploadMessage(el,msg,kind=''){
+  if(!el)return;
+  el.textContent=msg||'';
+  el.className='image-upload-status '+(kind||'');
+}
+
+function safeImageFileName(name){
+  const base=String(name||'image')
+    .toLowerCase()
+    .replace(/\.[^.]+$/,'')
+    .replace(/[^a-z0-9_-]+/g,'-')
+    .replace(/^-+|-+$/g,'')
+    .slice(0,48)||'image';
+  return base;
+}
+
+function blobFromCanvas(canvas,type,quality){
+  return new Promise(resolve=>{
+    canvas.toBlob(blob=>resolve(blob),type,quality);
+  });
+}
+
+function loadImageFromFile(file){
+  return new Promise((resolve,reject)=>{
+    const url=URL.createObjectURL(file);
+    const img=new Image();
+    img.onload=()=>{
+      URL.revokeObjectURL(url);
+      resolve(img);
+    };
+    img.onerror=()=>{
+      URL.revokeObjectURL(url);
+      reject(new Error('Could not read image file.'));
+    };
+    img.src=url;
+  });
+}
+
+async function preparePersonaImage(file,kind){
+  if(!file||!file.type||!file.type.startsWith('image/'))throw new Error('Please choose an image file.');
+
+  // Keep animated GIFs intact. Canvas would flatten them into one sad little frame.
+  if(file.type==='image/gif'){
+    return {blob:file,ext:'gif',contentType:'image/gif'};
+  }
+
+  const img=await loadImageFromFile(file);
+  const limits=kind==='banner'?{w:1600,h:620}:{w:512,h:512};
+  const scale=Math.min(1,limits.w/img.naturalWidth,limits.h/img.naturalHeight);
+  const w=Math.max(1,Math.round(img.naturalWidth*scale));
+  const h=Math.max(1,Math.round(img.naturalHeight*scale));
+  const canvas=document.createElement('canvas');
+  canvas.width=w;
+  canvas.height=h;
+  const ctx=canvas.getContext('2d');
+  ctx.imageSmoothingEnabled=true;
+  ctx.imageSmoothingQuality='high';
+  ctx.drawImage(img,0,0,w,h);
+
+  let blob=await blobFromCanvas(canvas,'image/webp',0.86);
+  let ext='webp';
+  let contentType='image/webp';
+
+  if(!blob){
+    blob=await blobFromCanvas(canvas,'image/jpeg',0.88);
+    ext='jpg';
+    contentType='image/jpeg';
+  }
+
+  if(!blob)throw new Error('Could not compress image.');
+  return {blob,ext,contentType};
+}
+
+async function uploadPersonaImage(kind,file,input,status,button){
+  if(!state.user?.id)throw new Error('You must be signed in to upload images.');
+  if(!supa?.storage)throw new Error('Supabase Storage is not available.');
+
+  button.disabled=true;
+  imageUploadMessage(status,'preparing image…');
+
+  const prepared=await preparePersonaImage(file,kind);
+  const stamp=new Date().toISOString().replace(/[^0-9]/g,'').slice(0,14);
+  const path=state.user.id+'/'+kind+'-'+stamp+'-'+safeImageFileName(file.name)+'.'+prepared.ext;
+
+  imageUploadMessage(status,'uploading…');
+
+  const {error}=await withTimeout(
+    supa.storage.from(GAYA_IMAGE_BUCKET).upload(path,prepared.blob,{
+      cacheControl:'31536000',
+      contentType:prepared.contentType,
+      upsert:false
+    }),
+    kind+' image upload',
+    45000
+  );
+
+  if(error)throw error;
+
+  const {data}=supa.storage.from(GAYA_IMAGE_BUCKET).getPublicUrl(path);
+  if(!data?.publicUrl)throw new Error('Upload succeeded, but no public URL came back.');
+
+  input.value=data.publicUrl;
+  input.dispatchEvent(new Event('input',{bubbles:true}));
+  updatePersonaPreview();
+  imageUploadMessage(status,'uploaded ✓','ok');
+  toast(kind+' uploaded');
+}
+
+function installPersonaImageUploader(kind,inputId){
+  const input=$(inputId);
+  if(!input||input.dataset.uploadReady)return;
+  input.dataset.uploadReady='1';
+
+  const controls=document.createElement('div');
+  controls.className='image-upload-controls';
+  controls.innerHTML='<input class="image-upload-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/*"><button type="button" class="ghost image-upload-pick">upload '+kind+'</button><button type="button" class="ghost image-upload-clear">clear</button><span class="image-upload-status"></span>';
+
+  input.insertAdjacentElement('afterend',controls);
+
+  const fileInput=controls.querySelector('.image-upload-file');
+  const pick=controls.querySelector('.image-upload-pick');
+  const clear=controls.querySelector('.image-upload-clear');
+  const status=controls.querySelector('.image-upload-status');
+
+  pick.onclick=()=>fileInput.click();
+  clear.onclick=()=>{
+    input.value='';
+    input.dispatchEvent(new Event('input',{bubbles:true}));
+    imageUploadMessage(status,'cleared');
+    updatePersonaPreview();
+  };
+
+  fileInput.onchange=()=>safe(async()=>{
+    const file=fileInput.files&&fileInput.files[0];
+    if(!file)return;
+    try{
+      await uploadPersonaImage(kind,file,input,status,pick);
+    }catch(e){
+      console.error(kind+' upload failed',e);
+      imageUploadMessage(status,'upload failed: '+(e.message||String(e)),'err');
+      toast(kind+' upload failed','err');
+    }finally{
+      pick.disabled=false;
+      fileInput.value='';
+    }
+  },kind+' image upload');
+}
+
+function enhancePersonaImageUploads(){
+  installPersonaImageUploader('avatar','pe-avatar');
+  installPersonaImageUploader('banner','pe-banner');
+}
+
+const gayaRenderPersonaEditorWithUploads=renderPersonaEditor;
+renderPersonaEditor=function(){
+  gayaRenderPersonaEditorWithUploads();
+  enhancePersonaImageUploads();
+};
+
+setTimeout(enhancePersonaImageUploads,0);
