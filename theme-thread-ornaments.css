@@ -9,7 +9,7 @@
 :root{
   --gaya-rail-w:min(1040px,calc(100% - 2rem));
   --gaya-masthead-h:clamp(138px,25vw,260px);
-  --gaya-shelf-w:clamp(188px,12.5vw,244px);
+  --gaya-shelf-w:clamp(198px,13.15vw,258px);
   --gaya-shelf-peek:clamp(5px,.7vw,12px);
   --gaya-shelf-top:calc(var(--gaya-masthead-h) + 1.7rem + .25rem);
 }
@@ -56,7 +56,7 @@
 
 @media(max-width:1320px){
   :root{
-    --gaya-shelf-w:clamp(148px,11.25vw,188px);
+    --gaya-shelf-w:clamp(156px,11.85vw,198px);
     --gaya-shelf-peek:clamp(3px,.55vw,9px);
   }
   .app:before,
@@ -67,7 +67,7 @@
 
 @media(max-width:1120px){
   :root{
-    --gaya-shelf-w:clamp(115px,11.25vw,160px);
+    --gaya-shelf-w:clamp(121px,11.85vw,168px);
     --gaya-shelf-peek:3px;
   }
   .app:before,
