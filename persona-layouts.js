@@ -1,43 +1,69 @@
 /*
   GAYA Persona Layouts
-  Adds friendly old-forum layout presets by writing a marked block into custom CSS.
-  No schema changes: layouts live inside the existing persona custom_css field.
+  One old-forum/Gaia-style layout engine with friendly toggles.
+  No schema changes: layout choices live inside a marked custom_css block.
 */
 
 const GAYA_LAYOUT_START='/* GAYA_LAYOUT_START';
 const GAYA_LAYOUT_END='GAYA_LAYOUT_END */';
 
-const PERSONA_LAYOUT_PRESETS=[
-  {
-    id:'classic-card',
-    name:'classic card',
-    note:'current avatar + post header layout',
-    css:''
-  },
-  {
-    id:'gaia-side-portrait',
-    name:'Gaia side portrait',
-    note:'big left image, text wraps beside it',
-    css:`& {
-  overflow: visible;
+function stripGayaLayoutCss(css){
+  return String(css||'')
+    .replace(/\/\* GAYA_LAYOUT_START[\s\S]*?GAYA_LAYOUT_END \*\//g,'')
+    .trim();
+}
+
+function getGayaLayoutOptions(){
+  const css=$('pe-css')?.value||'';
+  const match=css.match(/\/\* GAYA_LAYOUT_START side=(left|right) banner=(top|bottom|both|none) \*\//i);
+  return {
+    side:match?.[1]||'left',
+    banner:match?.[2]||'top'
+  };
+}
+
+function gaiaLayoutCss(side,banner){
+  const floatSide=side==='right'?'right':'left';
+  const opposite=side==='right'?'left':'right';
+  const nameAlign=side==='right'?'left':'right';
+  const bannerDisplay=banner==='none'||banner==='bottom'?'none':'block';
+
+  return `& {
+  overflow: auto;
   border-left-width: 1px;
+}
+
+.banner {
+  display: ${bannerDisplay};
+  height: 185px;
+  margin: 0 0 1rem;
+  border-radius: 14px 14px 0 0;
+  opacity: 1;
+}
+
+.banner.bottom-banner {
+  display: ${banner==='bottom'||banner==='both'?'block':'none'};
+  clear: both;
+  height: 150px;
+  margin: 1.15rem 1.45rem 1.2rem;
+  border-radius: 14px;
 }
 
 .post-head {
   display: block;
   min-height: 0;
   margin: 0;
-  padding: 1.25rem 1.45rem .25rem;
+  padding: 1.15rem 1.45rem .15rem;
   border-bottom: 0;
   background: transparent;
   opacity: 1;
 }
 
 .avatar {
-  float: left;
-  width: min(235px, 38vw);
-  height: 360px;
-  margin: .25rem 2rem 1.05rem 0;
+  float: ${floatSide};
+  width: min(230px, 36vw);
+  height: 355px;
+  margin: .25rem ${side==='right'?'0':'2rem'} 1.05rem ${side==='right'?'2rem':'0'};
   border-radius: 12px;
   border: 3px solid currentColor;
   background-size: cover;
@@ -49,171 +75,61 @@ const PERSONA_LAYOUT_PRESETS=[
   display: block;
   margin: .6rem 0 1.35rem;
   padding: .22rem .55rem;
-  text-align: right;
-  font-size: 2.05rem;
+  text-align: ${nameAlign};
+  font-size: 2rem;
   line-height: 1.05;
-  background: rgba(255,255,255,.18);
+  background: rgba(255,255,255,.16);
 }
 
 .post-meta {
   display: block;
-  margin: 0 0 1.5rem;
-  text-align: right;
+  margin: 0 0 1.4rem;
+  text-align: ${nameAlign};
 }
 
 .post-body {
-  padding: .25rem 1.65rem 1.2rem;
-  line-height: 1.55;
+  padding: .25rem 1.65rem 1.05rem;
+  line-height: 1.58;
+}
+
+.post-body:after {
+  content: "";
+  display: block;
+  clear: both;
 }
 
 .signature-block {
   clear: both;
-}`
-  },
-  {
-    id:'banner-letter',
-    name:'banner letter',
-    note:'wide image top, journal below',
-    css:`& {
-  border-left-width: 1px;
+}`;
 }
 
-.banner {
-  height: 210px;
-  margin: 0 0 .75rem;
-  border-radius: 14px 14px 0 0;
-  opacity: 1;
+function layoutCssBlock(side,banner){
+  return GAYA_LAYOUT_START+' side='+side+' banner='+banner+' */\n'+gaiaLayoutCss(side,banner).trim()+'\n/* '+GAYA_LAYOUT_END;
 }
 
-.post-head {
-  margin: 0;
-  padding: .9rem 1.35rem;
-  background: rgba(255,255,255,.16);
-}
-
-.avatar {
-  width: 46px;
-  height: 46px;
-  border-radius: 999px;
-}
-
-.post-body {
-  padding: 1.5rem 1.8rem .7rem;
-}
-
-.signature-block {
-  margin-top: .3rem;
-}`
-  },
-  {
-    id:'minimal-forum',
-    name:'minimal forum',
-    note:'small icon, clean readable post',
-    css:`& {
-  border-left-width: 3px;
-  box-shadow: none;
-}
-
-&:before,
-&:after {
-  display: none;
-}
-
-.post-head {
-  padding: .85rem 1rem;
-  margin-bottom: 0;
-  background: transparent;
-}
-
-.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-}
-
-.post-name {
-  font-size: 1.12rem;
-}
-
-.post-body {
-  padding: 1rem 1.25rem .35rem;
-  line-height: 1.7;
-}`
-  },
-  {
-    id:'shrine-card',
-    name:'shrine card',
-    note:'extra ornate, framed and dramatic',
-    css:`& {
-  border-style: double;
-  border-width: 4px;
-  box-shadow: 0 24px 70px rgba(0,0,0,.16);
-}
-
-&:before {
-  border-style: double;
-  opacity: .72;
-}
-
-.post-head {
-  background: linear-gradient(90deg, rgba(255,255,255,.18), rgba(255,255,255,.04));
-}
-
-.avatar {
-  width: 78px;
-  height: 78px;
-  border-radius: 18px;
-  border-width: 2px;
-}
-
-.post-name {
-  font-size: 1.85rem;
-}
-
-.post-body blockquote {
-  border-left-style: double;
-}`
-  }
-];
-
-function stripGayaLayoutCss(css){
-  return String(css||'')
-    .replace(/\/\* GAYA_LAYOUT_START[\s\S]*?GAYA_LAYOUT_END \*\//g,'')
-    .trim();
-}
-
-function layoutCssBlock(layout){
-  if(!layout||!layout.css)return '';
-  return GAYA_LAYOUT_START+' id='+layout.id+' */\n'+layout.css.trim()+'\n/* '+GAYA_LAYOUT_END;
-}
-
-function getCurrentLayoutId(){
-  const css=$('pe-css')?.value||'';
-  const match=css.match(/\/\* GAYA_LAYOUT_START id=([a-z0-9_-]+) \*\//i);
-  return match?match[1]:'classic-card';
-}
-
-function layoutPresetButtons(){
-  const active=getCurrentLayoutId();
-  return PERSONA_LAYOUT_PRESETS.map(l=>
-    '<button type="button" class="persona-layout-preset '+(l.id===active?'active':'')+'" data-layout="'+esc(l.id)+'">'+
-      '<strong>'+esc(l.name)+'</strong><small>'+esc(l.note)+'</small>'+
+function layoutButtonGroup(kind,options){
+  const current=getGayaLayoutOptions()[kind];
+  return options.map(([value,label,note])=>
+    '<button type="button" class="persona-layout-choice '+(value===current?'active':'')+'" data-layout-'+kind+'="'+esc(value)+'">'+
+      '<strong>'+esc(label)+'</strong><small>'+esc(note)+'</small>'+
     '</button>'
   ).join('');
 }
 
-function applyPersonaLayout(id){
-  const layout=PERSONA_LAYOUT_PRESETS.find(l=>l.id===id);
+function applyPersonaLayout(change){
   const cssArea=$('pe-css');
-  if(!layout||!cssArea)return;
+  if(!cssArea)return;
 
+  const current=getGayaLayoutOptions();
+  const side=change.side||current.side||'left';
+  const banner=change.banner||current.banner||'top';
   const base=stripGayaLayoutCss(cssArea.value);
-  const block=layoutCssBlock(layout);
-  cssArea.value=[base,block].filter(Boolean).join('\n\n');
+
+  cssArea.value=[base,layoutCssBlock(side,banner)].filter(Boolean).join('\n\n');
   cssArea.dispatchEvent(new Event('input',{bubbles:true}));
   updatePersonaPreview();
   enhancePersonaLayouts();
-  setStatus('ok','Layout applied: '+layout.name+'. Save when it looks right.');
+  setStatus('ok','Gaia layout updated. Save when it looks right.');
 }
 
 function enhancePersonaLayouts(){
@@ -224,17 +140,33 @@ function enhancePersonaLayouts(){
   if(!field){
     field=document.createElement('div');
     field.className='field full persona-layout-field';
-    field.innerHTML='<label>choose a layout</label><p class="muted preview-note">Layouts arrange the same post pieces in different old-forum ways. Gaia side portrait uses your avatar upload as the large left image.</p><div class="persona-layout-grid"></div>';
+    field.innerHTML='<label>old-forum layout</label><p class="muted preview-note">Use your avatar upload as the large portrait image. Choose which side it lives on, then choose where the banner appears.</p><div class="layout-choice-label">portrait side</div><div class="persona-layout-grid side-grid"></div><div class="layout-choice-label">banner placement</div><div class="persona-layout-grid banner-grid"></div>';
     const after=document.querySelector('.persona-studio .preset-field');
     if(after&&after.parentNode)after.insertAdjacentElement('afterend',field);
     else grid.insertBefore(field,grid.children[1]||null);
   }
 
-  const buttonGrid=field.querySelector('.persona-layout-grid');
-  if(buttonGrid){
-    buttonGrid.innerHTML=layoutPresetButtons();
-    buttonGrid.querySelectorAll('[data-layout]').forEach(btn=>{
-      btn.onclick=()=>applyPersonaLayout(btn.dataset.layout);
+  const sideGrid=field.querySelector('.side-grid');
+  const bannerGrid=field.querySelector('.banner-grid');
+  if(sideGrid){
+    sideGrid.innerHTML=layoutButtonGroup('side',[
+      ['left','left portrait','image on the left, words wrap right'],
+      ['right','right portrait','image on the right, words wrap left']
+    ]);
+    sideGrid.querySelectorAll('[data-layout-side]').forEach(btn=>{
+      btn.onclick=()=>applyPersonaLayout({side:btn.dataset.layoutSide});
+    });
+  }
+
+  if(bannerGrid){
+    bannerGrid.innerHTML=layoutButtonGroup('banner',[
+      ['top','top banner','banner appears above the post'],
+      ['bottom','bottom banner','banner appears below the words'],
+      ['both','both banners','top and bottom banner'],
+      ['none','no banner','portrait layout only']
+    ]);
+    bannerGrid.querySelectorAll('[data-layout-banner]').forEach(btn=>{
+      btn.onclick=()=>applyPersonaLayout({banner:btn.dataset.layoutBanner});
     });
   }
 }
