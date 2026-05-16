@@ -28,7 +28,39 @@ async function loadAll(){await Promise.all([loadThreads(),loadPersonas()]);}
 async function magicLink(email){const redirectTo=window.location.origin+window.location.pathname;return await supa.auth.signInWithOtp({email,options:{emailRedirectTo:redirectTo,shouldCreateUser:false}});}
 async function signOut(){await supa.auth.signOut();Object.assign(state,{session:null,user:null,threads:[],posts:[],personas:[],mine:[],view:'threads',threadId:null});render();}
 async function createThread(title,summary){const {data,error}=await supa.from('threads').insert({title,summary:summary||null,created_by:state.user.id}).select('*').single();if(error)throw error;await loadThreads();return data;}
-async function createPost(body){const personaId=state.selectedPersonaId||state.mine[0]?.id;if(!personaId)throw new Error('No persona is visible for this account yet. Create one on the personas page first.');const {data,error}=await supa.from('posts').insert({thread_id:state.threadId,persona_id:personaId,author_id:state.user.id,body}).select('*, persona:personas(*)').single();if(error)throw error;state.posts.push(data);await supa.from('threads').update({updated_at:new Date().toISOString()}).eq('id',state.threadId);return data;}
+async function createPost(body){
+  const personaId=state.selectedPersonaId||state.mine[0]?.id;
+
+  if(!personaId)throw new Error('No persona is visible for this account yet. Create one on the personas page first.');
+  if(!state.threadId)throw new Error('No active thread selected.');
+  if(!state.user?.id)throw new Error('No signed-in user for post.');
+
+  const insert=await withTimeout(
+    supa.from('posts').insert({
+      thread_id:state.threadId,
+      persona_id:personaId,
+      author_id:state.user.id,
+      body
+    }),
+    'post insert',
+    30000
+  );
+
+  if(insert.error)throw insert.error;
+
+  const bump=await withTimeout(
+    supa.from('threads').update({updated_at:new Date().toISOString()}).eq('id',state.threadId),
+    'thread activity update',
+    12000
+  ).catch(e=>({error:e}));
+
+  if(bump.error)console.warn('thread activity update failed',bump.error);
+
+  await withTimeout(loadPosts(state.threadId),'reload posts',30000);
+  await withTimeout(loadThreads(),'reload threads',30000).catch(e=>console.warn('thread reload failed',e));
+
+  return true;
+}
 async function savePersona(payload,id){
   if(!state.user?.id)throw new Error('No signed-in user for persona save.');
 
