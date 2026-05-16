@@ -80,6 +80,40 @@
   width:100%;
 }
 
+.image-upload-controls{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:.45rem;
+  margin-top:.45rem;
+}
+
+.image-upload-file{
+  display:none;
+}
+
+.image-upload-pick,
+.image-upload-clear{
+  padding:.38rem .68rem;
+  border-radius:999px;
+  font-size:.78rem;
+  line-height:1;
+}
+
+.image-upload-status{
+  color:rgba(102,95,91,.76);
+  font-size:.78rem;
+  font-style:italic;
+}
+
+.image-upload-status.ok{
+  color:var(--moss);
+}
+
+.image-upload-status.err{
+  color:var(--wine);
+}
+
 .advanced-css{
   padding:.85rem 1rem;
   border:1px dashed rgba(168,144,107,.34);
