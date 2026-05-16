@@ -1,7 +1,7 @@
 /*
   GAYA image render fix.
   Keeps avatar/banner URLs from breaking inline style attributes and supports
-  optional bottom banners for Gaia-style layouts.
+  Gaia-style portrait layouts with optional bottom banners.
 */
 
 function gayaCssUrl(value){
@@ -19,9 +19,17 @@ function gayaBgStyle(value){
   return url?'background-image:'+url+';':'';
 }
 
+function gayaLayoutMatch(css){
+  return String(css||'').match(/\/\* GAYA_LAYOUT_START side=(left|right) banner=(top|bottom|both|none) \*\//i);
+}
+
 function gayaBannerMode(css){
-  const match=String(css||'').match(/\/\* GAYA_LAYOUT_START side=(?:left|right) banner=(top|bottom|both|none) \*\//i);
-  return match?match[1]:'top';
+  const match=gayaLayoutMatch(css);
+  return match?match[2]:'top';
+}
+
+function isGaiaPortraitLayout(css){
+  return !!gayaLayoutMatch(css);
 }
 
 function gayaBanners(url,mode){
@@ -31,6 +39,11 @@ function gayaBanners(url,mode){
     top:(mode==='top'||mode==='both')?'<div class="banner top-banner" style="'+style+'"></div>':'',
     bottom:(mode==='bottom'||mode==='both')?'<div class="banner bottom-banner" style="'+style+'"></div>':''
   };
+}
+
+function gayaAvatarHtml(per,styleClass){
+  const av=esc(gayaBgStyle(per.avatar_url));
+  return '<div class="avatar '+styleClass+'" style="background-color:'+esc(per.accent_color||'#a8854f')+';'+av+'"></div>';
 }
 
 renderPosts=function(){
@@ -44,12 +57,14 @@ renderPosts=function(){
   list.innerHTML=state.posts.map((p,i)=>{
     const per=p.persona||{};
     const f=fontStyle(per.font_family);
-    const av=gayaBgStyle(per.avatar_url);
+    const gaia=isGaiaPortraitLayout(per.custom_css);
     const bannerMode=gayaBannerMode(per.custom_css);
     const banners=gayaBanners(per.banner_url,bannerMode);
     const scopeId=cssScopeId(per.id||p.persona_id||('post-'+i));
     const scope='[data-persona-style="'+scopeId+'"]';
     const custom=customCssTag(per.custom_css,scope);
+    const headAvatar=gaia?'':gayaAvatarHtml(per,'small-avatar');
+    const portrait=gaia?gayaAvatarHtml(per,'gaya-portrait'):'';
 
     return custom+'<article class="post" data-persona-style="'+esc(scopeId)+'" style="'+
       (per.bg_color?'background:'+esc(per.bg_color)+';':'')+
@@ -58,7 +73,8 @@ renderPosts=function(){
       f+
       '">'+
       banners.top+
-      '<div class="post-head"><div class="avatar" style="background-color:'+esc(per.accent_color||'#a8854f')+';'+esc(av)+'"></div><div class="post-name" style="'+f+'">'+esc(per.name||'unknown persona')+'</div><div class="post-meta">'+dateLabel(p.created_at)+'</div></div>'+
+      '<div class="post-head">'+headAvatar+'<div class="post-name" style="'+f+'">'+esc(per.name||'unknown persona')+'</div><div class="post-meta">'+dateLabel(p.created_at)+'</div></div>'+
+      portrait+
       '<div class="post-body" style="'+f+'">'+md(p.body)+'</div>'+
       (per.signature?'<div class="signature-block" style="'+f+'">'+md(per.signature)+'</div>':'')+
       banners.bottom+
@@ -72,17 +88,20 @@ updatePersonaPreview=function(){
 
   const p=readPersonaForm();
   const f=fontStyle(p.font_family);
+  const gaia=isGaiaPortraitLayout(p.custom_css);
   const bannerMode=gayaBannerMode(p.custom_css);
   const banners=gayaBanners(p.banner_url,bannerMode);
-  const avatar=gayaBgStyle(p.avatar_url);
   const scopeId='persona-preview';
   const scope='[data-persona-style="'+scopeId+'"]';
   const custom=customCssTag(p.custom_css,scope);
+  const headAvatar=gaia?'':gayaAvatarHtml(p,'small-avatar');
+  const portrait=gaia?gayaAvatarHtml(p,'gaya-portrait'):'';
 
   box.innerHTML=custom+'<article class="post" data-persona-style="'+scopeId+'" style="background:'+esc(p.bg_color)+';color:'+esc(p.text_color)+';border-color:'+esc(p.border_color)+';'+f+'">'+
     banners.top+
-    '<div class="post-head"><div class="avatar" style="background-color:'+esc(p.accent_color)+';'+esc(avatar)+'"></div><div class="post-name" style="'+f+'">'+esc(p.name||'unnamed')+'</div><div class="post-meta">preview</div></div>'+
-    '<div class="post-body" style="'+f+'"><p>This is how the persona speaks on the page.</p><blockquote>A line worth setting apart.</blockquote></div>'+
+    '<div class="post-head">'+headAvatar+'<div class="post-name" style="'+f+'">'+esc(p.name||'unnamed')+'</div><div class="post-meta">preview</div></div>'+
+    portrait+
+    '<div class="post-body" style="'+f+'"><p>This is how the persona speaks on the page. Longer posts will wrap around the portrait before continuing underneath it.</p><blockquote>A line worth setting apart.</blockquote></div>'+
     (p.signature?'<div class="signature-block" style="'+f+'">'+md(p.signature)+'</div>':'')+
     banners.bottom+
     '</article>';
