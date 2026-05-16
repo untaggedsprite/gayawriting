@@ -1,0 +1,40 @@
+/*
+  GAYA book-page warmth pass.
+  Loaded after the natural-history theme to turn the open page from cool grey
+  toward pale, old, yellowed paper without losing the soft botanical wash.
+*/
+
+:root{
+  --bg:#eee8dc;
+  --paper:#f8f1e5;
+  --paper2:#ede1cf;
+  --bone:#fbf4e7;
+  --stone:#ded2bf;
+  --ash:#cfc2af;
+  --fog:#d7c9b8;
+}
+
+body{
+  background:var(--bg);
+  background-image:
+    linear-gradient(115deg,rgba(251,244,231,.50),transparent 46%),
+    radial-gradient(circle at 14% 10%,rgba(218,199,158,.16),transparent 25rem),
+    radial-gradient(circle at 86% 18%,rgba(222,194,202,.10),transparent 23rem),
+    radial-gradient(circle at 82% 86%,rgba(190,201,189,.14),transparent 30rem),
+    radial-gradient(circle at 50% 50%,rgba(255,250,239,.28),transparent 38rem);
+}
+
+body:before{
+  opacity:.18;
+  background-image:repeating-linear-gradient(90deg,rgba(47,42,39,.020) 0 1px,transparent 1px 4px);
+}
+
+.main:before{
+  border-left-color:rgba(168,144,107,.12);
+  border-right-color:rgba(168,144,107,.12);
+  background:
+    linear-gradient(90deg,rgba(222,210,191,.10),rgba(251,244,231,.28) 15%,rgba(255,250,240,.44) 50%,rgba(251,244,231,.28) 85%,rgba(222,210,191,.10)),
+    radial-gradient(circle at 18% 25%,rgba(218,199,158,.09),transparent 24rem),
+    radial-gradient(circle at 82% 70%,rgba(174,187,195,.08),transparent 26rem),
+    linear-gradient(180deg,rgba(232,218,194,.12),rgba(255,250,240,.22));
+}
