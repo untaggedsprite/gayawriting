@@ -1,20 +1,31 @@
 /*
   GAYA thread-side ornaments.
   Separate layer so the harvested assets can be tuned without disturbing the main theme.
+
+  The shelves use the same centered rail as the greenhouse masthead/main column.
+  That keeps them framing the thread lane instead of drifting underneath it.
 */
+
+:root{
+  --gaya-rail-w:min(1040px,calc(100% - 2rem));
+  --gaya-masthead-h:clamp(138px,25vw,260px);
+  --gaya-shelf-w:clamp(150px,10vw,195px);
+  --gaya-shelf-peek:clamp(4px,.55vw,10px);
+  --gaya-shelf-top:calc(var(--gaya-masthead-h) + 1.7rem + .25rem);
+}
 
 .app:before,
 .app:after{
   content:"";
   position:fixed;
-  top:calc(clamp(138px,25vw,260px) + 1.7rem);
-  width:clamp(150px,10vw,195px);
-  height:calc(100vh - clamp(220px,28vw,315px));
+  top:var(--gaya-shelf-top);
+  width:var(--gaya-shelf-w);
+  height:calc(100vh - var(--gaya-shelf-top) - 2rem);
   min-height:540px;
   max-height:820px;
   z-index:3;
   pointer-events:none;
-  opacity:.9;
+  opacity:.92;
   background-repeat:no-repeat;
   background-size:100% 100%;
   filter:drop-shadow(0 14px 26px rgba(47,42,39,.14));
@@ -22,13 +33,13 @@
 }
 
 .app:before{
-  left:max(.75rem,calc(50% - 670px));
+  left:max(.5rem,calc((100% - var(--gaya-rail-w))/2 - var(--gaya-shelf-w) + var(--gaya-shelf-peek)));
   background-image:url("assets/ornaments/leftwitchyshelf.png");
   background-position:top right;
 }
 
 .app:after{
-  right:max(.75rem,calc(50% - 670px));
+  right:max(.5rem,calc((100% - var(--gaya-rail-w))/2 - var(--gaya-shelf-w) + var(--gaya-shelf-peek)));
   background-image:url("assets/ornaments/rightwitchyshelf.png");
   background-position:top left;
 }
@@ -44,24 +55,26 @@
 }
 
 @media(max-width:1320px){
+  :root{
+    --gaya-shelf-w:clamp(118px,9vw,150px);
+    --gaya-shelf-peek:clamp(2px,.45vw,7px);
+  }
   .app:before,
   .app:after{
-    width:clamp(118px,9vw,150px);
-    opacity:.72;
+    opacity:.76;
   }
-  .app:before{left:max(.35rem,calc(50% - 610px))}
-  .app:after{right:max(.35rem,calc(50% - 610px))}
 }
 
 @media(max-width:1120px){
+  :root{
+    --gaya-shelf-w:clamp(92px,9vw,128px);
+    --gaya-shelf-peek:2px;
+  }
   .app:before,
   .app:after{
-    width:clamp(92px,9vw,128px);
     opacity:.34;
     z-index:1;
   }
-  .app:before{left:.25rem}
-  .app:after{right:.25rem}
 }
 
 @media(max-width:980px){
