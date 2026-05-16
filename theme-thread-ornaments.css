@@ -22,13 +22,13 @@
 }
 
 .app:before{
-  left:max(.75rem,calc(50% - 640px));
+  left:max(.75rem,calc(50% - 735px));
   background-image:url("assets/ornaments/leftwitchyshelf.png");
   background-position:top right;
 }
 
 .app:after{
-  right:max(.75rem,calc(50% - 640px));
+  right:max(.75rem,calc(50% - 735px));
   background-image:url("assets/ornaments/rightwitchyshelf.png");
   background-position:top left;
 }
@@ -44,15 +44,15 @@
     width:clamp(118px,10vw,160px);
     opacity:.72;
   }
-  .app:before{left:max(.35rem,calc(50% - 610px))}
-  .app:after{right:max(.35rem,calc(50% - 610px))}
+  .app:before{left:max(.35rem,calc(50% - 690px))}
+  .app:after{right:max(.35rem,calc(50% - 690px))}
 }
 
 @media(max-width:1120px){
   .app:before,
   .app:after{
     width:clamp(92px,9vw,128px);
-    opacity:.42;
+    opacity:.34;
   }
   .app:before{left:.25rem}
   .app:after{right:.25rem}
