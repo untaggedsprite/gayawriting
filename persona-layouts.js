@@ -15,7 +15,7 @@ function stripGayaLayoutCss(css){
 
 function getGayaLayoutOptions(){
   const css=$('pe-css')?.value||'';
-  const match=css.match(/\/\* GAYA_LAYOUT_START side=(left|right) banner=(top|bottom|both|none) \*\//i);
+  const match=css.match(/\/\* GAYA_LAYOUT_START side=(left|right|none) banner=(top|bottom|both|none) \*\//i);
   return {
     side:match?.[1]||'left',
     banner:match?.[2]||'top'
@@ -26,6 +26,7 @@ function gaiaLayoutCss(side,banner){
   const floatSide=side==='right'?'right':'left';
   const nameAlign=side==='right'?'left':'right';
   const bannerDisplay=banner==='none'||banner==='bottom'?'none':'block';
+  const portraitDisplay=side==='none'?'none':'block';
 
   return `& {
   overflow: auto;
@@ -67,13 +68,13 @@ function gaiaLayoutCss(side,banner){
 }
 
 .gaya-portrait {
-  display: block;
+  display: ${portraitDisplay};
   float: ${floatSide};
   width: min(345px, 48vw);
   min-width: min(345px, 48vw);
   max-width: min(345px, 48vw);
-  height: 355px;
-  min-height: 355px;
+  height: 440px;
+  min-height: 440px;
   margin: .25rem ${side==='right'?'1.65rem':'2rem'} 1.05rem ${side==='right'?'2rem':'1.65rem'};
   border-radius: 12px;
   border: 3px solid currentColor;
@@ -151,7 +152,7 @@ function enhancePersonaLayouts(){
   if(!field){
     field=document.createElement('div');
     field.className='field full persona-layout-field';
-    field.innerHTML='<label>old-forum layout</label><p class="muted preview-note">Use your avatar upload as the large portrait image. Choose which side it lives on, then choose where the banner appears.</p><div class="layout-choice-label">portrait side</div><div class="persona-layout-grid side-grid"></div><div class="layout-choice-label">banner placement</div><div class="persona-layout-grid banner-grid"></div>';
+    field.innerHTML='<label>old-forum layout</label><p class="muted preview-note">Choose whether this post style uses a large Gaia-style portrait, then choose where the banner appears.</p><div class="layout-choice-label">portrait</div><div class="persona-layout-grid side-grid"></div><div class="layout-choice-label">banner placement</div><div class="persona-layout-grid banner-grid"></div>';
     const after=document.querySelector('.persona-studio .preset-field');
     if(after&&after.parentNode)after.insertAdjacentElement('afterend',field);
     else grid.insertBefore(field,grid.children[1]||null);
@@ -162,7 +163,8 @@ function enhancePersonaLayouts(){
   if(sideGrid){
     sideGrid.innerHTML=layoutButtonGroup('side',[
       ['left','left portrait','image on the left, words wrap right'],
-      ['right','right portrait','image on the right, words wrap left']
+      ['right','right portrait','image on the right, words wrap left'],
+      ['none','no portrait','no large Gaia avatar panel']
     ]);
     sideGrid.querySelectorAll('[data-layout-side]').forEach(btn=>{
       btn.onclick=()=>applyPersonaLayout({side:btn.dataset.layoutSide});
