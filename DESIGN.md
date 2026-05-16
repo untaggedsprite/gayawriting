@@ -24,6 +24,22 @@ Personas are the modern version of Gaia post styles: OC masks, author costumes, 
 
 The persona editor is the costume department for posts.
 
+## Babytooth-specific voltage
+
+Babytooth is not generic whimsy. Her visual language should hold craft, capability, and tenderness in the same hand.
+
+Known anchors:
+
+- Ohio: rivers, deer, waterlines, woods, field edges.
+- Kae's South: bones, heat, porch-dark, old ground, found remains, story as inheritance.
+- Babytooth does taxidermy as a hobby.
+- Babytooth preserves insects, but only already-dead bugs; the preservation is care, not conquest.
+- Babytooth loves bugs.
+- Babytooth loves pastels.
+- Babytooth makes things: construction, electrical work, hand-carved lamps, practical craft, made objects.
+
+The site should not become dark-goth taxidermy wallpaper. The target is softer and stranger: pastel natural history, ethical preservation, river/deer/bone lore, and handmade competence.
+
 ## Design vocabulary
 
 - old forum bones
@@ -33,6 +49,10 @@ The persona editor is the costume department for posts.
 - BBCode/post-style ceremony
 - private garden softness
 - craft/workbench competence
+- bones as story/remains, not shock imagery
+- deer/river/field-edge motifs
+- preserved insects as delicate specimens
+- pastels with moss/gold/cream grounding
 
 ## Current visual anchors
 
@@ -47,6 +67,8 @@ The persona editor is the costume department for posts.
 
 The site needs to be tender, but not merely cute. It should feel built. Babytooth's energy is craft, precision, audacity, and creativity that sometimes enters through logic before whimsy. GAYA should match that voltage: softness with structure, beauty with a frame, flowers growing over good bones.
 
+The deeper direction is not more decoration. It is a more specific mythology: a private RP board where forum ghosts, preserved little lives, river/deer/bone language, and handmade craft all belong without becoming clutter.
+
 ## Near-term visual priorities
 
 1. Make the thread index feel more like a private board/archive.
@@ -54,3 +76,4 @@ The site needs to be tender, but not merely cute. It should feel built. Babytoot
 3. Give the page stronger structure so the content feels housed, not floating.
 4. Keep flowers as atmosphere, not the whole concept.
 5. Add future ornament/assets deliberately rather than piling on decoration.
+6. Explore a pastel natural-history layer: specimen labels, small moth/bug/deer/bone marks, and river-line dividers.
