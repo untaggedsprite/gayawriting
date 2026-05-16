@@ -41,9 +41,9 @@ function gayaBanners(url,mode){
   };
 }
 
-function gayaAvatarHtml(per,styleClass){
+function gayaImageHtml(per,className){
   const av=esc(gayaBgStyle(per.avatar_url));
-  return '<div class="avatar '+styleClass+'" style="background-color:'+esc(per.accent_color||'#a8854f')+';'+av+'"></div>';
+  return '<div class="'+esc(className)+'" style="background-color:'+esc(per.accent_color||'#a8854f')+';'+av+'"></div>';
 }
 
 renderPosts=function(){
@@ -63,8 +63,8 @@ renderPosts=function(){
     const scopeId=cssScopeId(per.id||p.persona_id||('post-'+i));
     const scope='[data-persona-style="'+scopeId+'"]';
     const custom=customCssTag(per.custom_css,scope);
-    const headAvatar=gaia?'':gayaAvatarHtml(per,'small-avatar');
-    const portrait=gaia?gayaAvatarHtml(per,'gaya-portrait'):'';
+    const headAvatar=gaia?'':gayaImageHtml(per,'avatar small-avatar');
+    const portrait=gaia?gayaImageHtml(per,'gaya-portrait'):'';
 
     return custom+'<article class="post" data-persona-style="'+esc(scopeId)+'" style="'+
       (per.bg_color?'background:'+esc(per.bg_color)+';':'')+
@@ -94,8 +94,8 @@ updatePersonaPreview=function(){
   const scopeId='persona-preview';
   const scope='[data-persona-style="'+scopeId+'"]';
   const custom=customCssTag(p.custom_css,scope);
-  const headAvatar=gaia?'':gayaAvatarHtml(p,'small-avatar');
-  const portrait=gaia?gayaAvatarHtml(p,'gaya-portrait'):'';
+  const headAvatar=gaia?'':gayaImageHtml(p,'avatar small-avatar');
+  const portrait=gaia?gayaImageHtml(p,'gaya-portrait'):'';
 
   box.innerHTML=custom+'<article class="post" data-persona-style="'+scopeId+'" style="background:'+esc(p.bg_color)+';color:'+esc(p.text_color)+';border-color:'+esc(p.border_color)+';'+f+'">'+
     banners.top+
