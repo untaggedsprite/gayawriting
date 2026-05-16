@@ -29,7 +29,44 @@ async function magicLink(email){const redirectTo=window.location.origin+window.l
 async function signOut(){await supa.auth.signOut();Object.assign(state,{session:null,user:null,threads:[],posts:[],personas:[],mine:[],view:'threads',threadId:null});render();}
 async function createThread(title,summary){const {data,error}=await supa.from('threads').insert({title,summary:summary||null,created_by:state.user.id}).select('*').single();if(error)throw error;await loadThreads();return data;}
 async function createPost(body){const personaId=state.selectedPersonaId||state.mine[0]?.id;if(!personaId)throw new Error('No persona is visible for this account yet. Create one on the personas page first.');const {data,error}=await supa.from('posts').insert({thread_id:state.threadId,persona_id:personaId,author_id:state.user.id,body}).select('*, persona:personas(*)').single();if(error)throw error;state.posts.push(data);await supa.from('threads').update({updated_at:new Date().toISOString()}).eq('id',state.threadId);return data;}
-async function savePersona(payload,id){let res;if(id){res=await withTimeout(supa.from('personas').update(payload).eq('id',id).select('*').single(),'persona update');}else{payload.user_id=state.user.id;res=await withTimeout(supa.from('personas').insert(payload).select('*').single(),'persona insert');}if(res.error)throw res.error;await withTimeout(loadPersonas(),'reload personas');return res.data;}
+async function savePersona(payload,id){
+  if(!state.user?.id)throw new Error('No signed-in user for persona save.');
+
+  const saveWait=(promise,label)=>withTimeout(promise,label,30000);
+  const clean={...payload,updated_at:new Date().toISOString()};
+
+  if(id){
+    const {data,error}=await saveWait(
+      supa.from('personas')
+        .update(clean)
+        .eq('id',id)
+        .eq('user_id',state.user.id)
+        .select('id')
+        .maybeSingle(),
+      'persona update'
+    );
+
+    if(error)throw error;
+
+    await saveWait(loadPersonas(),'reload personas');
+    return personaById(id)||{id:data?.id||id,...clean,user_id:state.user.id};
+  }
+
+  clean.user_id=state.user.id;
+
+  const {data,error}=await saveWait(
+    supa.from('personas')
+      .insert(clean)
+      .select('id')
+      .single(),
+    'persona insert'
+  );
+
+  if(error)throw error;
+
+  await saveWait(loadPersonas(),'reload personas');
+  return personaById(data?.id)||{id:data?.id,...clean,user_id:state.user.id};
+}
 async function deletePersona(id){const {error}=await supa.from('personas').delete().eq('id',id);if(error)throw error;await loadPersonas();}
 function render(){if(state.fatal)return renderFatal();if(!state.session)return renderLogin();renderShell();}
 function renderFatal(){app.innerHTML='<div class="main"><div class="error"><h1>GAYA tripped on a root.</h1><p class="muted">The app caught the error instead of staying blank.</p><pre>'+esc(state.fatal?.where)+'\n'+esc(state.fatal?.message)+'\n'+esc(state.fatal?.stack)+'</pre><button id="retry">try again</button></div></div>';$('retry').onclick=()=>{state.fatal=null;boot();};}
