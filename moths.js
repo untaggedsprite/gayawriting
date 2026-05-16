@@ -4,16 +4,16 @@
   const MARK='__gayaShelfMothsInstalled';
   const MOTHS=[
     // Left shelf art is right-weighted in its fixed layer, so these lean toward the layer's right side.
-    {side:'left', species:'luna',  behavior:'tremor',   strip:true,  top:'12%', left:'58%', size:40, rotate:'-12deg', scale:1, delay:'-11s'},
-    {side:'left', species:'ghost', behavior:'crawler',  strip:false, top:'31%', left:'69%', size:31, rotate:'18deg',  scale:.96, delay:'-28s'},
-    {side:'left', species:'tiger', behavior:'consider', strip:false, top:'54%', left:'53%', size:37, rotate:'-8deg',  scale:1, delay:'-19s'},
-    {side:'left', species:'ghost', behavior:'tremor',   strip:true,  top:'75%', left:'72%', size:28, rotate:'10deg',  scale:.94, delay:'-7s'},
+    {side:'left', species:'luna',  behavior:'tremor',   strip:true,  top:'12%', left:'58%', size:40, rotate:'-12deg', scale:1, delay:'-1s'},
+    {side:'left', species:'ghost', behavior:'crawler',  strip:false, top:'31%', left:'69%', size:31, rotate:'18deg',  scale:.96, delay:'-5s'},
+    {side:'left', species:'tiger', behavior:'consider', strip:false, top:'54%', left:'53%', size:37, rotate:'-8deg',  scale:1, delay:'-3s'},
+    {side:'left', species:'ghost', behavior:'tremor',   strip:true,  top:'75%', left:'72%', size:28, rotate:'10deg',  scale:.94, delay:'-4s'},
 
     // Right shelf art is left-weighted in its fixed layer; keep them out of the drywall.
-    {side:'right',species:'ghost', behavior:'consider', strip:false, top:'15%', left:'24%', size:34, rotate:'11deg',  scale:.98, delay:'-17s'},
-    {side:'right',species:'tiger', behavior:'tremor',   strip:true,  top:'39%', left:'28%', size:42, rotate:'-14deg', scale:1, delay:'-4s'},
-    {side:'right',species:'luna',  behavior:'crawler',  strip:false, top:'62%', left:'14%', size:32, rotate:'21deg',  scale:.96, delay:'-34s'},
-    {side:'right',species:'luna',  behavior:'tremor',   strip:true,  top:'81%', left:'31%', size:30, rotate:'-6deg',  scale:.94, delay:'-21s'}
+    {side:'right',species:'ghost', behavior:'consider', strip:false, top:'15%', left:'24%', size:34, rotate:'11deg',  scale:.98, delay:'-6s'},
+    {side:'right',species:'tiger', behavior:'tremor',   strip:true,  top:'39%', left:'28%', size:42, rotate:'-14deg', scale:1, delay:'-2s'},
+    {side:'right',species:'luna',  behavior:'crawler',  strip:false, top:'62%', left:'14%', size:32, rotate:'21deg',  scale:.96, delay:'-8s'},
+    {side:'right',species:'luna',  behavior:'tremor',   strip:true,  top:'81%', left:'31%', size:30, rotate:'-6deg',  scale:.94, delay:'-5s'}
   ];
 
   function mothNode(moth,index){
@@ -33,6 +33,10 @@
     el.style.setProperty('--moth-scale',String(moth.scale||1));
     el.style.setProperty('--moth-delay',moth.delay||'0s');
     el.style.setProperty('--moth-wing-delay',moth.delay||'0s');
+
+    const sprite=document.createElement('span');
+    sprite.className='shelf-moth-sprite';
+    el.appendChild(sprite);
     return el;
   }
 
