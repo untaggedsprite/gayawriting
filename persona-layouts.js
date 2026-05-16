@@ -34,7 +34,7 @@ function gaiaLayoutCss(side,banner){
 
 .banner {
   display: ${bannerDisplay};
-  height: 278px;
+  height: 185px;
   margin: 0 0 1rem;
   border-radius: 14px 14px 0 0;
   opacity: 1;
@@ -45,7 +45,7 @@ function gaiaLayoutCss(side,banner){
 .banner.bottom-banner {
   display: ${banner==='bottom'||banner==='both'?'block':'none'};
   clear: both;
-  height: 225px;
+  height: 150px;
   margin: 1.15rem 0 0;
   border-radius: 0 0 14px 14px;
   background-size: cover;
@@ -64,7 +64,7 @@ function gaiaLayoutCss(side,banner){
 
 .avatar {
   float: ${floatSide};
-  width: min(230px, 36vw);
+  width: min(345px, 48vw);
   height: 355px;
   margin: .25rem ${side==='right'?'0':'2rem'} 1.05rem ${side==='right'?'2rem':'0'};
   border-radius: 12px;
