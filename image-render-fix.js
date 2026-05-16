@@ -46,9 +46,19 @@ function gayaBanners(url,mode){
   };
 }
 
+function gayaPortraitStyle(per,side){
+  const floatSide=side==='right'?'right':'left';
+  const margin=side==='right'?'.25rem 1.65rem 1.05rem 2rem':'.25rem 2rem 1.05rem 1.65rem';
+  return 'display:block !important;float:'+floatSide+';width:345px !important;min-width:345px !important;max-width:48vw !important;height:355px !important;min-height:355px !important;margin:'+margin+';border-radius:12px;border:3px solid currentColor;background-color:'+esc(per.accent_color||'#a8854f')+';'+esc(gayaBgStyle(per.avatar_url))+'background-size:cover;background-position:center top;box-shadow:0 16px 38px rgba(0,0,0,.18);';
+}
+
 function gayaImageHtml(per,className,extraAttrs=''){
   const av=esc(gayaBgStyle(per.avatar_url));
   return '<div class="'+esc(className)+'" '+extraAttrs+' style="background-color:'+esc(per.accent_color||'#a8854f')+';'+av+'"></div>';
+}
+
+function gayaPortraitHtml(per,side){
+  return '<div class="gaya-portrait" data-side="'+esc(side)+'" style="'+gayaPortraitStyle(per,side)+'"></div>';
 }
 
 renderPosts=function(){
@@ -70,7 +80,7 @@ renderPosts=function(){
     const scope='[data-persona-style="'+scopeId+'"]';
     const custom=customCssTag(per.custom_css,scope);
     const headAvatar=gaia?'':gayaImageHtml(per,'avatar small-avatar');
-    const portrait=gaia?gayaImageHtml(per,'gaya-portrait','data-side="'+esc(side)+'"'):'';
+    const portrait=gaia?gayaPortraitHtml(per,side):'';
 
     return custom+'<article class="post" data-persona-style="'+esc(scopeId)+'" data-gaya-layout="'+(gaia?'1':'0')+'" data-gaya-side="'+esc(side)+'" style="'+
       (per.bg_color?'background:'+esc(per.bg_color)+';':'')+
@@ -102,7 +112,7 @@ updatePersonaPreview=function(){
   const scope='[data-persona-style="'+scopeId+'"]';
   const custom=customCssTag(p.custom_css,scope);
   const headAvatar=gaia?'':gayaImageHtml(p,'avatar small-avatar');
-  const portrait=gaia?gayaImageHtml(p,'gaya-portrait','data-side="'+esc(side)+'"'):'';
+  const portrait=gaia?gayaPortraitHtml(p,side):'';
 
   box.innerHTML=custom+'<article class="post" data-persona-style="'+scopeId+'" data-gaya-layout="'+(gaia?'1':'0')+'" data-gaya-side="'+esc(side)+'" style="background:'+esc(p.bg_color)+';color:'+esc(p.text_color)+';border-color:'+esc(p.border_color)+';'+f+'">'+
     banners.top+
