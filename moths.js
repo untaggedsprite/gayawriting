@@ -3,14 +3,15 @@
 (function(){
   const MARK='__gayaShelfMothsInstalled';
   const MOTHS=[
-    {side:'left', species:'luna',  behavior:'tremor',   strip:true,  top:'13%', left:'54%', size:28},
-    {side:'left', species:'ghost', behavior:'crawler',  strip:false, top:'36%', left:'30%', size:21},
-    {side:'left', species:'tiger', behavior:'consider', strip:false, top:'58%', left:'64%', size:24},
-    {side:'left', species:'ghost', behavior:'tremor',   strip:true,  top:'77%', left:'42%', size:18},
-    {side:'right',species:'ghost', behavior:'consider', strip:false, top:'18%', left:'33%', size:24},
-    {side:'right',species:'tiger', behavior:'tremor',   strip:true,  top:'43%', left:'58%', size:27},
-    {side:'right',species:'luna',  behavior:'crawler',  strip:false, top:'64%', left:'28%', size:21},
-    {side:'right',species:'luna',  behavior:'tremor',   strip:true,  top:'82%', left:'55%', size:19}
+    {side:'left', species:'luna',  behavior:'tremor',   strip:true,  top:'12%', left:'48%', size:26, rotate:'-12deg', scale:.95, delay:'-11s'},
+    {side:'left', species:'ghost', behavior:'crawler',  strip:false, top:'31%', left:'22%', size:20, rotate:'18deg',  scale:.86, delay:'-64s'},
+    {side:'left', species:'tiger', behavior:'consider', strip:false, top:'55%', left:'60%', size:24, rotate:'-8deg',  scale:.90, delay:'-38s'},
+    {side:'left', species:'ghost', behavior:'tremor',   strip:true,  top:'76%', left:'36%', size:18, rotate:'10deg',  scale:.78, delay:'-29s'},
+
+    {side:'right',species:'ghost', behavior:'consider', strip:false, top:'15%', left:'34%', size:23, rotate:'11deg',  scale:.88, delay:'-47s'},
+    {side:'right',species:'tiger', behavior:'tremor',   strip:true,  top:'39%', left:'54%', size:27, rotate:'-14deg', scale:.96, delay:'-23s'},
+    {side:'right',species:'luna',  behavior:'crawler',  strip:false, top:'62%', left:'26%', size:21, rotate:'21deg',  scale:.84, delay:'-72s'},
+    {side:'right',species:'luna',  behavior:'tremor',   strip:true,  top:'81%', left:'52%', size:19, rotate:'-6deg',  scale:.78, delay:'-53s'}
   ];
 
   function mothNode(moth,index){
@@ -20,12 +21,16 @@
       'moth-'+moth.species,
       'moth-'+moth.behavior,
       moth.strip?'moth-strip moth-wingbeat':'',
-      'moth-'+index
+      'moth-'+moth.side+'-'+index
     ].filter(Boolean).join(' ');
     el.style.top=moth.top;
     el.style.left=moth.left;
     el.style.width=moth.size+'px';
     el.style.height=moth.size+'px';
+    el.style.setProperty('--moth-r',moth.rotate||'0deg');
+    el.style.setProperty('--moth-scale',String(moth.scale||1));
+    el.style.setProperty('--moth-delay',moth.delay||'0s');
+    el.style.setProperty('--moth-wing-delay',moth.delay||'0s');
     return el;
   }
 
