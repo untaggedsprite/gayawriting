@@ -176,21 +176,21 @@ input:focus,textarea:focus,select:focus{
 
 /* Asset pass: Gaia-style greenhouse masthead + tiny botanical objects. */
 .top{
-  min-height:clamp(132px,12vw,190px);
+  min-height:clamp(150px,14vw,230px);
   padding:0;
   gap:0;
   overflow:hidden;
   isolation:isolate;
   align-items:stretch;
   grid-template-columns:minmax(9rem,1fr) auto minmax(9rem,1fr);
-  grid-template-rows:minmax(104px,1fr) 1.7rem;
+  grid-template-rows:minmax(122px,1fr) 1.7rem;
   background-color:var(--stone);
   background-image:
     linear-gradient(180deg,rgba(47,42,39,.04),rgba(47,42,39,.12)),
     url("assets/ornaments/gayabanner.png");
-  background-position:center;
+  background-position:center center;
   background-repeat:no-repeat;
-  background-size:100% 100%;
+  background-size:cover;
   image-rendering:auto;
   border-bottom:1px solid rgba(47,42,39,.28);
   box-shadow:0 2px 0 rgba(244,239,231,.32) inset,0 12px 28px rgba(47,42,39,.10);
@@ -317,11 +317,11 @@ input:focus,textarea:focus,select:focus{
 
 @media(max-width:760px){
   .top{
-    min-height:128px;
+    min-height:136px;
     grid-template-columns:1fr;
     grid-template-rows:1fr 1.7rem;
-    background-size:auto 100%;
-    background-position:left center;
+    background-size:cover;
+    background-position:center center;
   }
   .top .brand{width:44vw;min-width:130px}
   .top .user{
