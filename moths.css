@@ -1,7 +1,7 @@
 /*
   GAYA shelf moths.
   Decorative pixel creatures layered over the side bookshelves.
-  The actual PNGs live in assets/ornaments/ and are intentionally tiny on-page.
+  The PNGs live in assets/ornaments/ and are intentionally tiny on-page.
 */
 
 .shelf-moth-layer{
@@ -25,6 +25,10 @@
 }
 
 .shelf-moth{
+  --moth-r:0deg;
+  --moth-scale:1;
+  --moth-delay:0s;
+  --moth-wing-delay:0s;
   position:absolute;
   pointer-events:none;
   image-rendering:pixelated;
@@ -32,6 +36,7 @@
   background-position:center;
   background-size:contain;
   filter:drop-shadow(0 1px 1px rgba(47,42,39,.22));
+  transform:rotate(var(--moth-r)) scale(var(--moth-scale));
   transform-origin:50% 70%;
   will-change:transform;
 }
@@ -46,57 +51,63 @@
   image-rendering:pixelated;
 }
 
-.moth-luna::before{background-image:url("assets/ornaments/moth_luna.png")}
-.moth-ghost::before{background-image:url("assets/ornaments/moth_ghost.png")}
-.moth-tiger::before{background-image:url("assets/ornaments/moth_tiger.png")}
+.moth-luna::before{background-image:url("assets/ornaments/moth_luna.png?v=2")}
+.moth-ghost::before{background-image:url("assets/ornaments/moth_ghost.png?v=2")}
+.moth-tiger::before{background-image:url("assets/ornaments/moth_tiger.png?v=2")}
 
-/* Optional two-frame strips. If these files exist, moth-wingbeat gives a tiny live-wing twitch. */
-.moth-luna.moth-strip::before{background-image:url("assets/ornaments/moth_luna_strip_2f.png");background-size:200% 100%;background-position:0 0}
-.moth-ghost.moth-strip::before{background-image:url("assets/ornaments/moth_ghost_strip_2f.png");background-size:200% 100%;background-position:0 0}
-.moth-tiger.moth-strip::before{background-image:url("assets/ornaments/moth_tiger_strip_2f.png");background-size:200% 100%;background-position:0 0}
+/* Two-frame strips are present in assets/ornaments and give the tremor moths a tiny wing twitch. */
+.moth-luna.moth-strip::before{background-image:url("assets/ornaments/moth_luna_strip_2f.png?v=2");background-size:200% 100%;background-position:0 0}
+.moth-ghost.moth-strip::before{background-image:url("assets/ornaments/moth_ghost_strip_2f.png?v=2");background-size:200% 100%;background-position:0 0}
+.moth-tiger.moth-strip::before{background-image:url("assets/ornaments/moth_tiger_strip_2f.png?v=2");background-size:200% 100%;background-position:0 0}
 
 /* Stillness for nearly a minute, then one rude little shudder. */
-.moth-tremor{animation:moth-tremor 58s linear infinite}
+.moth-tremor{
+  animation:moth-tremor 58s linear infinite;
+  animation-delay:var(--moth-delay);
+}
 @keyframes moth-tremor{
-  0%,96%{transform:translate(0,0) rotate(0deg)}
-  97%{transform:translate(-1px,0) rotate(-2deg)}
-  98%{transform:translate(1px,-1px) rotate(3deg)}
-  99%{transform:translate(-1px,1px) rotate(-2deg)}
-  100%{transform:translate(0,0) rotate(0deg)}
+  0%,96%{transform:translate(0,0) rotate(var(--moth-r)) scale(var(--moth-scale))}
+  97%{transform:translate(-1px,0) rotate(calc(var(--moth-r) - 2deg)) scale(var(--moth-scale))}
+  98%{transform:translate(1px,-1px) rotate(calc(var(--moth-r) + 3deg)) scale(var(--moth-scale))}
+  99%{transform:translate(-1px,1px) rotate(calc(var(--moth-r) - 2deg)) scale(var(--moth-scale))}
+  100%{transform:translate(0,0) rotate(var(--moth-r)) scale(var(--moth-scale))}
 }
 
 /* Slow downward migration with long pauses between tiny hops. */
-.moth-crawler{animation:moth-crawler 140s ease-in-out infinite}
+.moth-crawler{
+  animation:moth-crawler 140s ease-in-out infinite;
+  animation-delay:var(--moth-delay);
+}
 @keyframes moth-crawler{
-  0%,25%{transform:translate(0,0)}
-  30%,55%{transform:translate(1px,14px)}
-  60%,85%{transform:translate(-1px,30px)}
-  90%,100%{transform:translate(0,0)}
+  0%,25%{transform:translate(0,0) rotate(var(--moth-r)) scale(var(--moth-scale))}
+  30%,55%{transform:translate(1px,14px) rotate(calc(var(--moth-r) + 2deg)) scale(var(--moth-scale))}
+  60%,85%{transform:translate(-1px,30px) rotate(calc(var(--moth-r) - 2deg)) scale(var(--moth-scale))}
+  90%,100%{transform:translate(0,0) rotate(var(--moth-r)) scale(var(--moth-scale))}
 }
 
 /* The moth that is absolutely looking at you specifically. */
-.moth-consider{animation:moth-consider 95s ease-in-out infinite}
+.moth-consider{
+  animation:moth-consider 95s ease-in-out infinite;
+  animation-delay:var(--moth-delay);
+}
 @keyframes moth-consider{
-  0%,28%{transform:rotate(0deg)}
-  33%,55%{transform:rotate(14deg)}
-  60%,82%{transform:rotate(-20deg)}
-  88%,100%{transform:rotate(0deg)}
+  0%,28%{transform:rotate(var(--moth-r)) scale(var(--moth-scale))}
+  33%,55%{transform:rotate(calc(var(--moth-r) + 14deg)) scale(var(--moth-scale))}
+  60%,82%{transform:rotate(calc(var(--moth-r) - 20deg)) scale(var(--moth-scale))}
+  88%,100%{transform:rotate(var(--moth-r)) scale(var(--moth-scale))}
 }
 
 /* Wing frames live on the pseudo-element so transform animations can stay on the moth body. */
-.moth-wingbeat::before{animation:moth-wingbeat 58s steps(1,end) infinite}
+.moth-wingbeat::before{
+  animation:moth-wingbeat 58s steps(1,end) infinite;
+  animation-delay:var(--moth-wing-delay);
+}
 @keyframes moth-wingbeat{
   0%,96%,100%{background-position:0 0}
   97%{background-position:100% 0}
   98%{background-position:0 0}
   99%{background-position:100% 0}
 }
-
-.shelf-right .moth-tremor{animation-delay:-23s}
-.shelf-right .moth-crawler{animation-delay:-72s}
-.shelf-right .moth-consider{animation-delay:-47s}
-.shelf-right .moth-wingbeat::before{animation-delay:-23s}
-.shelf-left .moth-wingbeat::before{animation-delay:-11s}
 
 @media(max-width:1320px){
   .shelf-moth-layer{opacity:.80}
