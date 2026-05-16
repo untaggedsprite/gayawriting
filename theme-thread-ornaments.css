@@ -12,6 +12,7 @@
   --gaya-shelf-w:clamp(198px,13.15vw,258px);
   --gaya-shelf-peek:clamp(5px,.7vw,12px);
   --gaya-shelf-top:calc(var(--gaya-masthead-h) + 1.7rem + .25rem);
+  --gaya-shelf-art-w:106%;
 }
 
 .app:before,
@@ -27,7 +28,7 @@
   pointer-events:none;
   opacity:.92;
   background-repeat:no-repeat;
-  background-size:100% 100%;
+  background-size:var(--gaya-shelf-art-w) 100%;
   filter:drop-shadow(0 14px 26px rgba(47,42,39,.14));
   transform:none;
 }
@@ -58,6 +59,7 @@
   :root{
     --gaya-shelf-w:clamp(156px,11.85vw,198px);
     --gaya-shelf-peek:clamp(3px,.55vw,9px);
+    --gaya-shelf-art-w:107%;
   }
   .app:before,
   .app:after{
@@ -69,6 +71,7 @@
   :root{
     --gaya-shelf-w:clamp(121px,11.85vw,168px);
     --gaya-shelf-peek:3px;
+    --gaya-shelf-art-w:108%;
   }
   .app:before,
   .app:after{
