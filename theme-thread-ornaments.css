@@ -7,27 +7,31 @@
 .app:after{
   content:"";
   position:fixed;
-  top:calc(clamp(138px,25vw,260px) + 2.4rem);
-  width:clamp(108px,12vw,178px);
-  height:min(62vh,620px);
+  top:calc(clamp(138px,25vw,260px) + 3.2rem);
+  width:clamp(72px,7vw,108px);
+  height:min(44vh,430px);
   z-index:1;
   pointer-events:none;
-  opacity:.92;
+  opacity:.78;
   background-repeat:no-repeat;
   background-size:contain;
-  filter:drop-shadow(0 14px 28px rgba(47,42,39,.13));
+  filter:drop-shadow(0 12px 22px rgba(47,42,39,.12));
 }
 
 .app:before{
-  left:max(.35rem,calc(50% - 710px));
+  left:max(.75rem,calc(50% - 640px));
   background-image:url("assets/ornaments/leftwitchyshelf.png");
   background-position:top right;
+  transform:rotate(-4deg);
+  transform-origin:top center;
 }
 
 .app:after{
-  right:max(.35rem,calc(50% - 710px));
+  right:max(.75rem,calc(50% - 640px));
   background-image:url("assets/ornaments/rightwitchyshelf.png");
   background-position:top left;
+  transform:rotate(4deg);
+  transform-origin:top center;
 }
 
 .main{
@@ -38,11 +42,12 @@
 @media(max-width:1220px){
   .app:before,
   .app:after{
-    width:clamp(76px,10vw,120px);
-    opacity:.52;
+    width:clamp(58px,8vw,86px);
+    height:min(38vh,360px);
+    opacity:.42;
   }
-  .app:before{left:.25rem}
-  .app:after{right:.25rem}
+  .app:before{left:.35rem}
+  .app:after{right:.35rem}
 }
 
 @media(max-width:980px){
