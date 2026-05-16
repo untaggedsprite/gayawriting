@@ -9,8 +9,8 @@
 :root{
   --gaya-rail-w:min(1040px,calc(100% - 2rem));
   --gaya-masthead-h:clamp(138px,25vw,260px);
-  --gaya-shelf-w:clamp(150px,10vw,195px);
-  --gaya-shelf-peek:clamp(4px,.55vw,10px);
+  --gaya-shelf-w:clamp(188px,12.5vw,244px);
+  --gaya-shelf-peek:clamp(5px,.7vw,12px);
   --gaya-shelf-top:calc(var(--gaya-masthead-h) + 1.7rem + .25rem);
 }
 
@@ -20,9 +20,9 @@
   position:fixed;
   top:var(--gaya-shelf-top);
   width:var(--gaya-shelf-w);
-  height:calc(100vh - var(--gaya-shelf-top) - 2rem);
-  min-height:540px;
-  max-height:820px;
+  height:calc((100vh - var(--gaya-shelf-top) - 1.25rem) * 1.25);
+  min-height:675px;
+  max-height:1025px;
   z-index:3;
   pointer-events:none;
   opacity:.92;
@@ -56,8 +56,8 @@
 
 @media(max-width:1320px){
   :root{
-    --gaya-shelf-w:clamp(118px,9vw,150px);
-    --gaya-shelf-peek:clamp(2px,.45vw,7px);
+    --gaya-shelf-w:clamp(148px,11.25vw,188px);
+    --gaya-shelf-peek:clamp(3px,.55vw,9px);
   }
   .app:before,
   .app:after{
@@ -67,8 +67,8 @@
 
 @media(max-width:1120px){
   :root{
-    --gaya-shelf-w:clamp(92px,9vw,128px);
-    --gaya-shelf-peek:2px;
+    --gaya-shelf-w:clamp(115px,11.25vw,160px);
+    --gaya-shelf-peek:3px;
   }
   .app:before,
   .app:after{
