@@ -63,9 +63,14 @@ function gaiaLayoutCss(side,banner){
 }
 
 .avatar {
+  display: block;
   float: ${floatSide};
   width: min(345px, 48vw);
+  min-width: min(345px, 48vw);
+  max-width: min(345px, 48vw);
+  flex: 0 0 min(345px, 48vw);
   height: 355px;
+  min-height: 355px;
   margin: .25rem ${side==='right'?'0':'2rem'} 1.05rem ${side==='right'?'2rem':'0'};
   border-radius: 12px;
   border: 3px solid currentColor;
