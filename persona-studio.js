@@ -212,7 +212,7 @@ renderPersonaEditor=function(){
   area.innerHTML='<div class="editor persona-studio"><h2>'+(isNew?'New persona':'Edit persona')+'</h2>'+ 
     '<div class="editor-grid mt">'+
       '<div class="field full"><label>name</label><input id="pe-name" value="'+esc(p.name||'')+'"></div>'+ 
-      '<div class="field full preset-field"><label>pick a vibe</label><p class="muted preview-note">Presets change colors, font, and advanced CSS only. Your name, pictures, and signature stay put.</p><div class="persona-preset-grid">'+personaPresetButtons()+'</div></div>'+ 
+      '<div class="field full preset-field"><label>pick a vibe</label><p class="muted preview-note">Presets change colors, font, and controlled styling only. Your name, pictures, and signature stay put.</p><div class="persona-preset-grid">'+personaPresetButtons()+'</div></div>'+ 
       '<div class="field"><label>top banner url</label><input id="pe-banner" value="'+esc(p.banner_url||'')+'"></div>'+ 
       '<div class="field"><label>bottom banner url</label><input id="pe-bottom-banner" value="'+esc(p.bottom_banner_url||'')+'"><p class="muted preview-note">Optional. If empty, bottom banner falls back to the top banner.</p></div>'+ 
       '<div class="field"><label>avatar url</label><input id="pe-avatar" value="'+esc(p.avatar_url||'')+'"></div>'+ 
@@ -222,7 +222,7 @@ renderPersonaEditor=function(){
       colorField('border','border',p.border_color)+
       '<div class="field full"><label>font style</label><select id="pe-font" class="persona-font-select">'+personaFontOptions(p.font_family||'')+'</select><div id="persona-font-sample" class="persona-font-sample">A little field mouse writes beautifully in the margins.</div><p id="persona-font-status" class="muted preview-note persona-font-status"></p><p class="muted preview-note">Friendly names here. The app still saves the real font stack underneath.</p></div>'+ 
       '<div class="field full"><label>signature markdown</label><textarea id="pe-signature">'+esc(p.signature||'')+'</textarea></div>'+ 
-      '<div class="field full"><details class="advanced-css"><summary>Advanced custom CSS</summary><label for="pe-css">Custom CSS notes</label><textarea id="pe-css" placeholder="& { border-radius: 28px; }">'+esc(p.custom_css||'')+'</textarea><p class="muted preview-note">Custom CSS is scoped to this persona’s posts. Use & for the post card itself.</p></details></div>'+ 
+      '<textarea id="pe-css" hidden>'+esc(p.custom_css||'')+'</textarea>'+ 
     '</div>'+ 
     '<div class="spread mt"><div class="row"><button id="save-persona">save persona</button><button class="ghost" id="reset-persona">reset</button></div>'+(isNew?'':'<button class="danger" id="delete-persona">delete persona</button>')+'</div>'+ 
     '<div id="persona-status"></div>'+ 
