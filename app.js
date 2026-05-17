@@ -5,9 +5,45 @@ const state={session:null,user:null,view:'threads',threadId:null,threads:[],post
 const esc=v=>String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const $=id=>document.getElementById(id);let supa=null;
 function md(v){let s=esc(v||'');s=s.replace(/^### (.*)$/gm,'<h3>$1</h3>').replace(/^## (.*)$/gm,'<h2>$1</h2>').replace(/^# (.*)$/gm,'<h1>$1</h1>').replace(/^&gt; (.*)$/gm,'<blockquote>$1</blockquote>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\*([^*]+)\*/g,'<em>$1</em>').replace(/\n{2,}/g,'</p><p>').replace(/\n/g,'<br>');return '<p>'+s+'</p>';}
-function styleSafe(v){return String(v||'').replace(/[;{}<>]/g,'').trim();}
-function cssFontFamily(v){let raw=styleSafe(v||'');if(!raw)return 'inherit';return raw.split(',').map(part=>{let p=part.trim();if(!p)return '';if(/^var\(/.test(p)||/^['"].*['"]$/.test(p))return p;if(/\s/.test(p))return '"'+p.replace(/["\\]/g,'')+'"';return p;}).filter(Boolean).join(', ');}
-function fontStyle(v){return 'font-family:'+cssFontFamily(v)+';';}
+function styleSafe(v){
+  return String(v||'').replace(/[;{}<>]/g,'').trim();
+}
+
+function cssFontFamily(v){
+  const raw=styleSafe(v||'');
+  if(!raw)return 'inherit';
+
+  const genericFamilies=new Set([
+    'serif',
+    'sans-serif',
+    'monospace',
+    'cursive',
+    'fantasy',
+    'system-ui',
+    'ui-serif',
+    'ui-sans-serif',
+    'ui-monospace',
+    'emoji',
+    'math',
+    'fangsong'
+  ]);
+
+  return raw.split(',').map(part=>{
+    let p=part.trim();
+    if(!p)return '';
+    if(/^var\(/i.test(p))return p;
+
+    p=p.replace(/^['"]|['"]$/g,'').replace(/['"\\]/g,'').trim();
+    if(!p)return '';
+
+    if(genericFamilies.has(p.toLowerCase()))return p;
+    return /\s/.test(p)?"'"+p+"'":p;
+  }).filter(Boolean).join(', ');
+}
+
+function fontStyle(v){
+  return 'font-family:'+cssFontFamily(v)+';';
+}
 function cleanCustomCss(v){
   return String(v||'')
     .replace(/<\/?style[^>]*>/gi,'')
