@@ -15,6 +15,15 @@ function imageUploadMessage(el,msg,kind=''){
   el.className='image-upload-status '+(kind||'');
 }
 
+function imageUploadLabel(kind){
+  if(kind==='bottom-banner')return 'bottom banner';
+  return String(kind||'image').replace(/-/g,' ');
+}
+
+function imageUploadPrepareKind(kind){
+  return kind&&String(kind).includes('banner')?'banner':kind;
+}
+
 function fileSizeLabel(bytes){
   const n=Number(bytes)||0;
   if(n<1024)return n+' B';
@@ -93,7 +102,7 @@ async function preparePersonaImage(file,kind){
   }
 
   const img=await loadImageFromFile(file);
-  const limits=kind==='banner'?{w:1600,h:620}:{w:512,h:512};
+  const limits=imageUploadPrepareKind(kind)==='banner'?{w:1600,h:620}:{w:512,h:512};
   const scale=Math.min(1,limits.w/img.naturalWidth,limits.h/img.naturalHeight);
   const w=Math.max(1,Math.round(img.naturalWidth*scale));
   const h=Math.max(1,Math.round(img.naturalHeight*scale));
@@ -119,6 +128,7 @@ async function uploadPersonaImage(kind,file,input,status,button){
   if(!state.user?.id)throw new Error('You must be signed in to upload images.');
   if(!supa?.storage)throw new Error('Supabase Storage is not available.');
 
+  const label=imageUploadLabel(kind);
   button.disabled=true;
   imageUploadMessage(status,'preparing image…');
 
@@ -134,7 +144,7 @@ async function uploadPersonaImage(kind,file,input,status,button){
       contentType:prepared.contentType,
       upsert:false
     }),
-    kind+' image upload',
+    label+' image upload',
     45000
   );
 
@@ -147,17 +157,18 @@ async function uploadPersonaImage(kind,file,input,status,button){
   input.dispatchEvent(new Event('input',{bubbles:true}));
   updatePersonaPreview();
   imageUploadMessage(status,'uploaded ✓','ok');
-  toast(kind+' uploaded');
+  toast(label+' uploaded');
 }
 
 function installPersonaImageUploader(kind,inputId){
   const input=$(inputId);
   if(!input||input.dataset.uploadReady)return;
   input.dataset.uploadReady='1';
+  const label=imageUploadLabel(kind);
 
   const controls=document.createElement('div');
   controls.className='image-upload-controls';
-  controls.innerHTML='<input class="image-upload-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/*"><button type="button" class="ghost image-upload-pick">upload '+kind+'</button><button type="button" class="ghost image-upload-clear">clear</button><span class="image-upload-status"></span>';
+  controls.innerHTML='<input class="image-upload-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/*"><button type="button" class="ghost image-upload-pick">upload '+label+'</button><button type="button" class="ghost image-upload-clear">clear</button><span class="image-upload-status"></span>';
 
   input.insertAdjacentElement('afterend',controls);
 
@@ -181,19 +192,20 @@ function installPersonaImageUploader(kind,inputId){
     try{
       await uploadPersonaImage(kind,file,input,status,pick);
     }catch(e){
-      console.error(kind+' upload failed',e);
+      console.error(label+' upload failed',e);
       imageUploadMessage(status,'upload failed: '+(e.message||String(e)),'err');
-      toast(kind+' upload failed','err');
+      toast(label+' upload failed','err');
     }finally{
       pick.disabled=false;
       fileInput.value='';
     }
-  },kind+' image upload');
+  },label+' image upload');
 }
 
 function enhancePersonaImageUploads(){
   installPersonaImageUploader('avatar','pe-avatar');
   installPersonaImageUploader('banner','pe-banner');
+  installPersonaImageUploader('bottom-banner','pe-bottom-banner');
 }
 
 const gayaRenderPersonaEditorWithUploads=renderPersonaEditor;
