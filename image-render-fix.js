@@ -23,18 +23,43 @@ function gayaLayoutMatch(css){
   return String(css||'').match(/\/\* GAYA_LAYOUT_START side=(left|right|none) banner=(top|bottom|both|none) \*\//i);
 }
 
-function gayaLayoutSide(css){
-  const match=gayaLayoutMatch(css);
-  return match?match[1]:'left';
+function normalizeGayaSide(value){
+  return ['left','right','none'].includes(value)?value:'left';
 }
 
-function gayaBannerMode(css){
-  const match=gayaLayoutMatch(css);
-  return match?match[2]:'top';
+function normalizeGayaBanner(value){
+  return ['top','bottom','both','none'].includes(value)?value:'top';
 }
 
-function isGaiaPortraitLayout(css){
-  return !!gayaLayoutMatch(css);
+function stripGayaLayoutCss(css){
+  return String(css||'').replace(/\/\* GAYA_LAYOUT_START[\s\S]*?GAYA_LAYOUT_END \*\//g,'').trim();
+}
+
+function gayaLayoutSide(perOrCss){
+  if(perOrCss&&typeof perOrCss==='object'){
+    const match=gayaLayoutMatch(perOrCss.custom_css);
+    return normalizeGayaSide(perOrCss.layout_side||match?.[1]||'left');
+  }
+  const match=gayaLayoutMatch(perOrCss);
+  return normalizeGayaSide(match?.[1]||'left');
+}
+
+function gayaBannerMode(perOrCss){
+  if(perOrCss&&typeof perOrCss==='object'){
+    const match=gayaLayoutMatch(perOrCss.custom_css);
+    return normalizeGayaBanner(perOrCss.banner_position||match?.[2]||'top');
+  }
+  const match=gayaLayoutMatch(perOrCss);
+  return normalizeGayaBanner(match?.[2]||'top');
+}
+
+function isGaiaPortraitLayout(perOrCss){
+  if(perOrCss&&typeof perOrCss==='object'){
+    if(perOrCss.gaia_layout_enabled===true)return true;
+    if(perOrCss.gaia_layout_enabled===false)return false;
+    return !!gayaLayoutMatch(perOrCss.custom_css);
+  }
+  return !!gayaLayoutMatch(perOrCss);
 }
 
 function gayaBanners(url,mode){
@@ -73,13 +98,13 @@ renderPosts=function(){
   list.innerHTML=state.posts.map((p,i)=>{
     const per=p.persona||{};
     const f=fontStyle(per.font_family);
-    const gaia=isGaiaPortraitLayout(per.custom_css);
-    const side=gayaLayoutSide(per.custom_css);
-    const bannerMode=gayaBannerMode(per.custom_css);
+    const gaia=isGaiaPortraitLayout(per);
+    const side=gayaLayoutSide(per);
+    const bannerMode=gayaBannerMode(per);
     const banners=gayaBanners(per.banner_url,bannerMode);
     const scopeId=cssScopeId(per.id||p.persona_id||('post-'+i));
     const scope='[data-persona-style="'+scopeId+'"]';
-    const custom=customCssTag(per.custom_css,scope);
+    const custom=customCssTag(stripGayaLayoutCss(per.custom_css),scope);
     const headAvatar=gaia?'':gayaImageHtml(per,'avatar small-avatar');
     const portrait=gaia?gayaPortraitHtml(per,side):'';
 
@@ -105,13 +130,13 @@ updatePersonaPreview=function(){
 
   const p=readPersonaForm();
   const f=fontStyle(p.font_family);
-  const gaia=isGaiaPortraitLayout(p.custom_css);
-  const side=gayaLayoutSide(p.custom_css);
-  const bannerMode=gayaBannerMode(p.custom_css);
+  const gaia=isGaiaPortraitLayout(p);
+  const side=gayaLayoutSide(p);
+  const bannerMode=gayaBannerMode(p);
   const banners=gayaBanners(p.banner_url,bannerMode);
   const scopeId='persona-preview';
   const scope='[data-persona-style="'+scopeId+'"]';
-  const custom=customCssTag(p.custom_css,scope);
+  const custom=customCssTag(stripGayaLayoutCss(p.custom_css),scope);
   const headAvatar=gaia?'':gayaImageHtml(p,'avatar small-avatar');
   const portrait=gaia?gayaPortraitHtml(p,side):'';
 
