@@ -142,8 +142,10 @@
   }
 
   function enhanceAllFormattingTargets(){
-    installToolbar(document.getElementById('body'));
-    installToolbar(document.getElementById('edit-post-body'));
+  installToolbar(document.getElementById('body'));
+  installToolbar(document.getElementById('edit-post-body'));
+  installToolbar(document.getElementById('pe-signature'));
+}
   }
 
   if(typeof renderComposer==='function'){
