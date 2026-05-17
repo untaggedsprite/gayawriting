@@ -135,17 +135,16 @@
 
     const hint=document.createElement('span');
     hint.className='fmt-hint';
-    hint.textContent='select text, then click';
+    hint.textContent=textarea.id==='pe-signature'?'styles your signature':'select text, then click';
     bar.appendChild(hint);
 
     textarea.parentNode.insertBefore(bar,textarea);
   }
 
   function enhanceAllFormattingTargets(){
-  installToolbar(document.getElementById('body'));
-  installToolbar(document.getElementById('edit-post-body'));
-  installToolbar(document.getElementById('pe-signature'));
-}
+    installToolbar(document.getElementById('body'));
+    installToolbar(document.getElementById('edit-post-body'));
+    installToolbar(document.getElementById('pe-signature'));
   }
 
   if(typeof renderComposer==='function'){
