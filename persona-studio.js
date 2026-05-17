@@ -126,11 +126,39 @@ function personaFontOptions(current){
   return html;
 }
 
+function firstFontName(stack){
+  return String(stack||'').split(',')[0].trim().replace(/^['"]|['"]$/g,'');
+}
+
+function applyFontStack(el,stack){
+  if(!el)return;
+  if(typeof cssFontFamily==='function')el.style.fontFamily=cssFontFamily(stack||'inherit');
+  else el.style.fontFamily=stack||'inherit';
+}
+
+function loadPersonaFont(stack){
+  if(!document.fonts||!stack)return Promise.resolve();
+  const first=firstFontName(stack);
+  if(!first||['Georgia','Arial','Courier New','Lucida Console','serif','sans-serif','monospace'].includes(first))return Promise.resolve();
+  return document.fonts.load('400 18px "'+first.replace(/["\\]/g,'')+'"').then(()=>document.fonts.ready).catch(e=>console.warn('font load skipped',first,e));
+}
+
+function refreshPersonaFontPreview(){
+  const select=$('pe-font');
+  const stack=select?.value||'';
+  updatePersonaFontSample();
+  updatePersonaPreview();
+  loadPersonaFont(stack).then(()=>{
+    updatePersonaFontSample();
+    updatePersonaPreview();
+  });
+}
+
 function updatePersonaFontSample(){
   const select=$('pe-font');
   const sample=$('persona-font-sample');
   if(!select||!sample)return;
-  sample.style.fontFamily=select.value||'inherit';
+  applyFontStack(sample,select.value||'inherit');
 }
 
 function setPersonaField(id,value){
@@ -155,8 +183,7 @@ function applyPersonaPreset(id){
   setPersonaColor('border',preset.border_color);
   setPersonaField('pe-font',preset.font_family);
   setPersonaField('pe-css',preset.custom_css||'');
-  updatePersonaFontSample();
-  updatePersonaPreview();
+  refreshPersonaFontPreview();
   setStatus('ok','Preset applied: '+preset.name+'. Save when it looks right.');
 }
 
@@ -189,8 +216,8 @@ renderPersonaEditor=function(){
   ['name','avatar','banner','bg-c','bg-t','text-c','text-t','accent-c','accent-t','border-c','border-t','font','signature','css'].forEach(key=>{
     const el=$('pe-'+key);
     if(el){
-      el.oninput=()=>{if(key==='font')updatePersonaFontSample();updatePersonaPreview();};
-      if(el.tagName==='SELECT')el.onchange=()=>{updatePersonaFontSample();updatePersonaPreview();};
+      el.oninput=()=>{key==='font'?refreshPersonaFontPreview():updatePersonaPreview();};
+      if(el.tagName==='SELECT')el.onchange=refreshPersonaFontPreview;
     }
   });
 
@@ -239,6 +266,5 @@ renderPersonaEditor=function(){
     renderPersonas();
   },'delete persona');
 
-  updatePersonaFontSample();
-  updatePersonaPreview();
+  refreshPersonaFontPreview();
 };
