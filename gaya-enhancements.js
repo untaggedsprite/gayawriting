@@ -161,7 +161,7 @@
       const head=node.querySelector('.post-head');
       if(!head)return;
       const btn=document.createElement('button');
-      btn.className='ghost edit-post';
+      btn.className='thread-tool edit-post';
       btn.type='button';
       btn.textContent='edit reply';
       btn.onclick=e=>{e.preventDefault();e.stopPropagation();renderEditPostModal(post);};
@@ -186,7 +186,7 @@
       if(thread&&canEditThread(thread)&&header&&!document.getElementById('edit-thread')){
         const btn=document.createElement('button');
         btn.id='edit-thread';
-        btn.className='ghost';
+        btn.className='thread-tool';
         btn.type='button';
         btn.textContent='edit thread';
         btn.onclick=()=>renderEditThreadModal(thread);
