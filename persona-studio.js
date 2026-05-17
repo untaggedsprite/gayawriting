@@ -101,7 +101,7 @@ const PERSONA_FONT_OPTIONS=[
   ['clean readable','Literata, Georgia, serif'],
   ['archive serif','EB Garamond, Georgia, serif'],
   ['gothic letter','Cormorant Garamond, Georgia, serif'],
-  ['soft readable sans','Atkinson Hyperlegible, Arial, sans-serif'],
+  ['classic sans','Atkinson Hyperlegible, Arial, sans-serif'],
   ['typewriter','Special Elite, Courier New, monospace'],
   ['console','Lucida Console, Courier New, monospace'],
   ['classic Georgia','Georgia, serif'],
@@ -136,21 +136,36 @@ function applyFontStack(el,stack){
   else el.style.fontFamily=stack||'inherit';
 }
 
+function setPersonaFontStatus(msg,kind){
+  const el=$('persona-font-status');
+  if(!el)return;
+  el.textContent=msg||'';
+  el.className='muted preview-note persona-font-status '+(kind||'');
+}
+
 function loadPersonaFont(stack){
-  if(!document.fonts||!stack)return Promise.resolve();
+  if(!document.fonts||!stack)return Promise.resolve(false);
   const first=firstFontName(stack);
-  if(!first||['Georgia','Arial','Courier New','Lucida Console','serif','sans-serif','monospace'].includes(first))return Promise.resolve();
-  return document.fonts.load('400 18px "'+first.replace(/["\\]/g,'')+'"').then(()=>document.fonts.ready).catch(e=>console.warn('font load skipped',first,e));
+  if(!first||['Georgia','Arial','Courier New','Lucida Console','serif','sans-serif','monospace'].includes(first))return Promise.resolve(true);
+  const clean=first.replace(/["\\]/g,'');
+  return document.fonts.load('400 18px "'+clean+'"')
+    .then(fonts=>document.fonts.ready.then(()=>fonts&&fonts.length>0))
+    .catch(e=>{console.warn('font load skipped',clean,e);return false;});
 }
 
 function refreshPersonaFontPreview(){
   const select=$('pe-font');
   const stack=select?.value||'';
+  const first=firstFontName(stack);
   updatePersonaFontSample();
   updatePersonaPreview();
-  loadPersonaFont(stack).then(()=>{
+  setPersonaFontStatus(first?'loading '+first+'…':'','');
+  loadPersonaFont(stack).then(ok=>{
     updatePersonaFontSample();
     updatePersonaPreview();
+    if(!first)setPersonaFontStatus('', '');
+    else if(ok)setPersonaFontStatus('font loaded: '+first,'ok');
+    else setPersonaFontStatus('font did not load; using fallback','err');
   });
 }
 
@@ -204,7 +219,7 @@ renderPersonaEditor=function(){
       colorField('text','text',p.text_color)+
       colorField('accent','accent',p.accent_color)+
       colorField('border','border',p.border_color)+
-      '<div class="field full"><label>font style</label><select id="pe-font" class="persona-font-select">'+personaFontOptions(p.font_family||'')+'</select><div id="persona-font-sample" class="persona-font-sample">A little field mouse writes beautifully in the margins.</div><p class="muted preview-note">Friendly names here. The app still saves the real font stack underneath.</p></div>'+ 
+      '<div class="field full"><label>font style</label><select id="pe-font" class="persona-font-select">'+personaFontOptions(p.font_family||'')+'</select><div id="persona-font-sample" class="persona-font-sample">A little field mouse writes beautifully in the margins.</div><p id="persona-font-status" class="muted preview-note persona-font-status"></p><p class="muted preview-note">Friendly names here. The app still saves the real font stack underneath.</p></div>'+ 
       '<div class="field full"><label>signature markdown</label><textarea id="pe-signature">'+esc(p.signature||'')+'</textarea></div>'+ 
       '<div class="field full"><details class="advanced-css"><summary>Advanced custom CSS</summary><label for="pe-css">Custom CSS notes</label><textarea id="pe-css" placeholder="& { border-radius: 28px; }">'+esc(p.custom_css||'')+'</textarea><p class="muted preview-note">Custom CSS is scoped to this persona’s posts. Use & for the post card itself.</p></details></div>'+ 
     '</div>'+ 
