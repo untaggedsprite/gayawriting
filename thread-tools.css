@@ -1,0 +1,42 @@
+/* Quiet utility controls for thread/reply management */
+.thread-tool{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:0;
+  padding:.24rem .58rem;
+  border-radius:999px;
+  border:1px solid color-mix(in srgb,currentColor 32%,transparent);
+  background:color-mix(in srgb,currentColor 6%,transparent);
+  color:color-mix(in srgb,currentColor 70%,transparent);
+  font:inherit;
+  font-size:.68rem;
+  line-height:1.1;
+  letter-spacing:.02em;
+  text-transform:lowercase;
+  box-shadow:none;
+  opacity:.72;
+  cursor:pointer;
+}
+
+.thread-tool:hover,
+.thread-tool:focus-visible{
+  background:color-mix(in srgb,currentColor 12%,transparent);
+  color:currentColor;
+  border-color:color-mix(in srgb,currentColor 48%,transparent);
+  opacity:.95;
+  transform:none;
+  box-shadow:none;
+}
+
+.post-head .thread-tool.edit-post{
+  margin-left:auto;
+}
+
+#main>.header .thread-tool#edit-thread{
+  margin-left:auto;
+}
+
+.post.gaia-post .post-head .thread-tool.edit-post{
+  align-self:center;
+}
