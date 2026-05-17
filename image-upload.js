@@ -5,11 +5,33 @@
 */
 
 const GAYA_IMAGE_BUCKET='gaya-images';
+const GAYA_MAX_GIF_BYTES=10*1024*1024;
+const GAYA_MAX_SOURCE_IMAGE_BYTES=24*1024*1024;
+const GAYA_MAX_PREPARED_IMAGE_BYTES=8*1024*1024;
 
 function imageUploadMessage(el,msg,kind=''){
   if(!el)return;
   el.textContent=msg||'';
   el.className='image-upload-status '+(kind||'');
+}
+
+function fileSizeLabel(bytes){
+  const n=Number(bytes)||0;
+  if(n<1024)return n+' B';
+  if(n<1024*1024)return (n/1024).toFixed(n<10*1024?1:0)+' KB';
+  return (n/(1024*1024)).toFixed(n<10*1024*1024?1:0)+' MB';
+}
+
+function enforceImageUploadLimits(file){
+  if(!file||!file.type||!file.type.startsWith('image/'))throw new Error('Please choose an image file.');
+
+  if(file.type==='image/gif'&&file.size>GAYA_MAX_GIF_BYTES){
+    throw new Error('Animated GIFs stay animated, but they need to be under '+fileSizeLabel(GAYA_MAX_GIF_BYTES)+'. This one is '+fileSizeLabel(file.size)+'.');
+  }
+
+  if(file.size>GAYA_MAX_SOURCE_IMAGE_BYTES){
+    throw new Error('That image is '+fileSizeLabel(file.size)+'. Please keep uploads under '+fileSizeLabel(GAYA_MAX_SOURCE_IMAGE_BYTES)+'.');
+  }
 }
 
 function safeImageFileName(name){
@@ -44,8 +66,26 @@ function loadImageFromFile(file){
   });
 }
 
+async function compressCanvas(canvas){
+  const webpQualities=[0.86,0.76,0.66,0.56];
+  for(const quality of webpQualities){
+    const blob=await blobFromCanvas(canvas,'image/webp',quality);
+    if(blob&&blob.size<=GAYA_MAX_PREPARED_IMAGE_BYTES)return {blob,ext:'webp',contentType:'image/webp'};
+    if(blob&&quality===webpQualities[webpQualities.length-1])return {blob,ext:'webp',contentType:'image/webp'};
+  }
+
+  const jpgQualities=[0.88,0.78,0.68];
+  for(const quality of jpgQualities){
+    const blob=await blobFromCanvas(canvas,'image/jpeg',quality);
+    if(blob&&blob.size<=GAYA_MAX_PREPARED_IMAGE_BYTES)return {blob,ext:'jpg',contentType:'image/jpeg'};
+    if(blob&&quality===jpgQualities[jpgQualities.length-1])return {blob,ext:'jpg',contentType:'image/jpeg'};
+  }
+
+  throw new Error('Could not compress image.');
+}
+
 async function preparePersonaImage(file,kind){
-  if(!file||!file.type||!file.type.startsWith('image/'))throw new Error('Please choose an image file.');
+  enforceImageUploadLimits(file);
 
   // Keep animated GIFs intact. Canvas would flatten them into one sad little frame.
   if(file.type==='image/gif'){
@@ -65,18 +105,14 @@ async function preparePersonaImage(file,kind){
   ctx.imageSmoothingQuality='high';
   ctx.drawImage(img,0,0,w,h);
 
-  let blob=await blobFromCanvas(canvas,'image/webp',0.86);
-  let ext='webp';
-  let contentType='image/webp';
+  const prepared=await compressCanvas(canvas);
+  if(!prepared.blob)throw new Error('Could not compress image.');
 
-  if(!blob){
-    blob=await blobFromCanvas(canvas,'image/jpeg',0.88);
-    ext='jpg';
-    contentType='image/jpeg';
+  if(prepared.blob.size>GAYA_MAX_PREPARED_IMAGE_BYTES){
+    throw new Error('The resized image is still '+fileSizeLabel(prepared.blob.size)+'. Try a smaller or less detailed image.');
   }
 
-  if(!blob)throw new Error('Could not compress image.');
-  return {blob,ext,contentType};
+  return prepared;
 }
 
 async function uploadPersonaImage(kind,file,input,status,button){
@@ -90,7 +126,7 @@ async function uploadPersonaImage(kind,file,input,status,button){
   const stamp=new Date().toISOString().replace(/[^0-9]/g,'').slice(0,14);
   const path=state.user.id+'/'+kind+'-'+stamp+'-'+safeImageFileName(file.name)+'.'+prepared.ext;
 
-  imageUploadMessage(status,'uploading…');
+  imageUploadMessage(status,'uploading '+fileSizeLabel(prepared.blob.size)+'…');
 
   const {error}=await withTimeout(
     supa.storage.from(GAYA_IMAGE_BUCKET).upload(path,prepared.blob,{
@@ -130,6 +166,7 @@ function installPersonaImageUploader(kind,inputId){
   const clear=controls.querySelector('.image-upload-clear');
   const status=controls.querySelector('.image-upload-status');
 
+  pick.title='PNG/JPG/WebP are resized automatically. GIFs stay animated under '+fileSizeLabel(GAYA_MAX_GIF_BYTES)+'.';
   pick.onclick=()=>fileInput.click();
   clear.onclick=()=>{
     input.value='';
