@@ -113,6 +113,49 @@
   border:1px solid rgba(47,42,39,.18);
 }
 
+.persona-help details{
+  padding:.85rem 1rem;
+  border:1px solid rgba(168,144,107,.28);
+  border-radius:18px;
+  background:linear-gradient(180deg,rgba(255,250,241,.68),rgba(239,229,211,.34));
+  box-shadow:0 8px 22px rgba(47,42,39,.045);
+}
+
+.persona-help summary{
+  cursor:pointer;
+  color:var(--ink);
+  font-family:var(--fell);
+  font-size:.86rem;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+
+.persona-help-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:.65rem .9rem;
+  margin-top:.75rem;
+}
+
+.persona-help p{
+  margin:0;
+  color:rgba(64,55,49,.82);
+  font-size:.86rem;
+  line-height:1.42;
+}
+
+.persona-help strong{
+  color:var(--ink);
+}
+
+.persona-help code{
+  padding:.05rem .28rem;
+  border:1px solid rgba(168,144,107,.25);
+  border-radius:7px;
+  background:rgba(255,253,247,.62);
+  font-size:.82em;
+}
+
 .persona-font-select{
   width:100%;
 }
