@@ -35,7 +35,7 @@ const PERSONA_STYLE_PRESETS=[
     text_color:'#a2e4ff',
     accent_color:'#9792bc',
     border_color:'#383838',
-    font_family:'Courier New, monospace',
+    font_family:'Special Elite, Courier New, monospace',
     custom_css:'& {\n  box-shadow: 0 0 0 1px rgba(151,146,188,.30) inset, 0 18px 54px rgba(0,0,0,.18);\n}\n\n.post-body {\n  text-shadow: 0 0 10px rgba(162,228,255,.14);\n}'
   },
   {
@@ -90,7 +90,7 @@ const PERSONA_STYLE_PRESETS=[
     text_color:'#26211d',
     accent_color:'#7b8c70',
     border_color:'#b9aa91',
-    font_family:'Arial, sans-serif',
+    font_family:'Atkinson Hyperlegible, Arial, sans-serif',
     custom_css:'.post-head {\n  border-bottom-width: 2px;\n}\n\n.post-body {\n  line-height: 1.65;\n}'
   }
 ];
@@ -99,8 +99,11 @@ const PERSONA_FONT_OPTIONS=[
   ['storybook serif','Sorts Mill Goudy, Georgia, serif'],
   ['old book','IM Fell English, Sorts Mill Goudy, Georgia, serif'],
   ['clean readable','Literata, Georgia, serif'],
-  ['typewriter','Courier New, monospace'],
-  ['terminal','Fixedsys, Fixedsys Excelsior, Lucida Console, Courier New, monospace'],
+  ['archive serif','EB Garamond, Georgia, serif'],
+  ['gothic letter','Cormorant Garamond, Georgia, serif'],
+  ['soft readable sans','Atkinson Hyperlegible, Arial, sans-serif'],
+  ['typewriter','Special Elite, Courier New, monospace'],
+  ['console','Lucida Console, Courier New, monospace'],
   ['classic Georgia','Georgia, serif'],
   ['plain sans','Arial, sans-serif']
 ];
@@ -121,6 +124,13 @@ function personaFontOptions(current){
   let html=known||!current?'':'<option value="'+esc(current)+'" selected>current custom font</option>';
   html+=PERSONA_FONT_OPTIONS.map(([label,value])=>'<option value="'+esc(value)+'" '+(value===current?'selected':'')+'>'+esc(label)+'</option>').join('');
   return html;
+}
+
+function updatePersonaFontSample(){
+  const select=$('pe-font');
+  const sample=$('persona-font-sample');
+  if(!select||!sample)return;
+  sample.style.fontFamily=select.value||'inherit';
 }
 
 function setPersonaField(id,value){
@@ -145,6 +155,7 @@ function applyPersonaPreset(id){
   setPersonaColor('border',preset.border_color);
   setPersonaField('pe-font',preset.font_family);
   setPersonaField('pe-css',preset.custom_css||'');
+  updatePersonaFontSample();
   updatePersonaPreview();
   setStatus('ok','Preset applied: '+preset.name+'. Save when it looks right.');
 }
@@ -166,7 +177,7 @@ renderPersonaEditor=function(){
       colorField('text','text',p.text_color)+
       colorField('accent','accent',p.accent_color)+
       colorField('border','border',p.border_color)+
-      '<div class="field full"><label>font style</label><select id="pe-font" class="persona-font-select">'+personaFontOptions(p.font_family||'')+'</select><p class="muted preview-note">Friendly names here. The app still saves the real font stack underneath.</p></div>'+ 
+      '<div class="field full"><label>font style</label><select id="pe-font" class="persona-font-select">'+personaFontOptions(p.font_family||'')+'</select><div id="persona-font-sample" class="persona-font-sample">A little field mouse writes beautifully in the margins.</div><p class="muted preview-note">Friendly names here. The app still saves the real font stack underneath.</p></div>'+ 
       '<div class="field full"><label>signature markdown</label><textarea id="pe-signature">'+esc(p.signature||'')+'</textarea></div>'+ 
       '<div class="field full"><details class="advanced-css"><summary>Advanced custom CSS</summary><label for="pe-css">Custom CSS notes</label><textarea id="pe-css" placeholder="& { border-radius: 28px; }">'+esc(p.custom_css||'')+'</textarea><p class="muted preview-note">Custom CSS is scoped to this persona’s posts. Use & for the post card itself.</p></details></div>'+ 
     '</div>'+ 
@@ -177,8 +188,10 @@ renderPersonaEditor=function(){
 
   ['name','avatar','banner','bg-c','bg-t','text-c','text-t','accent-c','accent-t','border-c','border-t','font','signature','css'].forEach(key=>{
     const el=$('pe-'+key);
-    if(el)el.oninput=updatePersonaPreview;
-    if(el&&el.tagName==='SELECT')el.onchange=updatePersonaPreview;
+    if(el){
+      el.oninput=()=>{if(key==='font')updatePersonaFontSample();updatePersonaPreview();};
+      if(el.tagName==='SELECT')el.onchange=()=>{updatePersonaFontSample();updatePersonaPreview();};
+    }
   });
 
   document.querySelectorAll('.persona-preset[data-preset]').forEach(btn=>{
@@ -226,5 +239,6 @@ renderPersonaEditor=function(){
     renderPersonas();
   },'delete persona');
 
+  updatePersonaFontSample();
   updatePersonaPreview();
 };
