@@ -213,8 +213,9 @@ renderPersonaEditor=function(){
     '<div class="editor-grid mt">'+
       '<div class="field full"><label>name</label><input id="pe-name" value="'+esc(p.name||'')+'"></div>'+ 
       '<div class="field full preset-field"><label>pick a vibe</label><p class="muted preview-note">Presets change colors, font, and advanced CSS only. Your name, pictures, and signature stay put.</p><div class="persona-preset-grid">'+personaPresetButtons()+'</div></div>'+ 
+      '<div class="field"><label>top banner url</label><input id="pe-banner" value="'+esc(p.banner_url||'')+'"></div>'+ 
+      '<div class="field"><label>bottom banner url</label><input id="pe-bottom-banner" value="'+esc(p.bottom_banner_url||'')+'"><p class="muted preview-note">Optional. If empty, bottom banner falls back to the top banner.</p></div>'+ 
       '<div class="field"><label>avatar url</label><input id="pe-avatar" value="'+esc(p.avatar_url||'')+'"></div>'+ 
-      '<div class="field"><label>banner url</label><input id="pe-banner" value="'+esc(p.banner_url||'')+'"></div>'+ 
       colorField('bg','background',p.bg_color)+
       colorField('text','text',p.text_color)+
       colorField('accent','accent',p.accent_color)+
@@ -228,7 +229,7 @@ renderPersonaEditor=function(){
     '<div class="mt2 persona-preview-wrap"><h3>preview</h3><div id="persona-preview"></div></div>'+ 
   '</div>';
 
-  ['name','avatar','banner','bg-c','bg-t','text-c','text-t','accent-c','accent-t','border-c','border-t','font','signature','css'].forEach(key=>{
+  ['name','avatar','banner','bottom-banner','bg-c','bg-t','text-c','text-t','accent-c','accent-t','border-c','border-t','font','signature','css'].forEach(key=>{
     const el=$('pe-'+key);
     if(el){
       el.oninput=()=>{key==='font'?refreshPersonaFontPreview():updatePersonaPreview();};
