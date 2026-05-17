@@ -62,12 +62,13 @@ function isGaiaPortraitLayout(perOrCss){
   return !!gayaLayoutMatch(perOrCss);
 }
 
-function gayaBanners(url,mode){
-  if(!url||mode==='none')return {top:'',bottom:''};
-  const style=esc(gayaBgStyle(url));
+function gayaBanners(topUrl,mode,bottomUrl){
+  if(mode==='none')return {top:'',bottom:''};
+  const topStyle=topUrl?esc(gayaBgStyle(topUrl)):'';
+  const bottomStyle=(bottomUrl||topUrl)?esc(gayaBgStyle(bottomUrl||topUrl)):'';
   return {
-    top:(mode==='top'||mode==='both')?'<div class="banner top-banner" style="'+style+'"></div>':'',
-    bottom:(mode==='bottom'||mode==='both')?'<div class="banner bottom-banner" style="'+style+'"></div>':''
+    top:(topStyle&&(mode==='top'||mode==='both'))?'<div class="banner top-banner" style="'+topStyle+'"></div>':'',
+    bottom:(bottomStyle&&(mode==='bottom'||mode==='both'))?'<div class="banner bottom-banner" style="'+bottomStyle+'"></div>':''
   };
 }
 
@@ -101,7 +102,7 @@ renderPosts=function(){
     const gaia=isGaiaPortraitLayout(per);
     const side=gayaLayoutSide(per);
     const bannerMode=gayaBannerMode(per);
-    const banners=gayaBanners(per.banner_url,bannerMode);
+    const banners=gayaBanners(per.banner_url,bannerMode,per.bottom_banner_url);
     const scopeId=cssScopeId(per.id||p.persona_id||('post-'+i));
     const scope='[data-persona-style="'+scopeId+'"]';
     const custom=customCssTag(stripGayaLayoutCss(per.custom_css),scope);
@@ -133,7 +134,7 @@ updatePersonaPreview=function(){
   const gaia=isGaiaPortraitLayout(p);
   const side=gayaLayoutSide(p);
   const bannerMode=gayaBannerMode(p);
-  const banners=gayaBanners(p.banner_url,bannerMode);
+  const banners=gayaBanners(p.banner_url,bannerMode,p.bottom_banner_url);
   const scopeId='persona-preview';
   const scope='[data-persona-style="'+scopeId+'"]';
   const custom=customCssTag(stripGayaLayoutCss(p.custom_css),scope);
