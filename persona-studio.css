@@ -158,6 +158,31 @@
 
 .persona-font-select{
   width:100%;
+  min-height:42px;
+  padding:.55rem .8rem;
+  color:var(--ink);
+  background:rgba(255,253,247,.72);
+  border:1px solid rgba(168,144,107,.34);
+  border-radius:14px;
+  font-family:var(--book, Georgia, serif);
+  font-size:.95rem;
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset;
+}
+
+.persona-font-select:focus{
+  outline:2px solid rgba(169,133,77,.22);
+  border-color:rgba(169,133,77,.62);
+}
+
+.persona-font-sample{
+  margin-top:.5rem;
+  padding:.68rem .8rem;
+  color:rgba(64,55,49,.84);
+  background:rgba(255,250,241,.50);
+  border:1px solid rgba(168,144,107,.22);
+  border-radius:16px;
+  font-size:1.08rem;
+  line-height:1.35;
 }
 
 .image-upload-controls{
