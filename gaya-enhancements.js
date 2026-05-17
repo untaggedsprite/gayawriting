@@ -20,6 +20,10 @@
     }
   }
 
+  function currentUserId(){
+    return state.user&&state.user.id?String(state.user.id):'';
+  }
+
   function catchUtilityError(label, error){
     console.error(label, error);
     toast(label+': '+(error&&error.message?error.message:String(error)),'err');
@@ -46,26 +50,56 @@
     });
   }
 
+  function canEditThread(thread){
+    const uid=currentUserId();
+    return !!(thread&&thread.created_by&&uid&&String(thread.created_by)===uid);
+  }
+
   async function updateThreadDetails(id,title,summary){
+    const uid=currentUserId();
+    if(!uid)throw new Error('You must be signed in to edit threads.');
+
     const payload={title,summary:summary||null,updated_at:new Date().toISOString()};
-    const {data,error}=await supa.from('threads').update(payload).eq('id',id).select('*').single();
+    const {data,error}=await supa.from('threads')
+      .update(payload)
+      .eq('id',id)
+      .eq('created_by',uid)
+      .select('*')
+      .maybeSingle();
+
     if(error)throw error;
+    if(!data)throw new Error('Thread not found, or this account does not own it.');
+
     await loadThreads();
     return data;
   }
 
   async function updatePostBody(post,body){
-    const {data,error}=await supa.from('posts').update({body}).eq('id',post.id).select('*, persona:personas(*)').single();
+    const uid=currentUserId();
+    if(!uid)throw new Error('You must be signed in to edit replies.');
+
+    const {data,error}=await supa.from('posts')
+      .update({body})
+      .eq('id',post.id)
+      .eq('author_id',uid)
+      .select('*, persona:personas(*)')
+      .maybeSingle();
+
     if(error)throw error;
+    if(!data)throw new Error('Reply not found, or this account does not own it.');
+
     const index=state.posts.findIndex(p=>String(p.id)===String(post.id));
     if(index>=0)state.posts[index]=data;
     else await loadPosts(state.threadId);
+
     try{await supa.from('threads').update({updated_at:new Date().toISOString()}).eq('id',state.threadId);}catch(_e){}
     return data;
   }
 
   function renderEditThreadModal(thread){
     if(!thread)return toast('thread not found','err');
+    if(!canEditThread(thread))return toast('Only the thread creator can edit this thread.','err');
+
     const existing=document.getElementById('edit-thread-modal');
     if(existing)existing.remove();
     const wrap=document.createElement('div');
@@ -89,13 +123,14 @@
   }
 
   function canEditPost(post){
-    if(!post||!post.id)return false;
-    const uid=state.user&&state.user.id;
-    return !post.author_id || !uid || String(post.author_id)===String(uid);
+    const uid=currentUserId();
+    return !!(post&&post.id&&post.author_id&&uid&&String(post.author_id)===uid);
   }
 
   function renderEditPostModal(post){
     if(!post)return toast('reply not found','err');
+    if(!canEditPost(post))return toast('Only the reply author can edit this reply.','err');
+
     const existing=document.getElementById('edit-post-modal');
     if(existing)existing.remove();
     const name=(post.persona&&post.persona.name)||'reply';
@@ -148,7 +183,7 @@
       originalRenderThread();
       const thread=findCurrentThread();
       const header=document.querySelector('#main .header');
-      if(thread&&header&&!document.getElementById('edit-thread')){
+      if(thread&&canEditThread(thread)&&header&&!document.getElementById('edit-thread')){
         const btn=document.createElement('button');
         btn.id='edit-thread';
         btn.className='ghost';
