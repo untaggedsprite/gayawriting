@@ -144,22 +144,57 @@
   width:100%;
 }
 
-.signature-divider-line{
-  border-top:1px solid currentColor;
+.post{
+  --persona-accent-soft:color-mix(in srgb,var(--persona-accent,currentColor) 16%,transparent);
+  --persona-accent-mid:color-mix(in srgb,var(--persona-accent,currentColor) 42%,transparent);
+}
+
+.post .post-head{
+  border-bottom:1px solid var(--persona-accent-mid,rgba(168,144,107,.28));
+  background:linear-gradient(90deg,var(--persona-accent-soft,rgba(168,144,107,.12)),transparent 68%);
+}
+
+.post .post-name{
+  color:var(--persona-accent,currentColor);
+  text-shadow:0 1px 0 rgba(255,255,255,.18);
+}
+
+.post .post-body blockquote{
+  border-left-color:var(--persona-accent,currentColor);
+  background:var(--persona-accent-soft,rgba(168,144,107,.10));
+}
+
+.post .banner{
+  box-shadow:0 0 0 1px var(--persona-accent-mid,rgba(168,144,107,.24)) inset,0 10px 28px rgba(0,0,0,.06);
+}
+
+.post .top-banner{
+  border-bottom:2px solid var(--persona-accent,currentColor);
+}
+
+.post .bottom-banner{
+  border-top:2px solid var(--persona-accent,currentColor);
+}
+
+.post .avatar,
+.post .small-avatar,
+.post .gaya-portrait{
+  border-color:var(--persona-accent,currentColor);
 }
 
 .signature-block.signature-divider-line,
 .signature-block.signature-divider-dotted{
   margin-top:1.05rem;
   padding-top:.65rem;
+  border-color:var(--persona-accent,currentColor);
 }
 
 .signature-block.signature-divider-line{
-  border-top:1px solid currentColor;
+  border-top:1px solid var(--persona-accent,currentColor);
 }
 
 .signature-block.signature-divider-dotted{
-  border-top:1px dotted currentColor;
+  border-top:1px dotted var(--persona-accent,currentColor);
 }
 
 .signature-block.signature-size-small{
@@ -337,6 +372,10 @@
   content:"✧";
   color:var(--gold);
   font-weight:400;
+}
+
+@supports not (color:color-mix(in srgb, red 10%, transparent)){
+  .post .post-head{background:transparent;}
 }
 
 @media(max-width:860px){
