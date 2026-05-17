@@ -21,7 +21,8 @@ function gayaBgStyle(value){
 
 function personaAccentStyle(per){
   const accent=per?.accent_color||'#a8854f';
-  return '--persona-accent:'+esc(accent)+';';
+  const border=per?.border_color||'#d7c5a5';
+  return '--persona-accent:'+esc(accent)+';--persona-border:'+esc(border)+';';
 }
 
 function gayaLayoutMatch(css){
@@ -128,12 +129,12 @@ function gayaBanners(topUrl,mode,bottomUrl,topFocus,bottomFocus){
 function gayaPortraitStyle(per,side){
   const floatSide=side==='right'?'right':'left';
   const margin=side==='right'?'.25rem 1.65rem 1.05rem 2rem':'.25rem 2rem 1.05rem 1.65rem';
-  return 'display:block !important;float:'+floatSide+';width:345px !important;min-width:345px !important;max-width:48vw !important;height:440px !important;min-height:440px !important;margin:'+margin+';border-radius:12px;border:3px solid var(--persona-accent,currentColor);background-color:'+esc(per.accent_color||'#a8854f')+';'+esc(gayaBgStyle(per.avatar_url))+'background-size:cover;background-position:'+avatarFocusPosition(per.avatar_position)+';box-shadow:0 16px 38px rgba(0,0,0,.18);';
+  return 'display:block !important;float:'+floatSide+';width:345px !important;min-width:345px !important;max-width:48vw !important;height:440px !important;min-height:440px !important;margin:'+margin+';border-radius:12px;border:3px solid var(--persona-border,currentColor);background-color:'+esc(per.accent_color||'#a8854f')+';'+esc(gayaBgStyle(per.avatar_url))+'background-size:cover;background-position:'+avatarFocusPosition(per.avatar_position)+';box-shadow:0 0 0 3px var(--persona-border-soft,rgba(0,0,0,.08)),0 16px 38px rgba(0,0,0,.18);';
 }
 
 function gayaImageHtml(per,className,extraAttrs=''){
   const av=esc(gayaBgStyle(per.avatar_url)+'background-position:'+avatarFocusPosition(per.avatar_position)+';');
-  return '<div class="'+esc(className)+'" '+extraAttrs+' style="background-color:'+esc(per.accent_color||'#a8854f')+';border-color:var(--persona-accent,currentColor);'+av+'"></div>';
+  return '<div class="'+esc(className)+'" '+extraAttrs+' style="background-color:'+esc(per.accent_color||'#a8854f')+';border-color:var(--persona-border,currentColor);'+av+'"></div>';
 }
 
 function gayaPortraitHtml(per,side){
