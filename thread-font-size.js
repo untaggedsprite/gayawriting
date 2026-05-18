@@ -63,7 +63,7 @@
     return normalizeThreadFontSize(thread._gaya_thread_font_size||threadFontSizeFromSummary(raw));
   }
 
-  function fontSizeFieldHtml(current){
+  function fontSizeOptionsHtml(current){
     current=normalizeThreadFontSize(current);
     const options=[
       ['tiny','tiny','very small text'],
@@ -72,9 +72,13 @@
       ['large','large','easier reading size'],
       ['huge','huge','big dramatic text']
     ];
-    return '<div class="mt thread-font-size-field"><label>thread font size</label><select id="thread-font-size">'+options.map(([value,label,note])=>
+    return options.map(([value,label,note])=>
       '<option value="'+esc(value)+'" '+(value===current?'selected':'')+'>'+esc(label)+' — '+esc(note)+'</option>'
-    ).join('')+'</select><p class="muted preview-note">Applies to every post in this thread only.</p></div>';
+    ).join('');
+  }
+
+  function fontSizeFieldHtml(current){
+    return '<div class="mt thread-font-size-field"><label>thread font size</label><select id="thread-font-size">'+fontSizeOptionsHtml(current)+'</select><p class="muted preview-note">Applies to every post in this thread only.</p></div>';
   }
 
   function selectedThreadFontSize(){
@@ -83,8 +87,7 @@
 
   function setThreadFontAttr(node,size){
     if(!node)return;
-    if(size==='standard')node.dataset.threadFontSize='standard';
-    else node.dataset.threadFontSize=size;
+    node.dataset.threadFontSize=normalizeThreadFontSize(size);
   }
 
   function clearThreadFontAttr(node){
@@ -108,6 +111,57 @@
     setThreadFontAttr(main,size);
     setThreadFontAttr(posts,size);
     document.querySelectorAll('#posts .post').forEach(post=>setThreadFontAttr(post,size));
+    renderInlineThreadFontControl();
+  }
+
+  function canCurrentUserEditThread(thread){
+    const uid=state?.user?.id?String(state.user.id):'';
+    return !!(thread&&thread.created_by&&uid&&String(thread.created_by)===uid);
+  }
+
+  async function saveThreadFontSize(size){
+    const thread=currentThread();
+    if(!thread)return toast('thread not found','err');
+    size=normalizeThreadFontSize(size);
+    decorateThreadFontSize();
+
+    try{
+      if(typeof updateThreadDetails!=='function')throw new Error('thread editor is not ready yet');
+      const raw=rawSummaryForThread(thread);
+      const title=thread.title||'';
+      const saved=await updateThreadDetails(thread.id,title,summaryWithThreadFontSize(raw,size));
+      state.threadId=saved.id;
+      await loadThreads();
+      normalizeLoadedThreads();
+      renderThread();
+      toast('thread font size updated');
+    }catch(e){
+      console.error('thread font size update failed',e);
+      toast('thread font size update failed: '+(e.message||String(e)),'err');
+    }
+  }
+
+  function renderInlineThreadFontControl(){
+    const thread=currentThread();
+    const header=document.querySelector('#main .header');
+    if(!header||!thread||document.getElementById('thread-font-size-page'))return;
+    if(!canCurrentUserEditThread(thread))return;
+
+    const wrap=document.createElement('label');
+    wrap.className='thread-tool thread-font-size-page-control';
+    wrap.style.display='inline-flex';
+    wrap.style.alignItems='center';
+    wrap.style.gap='.35rem';
+    wrap.style.marginLeft='.5rem';
+    wrap.innerHTML='<span>text</span><select id="thread-font-size-page" aria-label="thread font size">'+fontSizeOptionsHtml(currentThreadFontSize(thread))+'</select>';
+    const select=wrap.querySelector('select');
+    select.onchange=()=>{
+      const size=normalizeThreadFontSize(select.value);
+      thread._gaya_thread_font_size=size;
+      decorateThreadFontSize();
+      saveThreadFontSize(size);
+    };
+    header.appendChild(wrap);
   }
 
   function enhanceNewThreadModal(){
