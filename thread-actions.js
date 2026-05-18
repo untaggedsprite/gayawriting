@@ -110,7 +110,7 @@
     const close=()=>wrap.remove();
     document.getElementById('edit-thread-close').onclick=close;
     document.getElementById('edit-thread-cancel').onclick=close;
-    wrap.onclick=e=>{if(e.target===wrap)close();};
+    wrap.onclick=e=>{if(e.target===wrap)toast('Use cancel or × to close the editor.','err');};
     setTimeout(()=>document.getElementById('edit-thread-title')?.focus(),0);
     document.getElementById('edit-thread-save').onclick=async()=>{
       const title=document.getElementById('edit-thread-title').value.trim();
@@ -142,7 +142,7 @@
     const close=()=>wrap.remove();
     document.getElementById('edit-post-close').onclick=close;
     document.getElementById('edit-post-cancel').onclick=close;
-    wrap.onclick=e=>{if(e.target===wrap)close();};
+    wrap.onclick=e=>{if(e.target===wrap)toast('Use cancel or × to close the editor.','err');};
     setTimeout(()=>document.getElementById('edit-post-body')?.focus(),0);
     document.getElementById('edit-post-save').onclick=async()=>{
       const body=document.getElementById('edit-post-body').value.trim();
