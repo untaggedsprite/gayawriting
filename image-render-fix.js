@@ -74,7 +74,7 @@ function normalizeFontSizeLocal(value){
 
 function normalizeBannerFitLocal(value){
   if(typeof normalizeBannerFit==='function')return normalizeBannerFit(value);
-  return ['cover','contain','stretch','tile'].includes(value)?value:'cover';
+  return ['cover','contain','fit-width','fit-height','stretch','tile'].includes(value)?value:'cover';
 }
 
 function getPostSizeFromPersonaLocal(per){
@@ -91,7 +91,7 @@ function getFontSizeFromPersonaLocal(per){
 
 function getBannerFitFromPersonaLocal(per){
   if(typeof getBannerFitFromPersona==='function')return getBannerFitFromPersona(per);
-  const match=String(per?.custom_css||'').match(/\/\* GAYA_BANNER_FIT_START fit=(cover|contain|stretch|tile) \*\//i);
+  const match=String(per?.custom_css||'').match(/\/\* GAYA_BANNER_FIT_START fit=(cover|contain|fit-width|fit-height|stretch|tile) \*\//i);
   return normalizeBannerFitLocal(match?.[1]||'cover');
 }
 
