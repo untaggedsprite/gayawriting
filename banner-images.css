@@ -1,38 +1,37 @@
-/* Banners are real images now, but they should behave like decorative strips.
-   They keep their full artwork, while max-height prevents giant portrait-ish
-   uploads from turning into a billboard. */
+/* Banners are real images now, but they should behave like wide decorative strips.
+   Width fills the post; height is capped generously to avoid giant billboard mode. */
 
 .post[data-gaya-layout="1"] img.banner,
 .post[data-gaya-layout="1"][data-post-size] img.banner{
   display:block;
-  width:auto;
+  width:100%;
   max-width:100%;
   height:auto;
-  max-height:var(--gaya-banner-top-max-h,165px);
+  max-height:var(--gaya-banner-top-max-h,260px);
   object-fit:contain;
   background:none;
   border:0;
-  margin:0 auto 1rem;
+  margin:0 0 1rem;
   border-radius:14px 14px 0 0;
 }
 
 .post[data-gaya-layout="1"] img.banner.bottom-banner,
 .post[data-gaya-layout="1"][data-post-size] img.banner.bottom-banner{
   clear:both;
-  width:auto;
+  width:100%;
   max-width:100%;
   height:auto;
-  max-height:var(--gaya-banner-bottom-max-h,135px);
+  max-height:var(--gaya-banner-bottom-max-h,220px);
   object-fit:contain;
   background:none;
   border:0;
-  margin:1.15rem auto 0;
+  margin:1.15rem 0 0;
   border-radius:0 0 14px 14px;
 }
 
 @media(max-width:760px){
   .post[data-gaya-layout="1"] img.banner,
   .post[data-gaya-layout="1"] img.banner.bottom-banner{
-    max-height:128px;
+    max-height:170px;
   }
 }
