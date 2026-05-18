@@ -19,11 +19,23 @@
     '#2f2a24'
   ];
 
+  const SIZE_OPTIONS={
+    tiny:'fmt-size-tiny',
+    small:'fmt-size-small',
+    large:'fmt-size-large',
+    huge:'fmt-size-huge'
+  };
+
   function safeColor(value){
     const v=String(value||'').trim();
     if(/^#[0-9a-f]{3}$/i.test(v))return v;
     if(/^#[0-9a-f]{6}$/i.test(v))return v;
     return '';
+  }
+
+  function safeSize(value){
+    const v=String(value||'').trim().toLowerCase();
+    return Object.prototype.hasOwnProperty.call(SIZE_OPTIONS,v)?v:'';
   }
 
   function enhanceRenderedHtml(html){
@@ -32,6 +44,10 @@
       .replace(/\[i\]([\s\S]*?)\[\/i\]/gi,'<em>$1</em>')
       .replace(/\[u\]([\s\S]*?)\[\/u\]/gi,'<span class="fmt-underline">$1</span>')
       .replace(/\[s\]([\s\S]*?)\[\/s\]/gi,'<span class="fmt-strike">$1</span>')
+      .replace(/\[size=(tiny|small|large|huge)\]([\s\S]*?)\[\/size\]/gi,(match,size,body)=>{
+        const s=safeSize(size);
+        return s?'<span class="fmt-size '+SIZE_OPTIONS[s]+'">'+body+'</span>':body;
+      })
       .replace(/\[color=(#[0-9a-f]{3}|#[0-9a-f]{6})\]([\s\S]*?)\[\/color\]/gi,(match,color,body)=>{
         const c=safeColor(color);
         return c?'<span class="fmt-color" style="color:'+c+'">'+body+'</span>':body;
@@ -104,6 +120,20 @@
     return btn;
   }
 
+  function makeSizeSelect(textarea){
+    const select=document.createElement('select');
+    select.className='fmt-size-select';
+    select.title='Text size';
+    select.setAttribute('aria-label','Text size');
+    select.innerHTML='<option value="">size</option><option value="tiny">tiny</option><option value="small">small</option><option value="large">large</option><option value="huge">huge</option>';
+    select.onchange=e=>{
+      const size=safeSize(e.target.value);
+      if(size)insertAround(textarea,'[size='+size+']','[/size]',size+' text');
+      e.target.value='';
+    };
+    return select;
+  }
+
   function installToolbar(textarea){
     if(!textarea||textarea.dataset.gayaFormatting==='1')return;
     textarea.dataset.gayaFormatting='1';
@@ -122,6 +152,7 @@
     bar.appendChild(makeButton('I','italic',()=>insertAround(textarea,'*','*','italic text')));
     bar.appendChild(makeButton('U','underline',()=>insertAround(textarea,'[u]','[/u]','underlined text')));
     bar.appendChild(makeButton('quote','quote selected lines',()=>quoteSelection(textarea)));
+    bar.appendChild(makeSizeSelect(textarea));
 
     const colorWrap=document.createElement('span');
     colorWrap.className='fmt-color-group';
