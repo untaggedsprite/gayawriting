@@ -32,11 +32,19 @@
     return (clean?clean+'\n\n':'')+MARK_START+size+MARK_END;
   }
 
+  function rawSummaryForThread(thread){
+    if(!thread)return '';
+    const current=String(thread.summary||'');
+    const stored=String(thread._gaya_summary_raw||'');
+    if(stored && stripThreadFontSizeMarker(stored)===current)return stored;
+    return current;
+  }
+
   function normalizeLoadedThreads(){
     if(!state?.threads)return;
     state.threads=state.threads.map(thread=>{
       if(!thread)return thread;
-      const raw=thread._gaya_summary_raw!==undefined?thread._gaya_summary_raw:(thread.summary||'');
+      const raw=rawSummaryForThread(thread);
       return Object.assign(thread,{
         _gaya_summary_raw:raw,
         _gaya_thread_font_size:threadFontSizeFromSummary(raw),
@@ -45,14 +53,14 @@
     });
   }
 
-  function currentThreadFontSize(thread){
-    if(!thread)return 'standard';
-    return normalizeThreadFontSize(thread._gaya_thread_font_size||threadFontSizeFromSummary(thread._gaya_summary_raw||thread.summary));
+  function currentThread(){
+    return state?.threads?.find(t=>String(t.id)===String(state.threadId));
   }
 
-  function currentThreadRawSummary(thread){
-    if(!thread)return '';
-    return thread._gaya_summary_raw!==undefined?thread._gaya_summary_raw:(thread.summary||'');
+  function currentThreadFontSize(thread){
+    if(!thread)return 'standard';
+    const raw=rawSummaryForThread(thread);
+    return normalizeThreadFontSize(thread._gaya_thread_font_size||threadFontSizeFromSummary(raw));
   }
 
   function fontSizeFieldHtml(current){
@@ -64,7 +72,7 @@
       ['large','large','easier reading size'],
       ['huge','huge','big dramatic text']
     ];
-    return '<div class="mt"><label>thread font size</label><select id="thread-font-size">'+options.map(([value,label,note])=>
+    return '<div class="mt thread-font-size-field"><label>thread font size</label><select id="thread-font-size">'+options.map(([value,label,note])=>
       '<option value="'+esc(value)+'" '+(value===current?'selected':'')+'>'+esc(label)+' — '+esc(note)+'</option>'
     ).join('')+'</select><p class="muted preview-note">Applies to every post in this thread only.</p></div>';
   }
@@ -73,15 +81,33 @@
     return normalizeThreadFontSize(document.getElementById('thread-font-size')?.value||'standard');
   }
 
-  function decorateMainForThread(){
+  function setThreadFontAttr(node,size){
+    if(!node)return;
+    if(size==='standard')node.dataset.threadFontSize='standard';
+    else node.dataset.threadFontSize=size;
+  }
+
+  function clearThreadFontAttr(node){
+    if(node)node.removeAttribute('data-thread-font-size');
+  }
+
+  function decorateThreadFontSize(){
     const main=document.getElementById('main');
-    if(!main)return;
+    const posts=document.getElementById('posts');
+
     if(state.view!=='thread'){
-      main.removeAttribute('data-thread-font-size');
+      clearThreadFontAttr(document.body);
+      clearThreadFontAttr(main);
+      clearThreadFontAttr(posts);
+      document.querySelectorAll('.post[data-thread-font-size]').forEach(post=>clearThreadFontAttr(post));
       return;
     }
-    const thread=state.threads.find(t=>String(t.id)===String(state.threadId));
-    main.dataset.threadFontSize=currentThreadFontSize(thread);
+
+    const size=currentThreadFontSize(currentThread());
+    setThreadFontAttr(document.body,size);
+    setThreadFontAttr(main,size);
+    setThreadFontAttr(posts,size);
+    document.querySelectorAll('#posts .post').forEach(post=>setThreadFontAttr(post,size));
   }
 
   function enhanceNewThreadModal(){
@@ -107,6 +133,7 @@
       await loadThreads();
       normalizeLoadedThreads();
       go('thread/'+thread.id);
+      setTimeout(decorateThreadFontSize,0);
       toast('thread created');
     },'create thread');
   }
@@ -114,10 +141,13 @@
   function enhanceEditThreadModal(){
     const summary=document.getElementById('edit-thread-summary');
     if(!summary)return;
-    const thread=state.threads.find(t=>String(t.id)===String(state.threadId));
-    if(thread){
-      summary.value=stripThreadFontSizeMarker(currentThreadRawSummary(thread));
+    const thread=currentThread();
+
+    if(thread && !summary.dataset.threadFontCleaned){
+      summary.value=stripThreadFontSizeMarker(rawSummaryForThread(thread));
+      summary.dataset.threadFontCleaned='1';
     }
+
     if(!document.getElementById('thread-font-size')){
       summary.closest('.mt')?.insertAdjacentHTML('afterend',fontSizeFieldHtml(currentThreadFontSize(thread)));
     }
@@ -126,7 +156,7 @@
     if(!btn||btn.dataset.threadFontReady)return;
     btn.dataset.threadFontReady='1';
     btn.onclick=async()=>{
-      const thread=state.threads.find(t=>String(t.id)===String(state.threadId));
+      const thread=currentThread();
       const title=document.getElementById('edit-thread-title').value.trim();
       const summary=document.getElementById('edit-thread-summary').value.trim();
       if(!thread)return toast('thread not found','err');
@@ -140,6 +170,7 @@
         await loadThreads();
         normalizeLoadedThreads();
         renderThread();
+        decorateThreadFontSize();
         toast('thread updated');
       }catch(e){
         btn.disabled=false;
@@ -155,6 +186,7 @@
       enhanceNewThreadModal();
       replaceNewThreadSave();
       enhanceEditThreadModal();
+      decorateThreadFontSize();
     });
     observer.observe(document.body,{childList:true,subtree:true});
   }
@@ -172,7 +204,7 @@
     const previousRenderThread=renderThread;
     renderThread=function(){
       previousRenderThread();
-      decorateMainForThread();
+      decorateThreadFontSize();
     };
   }
 
@@ -180,7 +212,15 @@
     const previousRenderThreads=renderThreads;
     renderThreads=function(){
       previousRenderThreads();
-      decorateMainForThread();
+      decorateThreadFontSize();
+    };
+  }
+
+  if(typeof renderPosts==='function'){
+    const previousRenderPosts=renderPosts;
+    renderPosts=function(){
+      previousRenderPosts();
+      decorateThreadFontSize();
     };
   }
 
@@ -197,8 +237,9 @@
   window.threadFontSizeFromSummary=threadFontSizeFromSummary;
   window.stripThreadFontSizeMarker=stripThreadFontSizeMarker;
   window.summaryWithThreadFontSize=summaryWithThreadFontSize;
+  window.decorateThreadFontSize=decorateThreadFontSize;
 
   normalizeLoadedThreads();
-  decorateMainForThread();
+  decorateThreadFontSize();
   watchModals();
 })();
