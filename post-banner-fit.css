@@ -1,0 +1,33 @@
+/* Persona-controlled banner image fit. */
+
+.post[data-banner-fit="cover"] .banner{
+  background-size:cover;
+  background-repeat:no-repeat;
+}
+
+.post[data-banner-fit="contain"] .banner{
+  background-size:contain;
+  background-repeat:no-repeat;
+}
+
+.post[data-banner-fit="stretch"] .banner{
+  background-size:100% 100%;
+  background-repeat:no-repeat;
+}
+
+.post[data-banner-fit="tile"] .banner{
+  background-size:auto;
+  background-repeat:repeat-x;
+}
+
+.post[data-banner-fit="contain"] .top-banner,
+.post[data-banner-fit="contain"] .bottom-banner{
+  background-color:color-mix(in srgb,var(--persona-border,currentColor) 12%,transparent);
+}
+
+@supports not (color:color-mix(in srgb, red 10%, transparent)){
+  .post[data-banner-fit="contain"] .top-banner,
+  .post[data-banner-fit="contain"] .bottom-banner{
+    background-color:transparent;
+  }
+}
