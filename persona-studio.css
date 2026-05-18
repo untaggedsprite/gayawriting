@@ -197,6 +197,11 @@
   border-color:var(--persona-border-soft,rgba(168,144,107,.18));
 }
 
+.signature-block.signature-divider-none{
+  border-top:0;
+  padding-top:.85rem;
+}
+
 .signature-block.signature-divider-line,
 .signature-block.signature-divider-dotted{
   margin-top:1.05rem;
