@@ -1,0 +1,99 @@
+/* Persona-controlled post sizing. */
+
+.post{
+  --gaya-post-body-size:1rem;
+  --gaya-post-line-height:1.58;
+  --gaya-post-pad-x:1.35rem;
+  --gaya-post-pad-y:1.15rem;
+  --gaya-banner-top-h:185px;
+  --gaya-banner-bottom-h:150px;
+  --gaya-portrait-w:345px;
+  --gaya-portrait-h:440px;
+  --gaya-portrait-gap:2rem;
+}
+
+.post[data-post-size="compact"]{
+  --gaya-post-body-size:.92rem;
+  --gaya-post-line-height:1.48;
+  --gaya-post-pad-x:1rem;
+  --gaya-post-pad-y:.85rem;
+  --gaya-banner-top-h:145px;
+  --gaya-banner-bottom-h:112px;
+  --gaya-portrait-w:270px;
+  --gaya-portrait-h:345px;
+  --gaya-portrait-gap:1.35rem;
+}
+
+.post[data-post-size="roomy"]{
+  --gaya-post-body-size:1.08rem;
+  --gaya-post-line-height:1.68;
+  --gaya-post-pad-x:1.75rem;
+  --gaya-post-pad-y:1.35rem;
+  --gaya-banner-top-h:210px;
+  --gaya-banner-bottom-h:170px;
+  --gaya-portrait-w:375px;
+  --gaya-portrait-h:480px;
+  --gaya-portrait-gap:2.25rem;
+}
+
+.post[data-post-size="novella"]{
+  --gaya-post-body-size:1.04rem;
+  --gaya-post-line-height:1.74;
+  --gaya-post-pad-x:1.65rem;
+  --gaya-post-pad-y:1.35rem;
+  --gaya-banner-top-h:180px;
+  --gaya-banner-bottom-h:145px;
+  --gaya-portrait-w:325px;
+  --gaya-portrait-h:415px;
+  --gaya-portrait-gap:2rem;
+}
+
+.post[data-post-size] .post-body{
+  font-size:var(--gaya-post-body-size);
+  line-height:var(--gaya-post-line-height);
+}
+
+.post[data-post-size="compact"] .post-head{
+  padding:.85rem 1rem .15rem;
+}
+
+.post[data-post-size="roomy"] .post-head,
+.post[data-post-size="novella"] .post-head{
+  padding:1.35rem 1.65rem .2rem;
+}
+
+.post[data-gaya-layout="1"][data-post-size] .banner{
+  height:var(--gaya-banner-top-h);
+}
+
+.post[data-gaya-layout="1"][data-post-size] .banner.bottom-banner{
+  height:var(--gaya-banner-bottom-h);
+}
+
+.post[data-gaya-layout="1"][data-post-size] .post-body{
+  padding:var(--gaya-post-pad-y) var(--gaya-post-pad-x) calc(var(--gaya-post-pad-y) + .15rem);
+}
+
+.post[data-gaya-layout="0"][data-post-size] .post-body{
+  padding:var(--gaya-post-pad-y) var(--gaya-post-pad-x);
+}
+
+.post[data-gaya-layout="1"][data-post-size="compact"] .post-name{
+  font-size:1.65rem;
+}
+
+.post[data-gaya-layout="1"][data-post-size="roomy"] .post-name{
+  font-size:2.18rem;
+}
+
+.post[data-gaya-layout="1"][data-post-size="novella"] .post-body{
+  letter-spacing:.005em;
+}
+
+@media(max-width:760px){
+  .post{
+    --gaya-portrait-w:min(78vw,300px);
+    --gaya-portrait-h:380px;
+    --gaya-portrait-gap:1rem;
+  }
+}
