@@ -1,7 +1,8 @@
 /*
   GAYA Post Density Controls
   Stores density in a harmless custom_css marker so no Supabase migration is needed.
-  This controls spacing/layout only. Story font size is controlled per thread.
+  This controls card breathing room, portrait scale, and banner strip height.
+  Inline story text size belongs to post formatting: [size=small]...[/size].
 */
 
 (function(){
@@ -90,7 +91,7 @@
     if(!field){
       field=document.createElement('div');
       field.className='field full persona-post-size-field';
-      field.innerHTML='<label>post density</label><p class="muted preview-note">Changes card spacing, portrait size, and banner cap. Text size is set per thread.</p><div class="persona-layout-grid post-size-grid"></div>';
+      field.innerHTML='<label>post density</label><p class="muted preview-note">Changes card spacing, portrait scale, and banner strip height. Inline text size uses the post formatter size menu.</p><div class="persona-layout-grid post-size-grid"></div>';
       const fontField=$('pe-font')?.closest('.field');
       if(fontField)fontField.insertAdjacentElement('afterend',field);
       else grid.appendChild(field);
