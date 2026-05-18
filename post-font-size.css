@@ -1,0 +1,83 @@
+/* Persona-controlled font sizing. Loaded after post-size.css so text scale can be tuned independently of card density. */
+
+.post{
+  --gaya-name-scale:1;
+  --gaya-meta-scale:1;
+  --gaya-signature-scale:1;
+}
+
+.post[data-font-size="tiny"]{
+  --gaya-post-body-size:.82rem;
+  --gaya-post-line-height:1.52;
+  --gaya-name-scale:.82;
+  --gaya-meta-scale:.86;
+  --gaya-signature-scale:.86;
+}
+
+.post[data-font-size="small"]{
+  --gaya-post-body-size:.92rem;
+  --gaya-post-line-height:1.56;
+  --gaya-name-scale:.9;
+  --gaya-meta-scale:.92;
+  --gaya-signature-scale:.92;
+}
+
+.post[data-font-size="standard"]{
+  --gaya-name-scale:1;
+  --gaya-meta-scale:1;
+  --gaya-signature-scale:1;
+}
+
+.post[data-font-size="large"]{
+  --gaya-post-body-size:1.12rem;
+  --gaya-post-line-height:1.68;
+  --gaya-name-scale:1.08;
+  --gaya-meta-scale:1.04;
+  --gaya-signature-scale:1.06;
+}
+
+.post[data-font-size="huge"]{
+  --gaya-post-body-size:1.26rem;
+  --gaya-post-line-height:1.72;
+  --gaya-name-scale:1.16;
+  --gaya-meta-scale:1.08;
+  --gaya-signature-scale:1.1;
+}
+
+.post[data-font-size] .post-body{
+  font-size:var(--gaya-post-body-size);
+  line-height:var(--gaya-post-line-height);
+}
+
+.post[data-font-size] .post-meta{
+  font-size:calc(.74rem * var(--gaya-meta-scale));
+}
+
+.post[data-font-size] .signature-block{
+  font-size:calc(.92rem * var(--gaya-signature-scale));
+}
+
+.post[data-gaya-layout="1"][data-font-size] .post-name{
+  font-size:calc(2rem * var(--gaya-name-scale));
+}
+
+.post[data-gaya-layout="1"][data-post-size="compact"][data-font-size] .post-name{
+  font-size:calc(1.65rem * var(--gaya-name-scale));
+}
+
+.post[data-gaya-layout="1"][data-post-size="roomy"][data-font-size] .post-name{
+  font-size:calc(2.18rem * var(--gaya-name-scale));
+}
+
+.post[data-gaya-layout="0"][data-font-size] .post-name{
+  font-size:calc(1.35rem * var(--gaya-name-scale));
+}
+
+.post[data-font-size="tiny"] .post-body blockquote,
+.post[data-font-size="small"] .post-body blockquote{
+  padding:.55rem .75rem;
+}
+
+.post[data-font-size="huge"] .post-body blockquote{
+  padding:.85rem 1rem;
+}
