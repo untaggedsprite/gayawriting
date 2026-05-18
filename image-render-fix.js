@@ -19,6 +19,12 @@ function gayaBgStyle(value){
   return url?'background-image:'+url+';':'';
 }
 
+function gayaImgSrc(value){
+  return String(value||'')
+    .trim()
+    .replace(/[<>"\n\r]/g,'');
+}
+
 function personaAccentStyle(per){
   const accent=per?.accent_color||'#a8854f';
   const border=per?.border_color||'#d7c5a5';
@@ -72,11 +78,6 @@ function normalizeFontSizeLocal(value){
   return ['tiny','small','standard','large','huge'].includes(value)?value:'standard';
 }
 
-function normalizeBannerFitLocal(value){
-  if(typeof normalizeBannerFit==='function')return normalizeBannerFit(value);
-  return ['cover','contain','fit-width','fit-height','stretch','tile'].includes(value)?value:'cover';
-}
-
 function getPostSizeFromPersonaLocal(per){
   if(typeof getPostSizeFromPersona==='function')return getPostSizeFromPersona(per);
   const match=String(per?.custom_css||'').match(/\/\* GAYA_POST_SIZE_START size=(compact|standard|roomy|novella) \*\//i);
@@ -87,12 +88,6 @@ function getFontSizeFromPersonaLocal(per){
   if(typeof getFontSizeFromPersona==='function')return getFontSizeFromPersona(per);
   const match=String(per?.custom_css||'').match(/\/\* GAYA_FONT_SIZE_START size=(tiny|small|standard|large|huge) \*\//i);
   return normalizeFontSizeLocal(match?.[1]||'standard');
-}
-
-function getBannerFitFromPersonaLocal(per){
-  if(typeof getBannerFitFromPersona==='function')return getBannerFitFromPersona(per);
-  const match=String(per?.custom_css||'').match(/\/\* GAYA_BANNER_FIT_START fit=(cover|contain|fit-width|fit-height|stretch|tile) \*\//i);
-  return normalizeBannerFitLocal(match?.[1]||'cover');
 }
 
 function stripGayaLayoutCss(css){
@@ -110,7 +105,6 @@ function stripFontSizeCssLocal(css){
 }
 
 function stripBannerFitCssLocal(css){
-  if(typeof stripBannerFitCss==='function')return stripBannerFitCss(css);
   return String(css||'').replace(/\/\* GAYA_BANNER_FIT_START[\s\S]*?GAYA_BANNER_FIT_END \*\//g,'').trim();
 }
 
@@ -168,13 +162,18 @@ function signatureStyle(per,f){
   return f+'text-align:'+align+';';
 }
 
+function gayaBannerImg(url,className,focus){
+  const src=gayaImgSrc(url);
+  if(!src)return '';
+  return '<img class="'+esc(className)+'" src="'+esc(src)+'" alt="" loading="lazy" decoding="async" style="object-position:'+bannerFocusPosition(focus)+';">';
+}
+
 function gayaBanners(topUrl,mode,bottomUrl,topFocus,bottomFocus){
   if(mode==='none')return {top:'',bottom:''};
-  const topStyle=topUrl?esc(gayaBgStyle(topUrl)+'background-position:'+bannerFocusPosition(topFocus)+';'):'';
-  const bottomStyle=(bottomUrl||topUrl)?esc(gayaBgStyle(bottomUrl||topUrl)+'background-position:'+bannerFocusPosition(bottomUrl?bottomFocus:topFocus)+';'):'';
+  const bottom=bottomUrl||topUrl;
   return {
-    top:(topStyle&&(mode==='top'||mode==='both'))?'<div class="banner top-banner" style="'+topStyle+'"></div>':'',
-    bottom:(bottomStyle&&(mode==='bottom'||mode==='both'))?'<div class="banner bottom-banner" style="'+bottomStyle+'"></div>':''
+    top:(topUrl&&(mode==='top'||mode==='both'))?gayaBannerImg(topUrl,'banner top-banner',topFocus):'',
+    bottom:(bottom&&(mode==='bottom'||mode==='both'))?gayaBannerImg(bottom,'banner bottom-banner',bottomUrl?bottomFocus:topFocus):''
   };
 }
 
@@ -194,6 +193,15 @@ function gayaPortraitHtml(per,side){
   return '<div class="gaya-portrait" data-side="'+esc(side)+'" style="'+gayaPortraitStyle(per,side)+'"></div>';
 }
 
+if(typeof readPersonaForm==='function'){
+  const previousReadPersonaFormForBannerCleanup=readPersonaForm;
+  readPersonaForm=function(){
+    const payload=previousReadPersonaFormForBannerCleanup();
+    payload.custom_css=stripBannerFitCssLocal(payload.custom_css);
+    return payload;
+  };
+}
+
 renderPosts=function(){
   const list=$('posts');
 
@@ -210,7 +218,6 @@ renderPosts=function(){
     const bannerMode=gayaBannerMode(per);
     const postSize=getPostSizeFromPersonaLocal(per);
     const fontSize=getFontSizeFromPersonaLocal(per);
-    const bannerFit=getBannerFitFromPersonaLocal(per);
     const banners=gayaBanners(per.banner_url,bannerMode,per.bottom_banner_url,per.top_banner_position,per.bottom_banner_position);
     const scopeId=cssScopeId(per.id||p.persona_id||('post-'+i));
     const scope='[data-persona-style="'+scopeId+'"]';
@@ -218,7 +225,7 @@ renderPosts=function(){
     const headAvatar=gaia?'':gayaImageHtml(per,'avatar small-avatar');
     const portrait=gaia?gayaPortraitHtml(per,side):'';
 
-    return custom+'<article class="post" data-persona-style="'+esc(scopeId)+'" data-gaya-layout="'+(gaia?'1':'0')+'" data-gaya-side="'+esc(side)+'" data-post-size="'+esc(postSize)+'" data-font-size="'+esc(fontSize)+'" data-banner-fit="'+esc(bannerFit)+'" style="'+
+    return custom+'<article class="post" data-persona-style="'+esc(scopeId)+'" data-gaya-layout="'+(gaia?'1':'0')+'" data-gaya-side="'+esc(side)+'" data-post-size="'+esc(postSize)+'" data-font-size="'+esc(fontSize)+'" style="'+
       personaAccentStyle(per)+
       (per.bg_color?'background:'+esc(per.bg_color)+';':'')+
       (per.text_color?'color:'+esc(per.text_color)+';':'')+
@@ -246,7 +253,6 @@ updatePersonaPreview=function(){
   const bannerMode=gayaBannerMode(p);
   const postSize=getPostSizeFromPersonaLocal(p);
   const fontSize=getFontSizeFromPersonaLocal(p);
-  const bannerFit=getBannerFitFromPersonaLocal(p);
   const banners=gayaBanners(p.banner_url,bannerMode,p.bottom_banner_url,p.top_banner_position,p.bottom_banner_position);
   const scopeId='persona-preview';
   const scope='[data-persona-style="'+scopeId+'"]';
@@ -254,7 +260,7 @@ updatePersonaPreview=function(){
   const headAvatar=gaia?'':gayaImageHtml(p,'avatar small-avatar');
   const portrait=gaia?gayaPortraitHtml(p,side):'';
 
-  box.innerHTML=custom+'<article class="post" data-persona-style="'+scopeId+'" data-gaya-layout="'+(gaia?'1':'0')+'" data-gaya-side="'+esc(side)+'" data-post-size="'+esc(postSize)+'" data-font-size="'+esc(fontSize)+'" data-banner-fit="'+esc(bannerFit)+'" style="'+personaAccentStyle(p)+'background:'+esc(p.bg_color)+';color:'+esc(p.text_color)+';border-color:'+esc(p.border_color)+';'+f+'">'+
+  box.innerHTML=custom+'<article class="post" data-persona-style="'+scopeId+'" data-gaya-layout="'+(gaia?'1':'0')+'" data-gaya-side="'+esc(side)+'" data-post-size="'+esc(postSize)+'" data-font-size="'+esc(fontSize)+'" style="'+personaAccentStyle(p)+'background:'+esc(p.bg_color)+';color:'+esc(p.text_color)+';border-color:'+esc(p.border_color)+';'+f+'">'+
     banners.top+
     '<div class="post-head">'+headAvatar+'<div class="post-name" style="'+f+'">'+esc(p.name||'unnamed')+'</div><div class="post-meta">preview</div></div>'+
     portrait+
