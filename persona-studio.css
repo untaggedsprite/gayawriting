@@ -179,11 +179,11 @@
 }
 
 .post .top-banner{
-  border-bottom:2px solid var(--persona-accent,currentColor);
+  border-bottom:0;
 }
 
 .post .bottom-banner{
-  border-top:2px solid var(--persona-accent,currentColor);
+  border-top:0;
 }
 
 .post .avatar,
