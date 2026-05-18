@@ -1,12 +1,14 @@
 .post[data-gaya-layout="1"]{overflow:auto;border-left-width:1px}
 .post[data-gaya-layout="1"] .banner{display:block;height:185px;margin:0 0 1rem;border-radius:14px 14px 0 0;opacity:1;background-size:cover;background-position:center}
 .post[data-gaya-layout="1"] .banner.bottom-banner{clear:both;height:150px;margin:1.15rem 0 0;border-radius:0 0 14px 14px;background-size:cover;background-position:center}
-.post[data-gaya-layout="1"] .post-head{display:block;min-height:0;margin:0;padding:1.15rem 1.45rem .15rem;border-bottom:0;background:transparent;opacity:1}
+.post[data-gaya-layout="1"] .post-head{display:block;min-height:0;margin:0;padding:1.15rem 1.45rem .15rem;border-bottom:0;background:transparent;box-shadow:none;opacity:1}
 .post[data-gaya-layout="1"] .post-head .avatar{display:none}
-.post[data-gaya-layout="1"] .post-name{display:block;margin:.6rem 0 1.35rem;padding:.22rem .55rem;text-align:right;font-size:2rem;line-height:1.05;background:rgba(255,255,255,.16)}
+.post[data-gaya-layout="1"] .post-name{display:block;margin:.6rem 0 1.35rem;padding:.22rem .55rem;text-align:right;font-size:2rem;line-height:1.05;background:var(--persona-accent-soft,rgba(255,255,255,.16));box-shadow:0 0 0 1px var(--persona-border-soft,transparent) inset}
 .post[data-gaya-layout="1"] .post-meta{display:block;margin:0 0 1.4rem;text-align:right}
 .post[data-gaya-layout="1"][data-gaya-side="right"] .post-name,.post[data-gaya-layout="1"][data-gaya-side="right"] .post-meta{text-align:left}
 .post[data-gaya-layout="1"] .post-body{padding:.25rem 1.65rem 1.05rem;line-height:1.58}
 .post[data-gaya-layout="1"] .post-body blockquote,.post[data-gaya-layout="1"] .post-body pre,.post[data-gaya-layout="1"] .post-body table{clear:both}
 .post[data-gaya-layout="1"] .post-body:after{content:"";display:block;clear:both}
-.post[data-gaya-layout="1"] .signature-block{clear:both}
+.post[data-gaya-layout="1"] .signature-block{clear:both;border-color:var(--persona-border-soft,currentColor)}
+.post[data-gaya-layout="1"] .signature-block.signature-divider-line{border-top-color:var(--persona-accent,currentColor)}
+.post[data-gaya-layout="1"] .signature-block.signature-divider-dotted{border-top-color:var(--persona-accent,currentColor)}
