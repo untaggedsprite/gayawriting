@@ -1,83 +1,61 @@
-/* Persona-controlled font sizing. Loaded after post-size.css so text scale can be tuned independently of card density. */
+/* Thread-controlled story text sizing.
+   Font size is intentionally not a persona setting: it belongs to the thread,
+   so different parts of the story can breathe differently. */
 
-.post{
-  --gaya-name-scale:1;
-  --gaya-meta-scale:1;
-  --gaya-signature-scale:1;
+#main[data-thread-font-size="tiny"] .post{
+  --gaya-thread-body-size:.84rem;
+  --gaya-thread-line-height:1.52;
+  --gaya-thread-meta-scale:.9;
+  --gaya-thread-signature-scale:.9;
 }
 
-.post[data-font-size="tiny"]{
-  --gaya-post-body-size:.82rem;
-  --gaya-post-line-height:1.52;
-  --gaya-name-scale:.82;
-  --gaya-meta-scale:.86;
-  --gaya-signature-scale:.86;
+#main[data-thread-font-size="small"] .post{
+  --gaya-thread-body-size:.92rem;
+  --gaya-thread-line-height:1.56;
+  --gaya-thread-meta-scale:.94;
+  --gaya-thread-signature-scale:.94;
 }
 
-.post[data-font-size="small"]{
-  --gaya-post-body-size:.92rem;
-  --gaya-post-line-height:1.56;
-  --gaya-name-scale:.9;
-  --gaya-meta-scale:.92;
-  --gaya-signature-scale:.92;
+#main[data-thread-font-size="standard"] .post,
+#main:not([data-thread-font-size]) .post{
+  --gaya-thread-body-size:1rem;
+  --gaya-thread-line-height:1.62;
+  --gaya-thread-meta-scale:1;
+  --gaya-thread-signature-scale:1;
 }
 
-.post[data-font-size="standard"]{
-  --gaya-name-scale:1;
-  --gaya-meta-scale:1;
-  --gaya-signature-scale:1;
+#main[data-thread-font-size="large"] .post{
+  --gaya-thread-body-size:1.12rem;
+  --gaya-thread-line-height:1.7;
+  --gaya-thread-meta-scale:1.04;
+  --gaya-thread-signature-scale:1.06;
 }
 
-.post[data-font-size="large"]{
-  --gaya-post-body-size:1.12rem;
-  --gaya-post-line-height:1.68;
-  --gaya-name-scale:1.08;
-  --gaya-meta-scale:1.04;
-  --gaya-signature-scale:1.06;
+#main[data-thread-font-size="huge"] .post{
+  --gaya-thread-body-size:1.26rem;
+  --gaya-thread-line-height:1.74;
+  --gaya-thread-meta-scale:1.08;
+  --gaya-thread-signature-scale:1.1;
 }
 
-.post[data-font-size="huge"]{
-  --gaya-post-body-size:1.26rem;
-  --gaya-post-line-height:1.72;
-  --gaya-name-scale:1.16;
-  --gaya-meta-scale:1.08;
-  --gaya-signature-scale:1.1;
+#main[data-thread-font-size] .post .post-body{
+  font-size:var(--gaya-thread-body-size);
+  line-height:var(--gaya-thread-line-height);
 }
 
-.post[data-font-size] .post-body{
-  font-size:var(--gaya-post-body-size);
-  line-height:var(--gaya-post-line-height);
+#main[data-thread-font-size] .post .post-meta{
+  font-size:calc(.74rem * var(--gaya-thread-meta-scale));
 }
 
-.post[data-font-size] .post-meta{
-  font-size:calc(.74rem * var(--gaya-meta-scale));
+#main[data-thread-font-size] .post .signature-block{
+  font-size:calc(.92rem * var(--gaya-thread-signature-scale));
 }
 
-.post[data-font-size] .signature-block{
-  font-size:calc(.92rem * var(--gaya-signature-scale));
-}
-
-.post[data-gaya-layout="1"][data-font-size] .post-name{
-  font-size:calc(2rem * var(--gaya-name-scale));
-}
-
-.post[data-gaya-layout="1"][data-post-size="compact"][data-font-size] .post-name{
-  font-size:calc(1.65rem * var(--gaya-name-scale));
-}
-
-.post[data-gaya-layout="1"][data-post-size="roomy"][data-font-size] .post-name{
-  font-size:calc(2.18rem * var(--gaya-name-scale));
-}
-
-.post[data-gaya-layout="0"][data-font-size] .post-name{
-  font-size:calc(1.35rem * var(--gaya-name-scale));
-}
-
-.post[data-font-size="tiny"] .post-body blockquote,
-.post[data-font-size="small"] .post-body blockquote{
+#main[data-thread-font-size="tiny"] .post-body blockquote,
+#main[data-thread-font-size="small"] .post-body blockquote{
   padding:.55rem .75rem;
 }
 
-.post[data-font-size="huge"] .post-body blockquote{
+#main[data-thread-font-size="huge"] .post-body blockquote{
   padding:.85rem 1rem;
 }
