@@ -62,8 +62,28 @@ function normalizeSignatureSizeLocal(value){
   return ['small','normal','large'].includes(value)?value:'normal';
 }
 
+function normalizePostSizeLocal(value){
+  if(typeof normalizePostSize==='function')return normalizePostSize(value);
+  return ['compact','standard','roomy','novella'].includes(value)?value:'standard';
+}
+
+function getPostSizeFromPersonaLocal(per){
+  if(typeof getPostSizeFromPersona==='function')return getPostSizeFromPersona(per);
+  const match=String(per?.custom_css||'').match(/\/\* GAYA_POST_SIZE_START size=(compact|standard|roomy|novella) \*\//i);
+  return normalizePostSizeLocal(match?.[1]||'standard');
+}
+
 function stripGayaLayoutCss(css){
   return String(css||'').replace(/\/\* GAYA_LAYOUT_START[\s\S]*?GAYA_LAYOUT_END \*\//g,'').trim();
+}
+
+function stripPostSizeCssLocal(css){
+  if(typeof stripPostSizeCss==='function')return stripPostSizeCss(css);
+  return String(css||'').replace(/\/\* GAYA_POST_SIZE_START[\s\S]*?GAYA_POST_SIZE_END \*\//g,'').trim();
+}
+
+function stripInternalPersonaCss(css){
+  return stripPostSizeCssLocal(stripGayaLayoutCss(css));
 }
 
 function gayaLayoutSide(perOrCss){
@@ -128,8 +148,8 @@ function gayaBanners(topUrl,mode,bottomUrl,topFocus,bottomFocus){
 
 function gayaPortraitStyle(per,side){
   const floatSide=side==='right'?'right':'left';
-  const margin=side==='right'?'.25rem 1.65rem 1.05rem 2rem':'.25rem 2rem 1.05rem 1.65rem';
-  return 'display:block !important;float:'+floatSide+';width:345px !important;min-width:345px !important;max-width:48vw !important;height:440px !important;min-height:440px !important;margin:'+margin+';border-radius:12px;border:3px solid var(--persona-border,currentColor);background-color:'+esc(per.accent_color||'#a8854f')+';'+esc(gayaBgStyle(per.avatar_url))+'background-size:cover;background-position:'+avatarFocusPosition(per.avatar_position)+';box-shadow:0 0 0 3px var(--persona-border-soft,rgba(0,0,0,.08)),0 16px 38px rgba(0,0,0,.18);';
+  const margin=side==='right'?'.25rem 1.65rem 1.05rem var(--gaya-portrait-gap,2rem)':'.25rem var(--gaya-portrait-gap,2rem) 1.05rem 1.65rem';
+  return 'display:block !important;float:'+floatSide+';width:var(--gaya-portrait-w,345px) !important;min-width:var(--gaya-portrait-w,345px) !important;max-width:48vw !important;height:var(--gaya-portrait-h,440px) !important;min-height:var(--gaya-portrait-h,440px) !important;margin:'+margin+';border-radius:12px;border:3px solid var(--persona-border,currentColor);background-color:'+esc(per.accent_color||'#a8854f')+';'+esc(gayaBgStyle(per.avatar_url))+'background-size:cover;background-position:'+avatarFocusPosition(per.avatar_position)+';box-shadow:0 0 0 3px var(--persona-border-soft,rgba(0,0,0,.08)),0 16px 38px rgba(0,0,0,.18);';
 }
 
 function gayaImageHtml(per,className,extraAttrs=''){
@@ -156,14 +176,15 @@ renderPosts=function(){
     const gaia=isGaiaPortraitLayout(per);
     const side=gayaLayoutSide(per);
     const bannerMode=gayaBannerMode(per);
+    const postSize=getPostSizeFromPersonaLocal(per);
     const banners=gayaBanners(per.banner_url,bannerMode,per.bottom_banner_url,per.top_banner_position,per.bottom_banner_position);
     const scopeId=cssScopeId(per.id||p.persona_id||('post-'+i));
     const scope='[data-persona-style="'+scopeId+'"]';
-    const custom=customCssTag(stripGayaLayoutCss(per.custom_css),scope);
+    const custom=customCssTag(stripInternalPersonaCss(per.custom_css),scope);
     const headAvatar=gaia?'':gayaImageHtml(per,'avatar small-avatar');
     const portrait=gaia?gayaPortraitHtml(per,side):'';
 
-    return custom+'<article class="post" data-persona-style="'+esc(scopeId)+'" data-gaya-layout="'+(gaia?'1':'0')+'" data-gaya-side="'+esc(side)+'" style="'+
+    return custom+'<article class="post" data-persona-style="'+esc(scopeId)+'" data-gaya-layout="'+(gaia?'1':'0')+'" data-gaya-side="'+esc(side)+'" data-post-size="'+esc(postSize)+'" style="'+
       personaAccentStyle(per)+
       (per.bg_color?'background:'+esc(per.bg_color)+';':'')+
       (per.text_color?'color:'+esc(per.text_color)+';':'')+
@@ -189,14 +210,15 @@ updatePersonaPreview=function(){
   const gaia=isGaiaPortraitLayout(p);
   const side=gayaLayoutSide(p);
   const bannerMode=gayaBannerMode(p);
+  const postSize=getPostSizeFromPersonaLocal(p);
   const banners=gayaBanners(p.banner_url,bannerMode,p.bottom_banner_url,p.top_banner_position,p.bottom_banner_position);
   const scopeId='persona-preview';
   const scope='[data-persona-style="'+scopeId+'"]';
-  const custom=customCssTag(stripGayaLayoutCss(p.custom_css),scope);
+  const custom=customCssTag(stripInternalPersonaCss(p.custom_css),scope);
   const headAvatar=gaia?'':gayaImageHtml(p,'avatar small-avatar');
   const portrait=gaia?gayaPortraitHtml(p,side):'';
 
-  box.innerHTML=custom+'<article class="post" data-persona-style="'+scopeId+'" data-gaya-layout="'+(gaia?'1':'0')+'" data-gaya-side="'+esc(side)+'" style="'+personaAccentStyle(p)+'background:'+esc(p.bg_color)+';color:'+esc(p.text_color)+';border-color:'+esc(p.border_color)+';'+f+'">'+
+  box.innerHTML=custom+'<article class="post" data-persona-style="'+scopeId+'" data-gaya-layout="'+(gaia?'1':'0')+'" data-gaya-side="'+esc(side)+'" data-post-size="'+esc(postSize)+'" style="'+personaAccentStyle(p)+'background:'+esc(p.bg_color)+';color:'+esc(p.text_color)+';border-color:'+esc(p.border_color)+';'+f+'">'+
     banners.top+
     '<div class="post-head">'+headAvatar+'<div class="post-name" style="'+f+'">'+esc(p.name||'unnamed')+'</div><div class="post-meta">preview</div></div>'+
     portrait+
