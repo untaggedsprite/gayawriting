@@ -9,10 +9,10 @@
 :root{
   --gaya-rail-w:min(1040px,calc(100% - 2rem));
   --gaya-masthead-h:clamp(138px,25vw,260px);
-  --gaya-shelf-w:clamp(198px,13.15vw,258px);
-  --gaya-shelf-peek:clamp(5px,.7vw,12px);
+  --gaya-shelf-w:clamp(225px,14.6vw,292px);
+  --gaya-shelf-peek:clamp(8px,.9vw,16px);
   --gaya-shelf-top:calc(var(--gaya-masthead-h) + 1.7rem + .25rem);
-  --gaya-shelf-art-w:106%;
+  --gaya-shelf-art-w:110%;
 }
 
 .app:before,
