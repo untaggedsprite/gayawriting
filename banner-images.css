@@ -1,0 +1,14 @@
+/* Banners are real images now, so let their natural ratio show. */
+
+.post[data-gaya-layout="1"] img.banner,
+.post[data-gaya-layout="1"][data-post-size] img.banner,
+.post[data-gaya-layout="1"] img.banner.bottom-banner,
+.post[data-gaya-layout="1"][data-post-size] img.banner.bottom-banner{
+  display:block;
+  width:100%;
+  height:auto;
+  max-height:none;
+  object-fit:contain;
+  background:none;
+  border:0;
+}
