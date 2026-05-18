@@ -13,6 +13,8 @@
   --gaya-shelf-peek:clamp(8px,.9vw,16px);
   --gaya-shelf-top:calc(var(--gaya-masthead-h) + 1.7rem + .25rem);
   --gaya-shelf-art-w:110%;
+  --gaya-left-shelf-art-w:108%;
+  --gaya-right-shelf-art-w:114%;
 }
 
 .app:before,
@@ -37,12 +39,14 @@
   left:max(.5rem,calc((100% - var(--gaya-rail-w))/2 - var(--gaya-shelf-w) + var(--gaya-shelf-peek)));
   background-image:url("assets/ornaments/leftwitchyshelf.png");
   background-position:top right;
+  background-size:var(--gaya-left-shelf-art-w) 100%;
 }
 
 .app:after{
   right:max(.5rem,calc((100% - var(--gaya-rail-w))/2 - var(--gaya-shelf-w) + var(--gaya-shelf-peek)));
   background-image:url("assets/ornaments/rightwitchyshelf.png");
   background-position:top left;
+  background-size:var(--gaya-right-shelf-art-w) 100%;
 }
 
 .main{
@@ -60,6 +64,8 @@
     --gaya-shelf-w:clamp(156px,11.85vw,198px);
     --gaya-shelf-peek:clamp(3px,.55vw,9px);
     --gaya-shelf-art-w:107%;
+    --gaya-left-shelf-art-w:105%;
+    --gaya-right-shelf-art-w:111%;
   }
   .app:before,
   .app:after{
@@ -72,6 +78,8 @@
     --gaya-shelf-w:clamp(121px,11.85vw,168px);
     --gaya-shelf-peek:3px;
     --gaya-shelf-art-w:108%;
+    --gaya-left-shelf-art-w:106%;
+    --gaya-right-shelf-art-w:112%;
   }
   .app:before,
   .app:after{
