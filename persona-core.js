@@ -10,6 +10,7 @@ function defaultPersona(){
     name:'New Persona',
     avatar_url:'',
     banner_url:'',
+    bottom_banner_url:'',
     signature:'',
     bg_color:'#fff9ed',
     text_color:'#2b241c',
@@ -68,7 +69,8 @@ function renderPersonaEditor(){
     '<div class="editor"><h2>'+(isNew?'New persona':'Edit persona')+'</h2><div class="editor-grid mt">'+
       '<div class="field full"><label>name</label><input id="pe-name" value="'+esc(p.name||'')+'"></div>'+
       '<div class="field"><label>avatar url</label><input id="pe-avatar" value="'+esc(p.avatar_url||'')+'"></div>'+
-      '<div class="field"><label>banner url</label><input id="pe-banner" value="'+esc(p.banner_url||'')+'"></div>'+
+      '<div class="field"><label>top banner url</label><input id="pe-banner" value="'+esc(p.banner_url||'')+'"></div>'+
+      '<div class="field"><label>bottom banner url</label><input id="pe-bottom-banner" value="'+esc(p.bottom_banner_url||'')+'"><p class="muted preview-note">Optional. If empty, bottom banner can fall back to the top banner in banner layouts.</p></div>'+
       colorField('bg','background',p.bg_color)+
       colorField('text','text',p.text_color)+
       colorField('accent','accent',p.accent_color)+
@@ -80,7 +82,7 @@ function renderPersonaEditor(){
       (isNew?'':'<button class="danger" id="delete-persona">delete persona</button>')+
     '</div><div id="persona-status"></div><div class="mt2"><h3>preview</h3><div id="persona-preview"></div></div></div>';
 
-  ['name','avatar','banner','bg-c','bg-t','text-c','text-t','accent-c','accent-t','border-c','border-t','font','signature','css'].forEach(key=>{
+  ['name','avatar','banner','bottom-banner','bg-c','bg-t','text-c','text-t','accent-c','accent-t','border-c','border-t','font','signature','css'].forEach(key=>{
     const el=$('pe-'+key);
     if(el)el.oninput=updatePersonaPreview;
   });
@@ -147,10 +149,12 @@ function colorField(k,label,value){
 }
 
 function readPersonaForm(){
+  const bottomInput=$('pe-bottom-banner');
   return {
     name:$('pe-name').value.trim(),
     avatar_url:$('pe-avatar').value.trim()||null,
     banner_url:$('pe-banner').value.trim()||null,
+    bottom_banner_url:bottomInput&&bottomInput.value.trim()?bottomInput.value.trim():null,
     signature:$('pe-signature').value.trim()||null,
     bg_color:$('pe-bg-t').value.trim()||'#fff9ed',
     text_color:$('pe-text-t').value.trim()||'#2b241c',
@@ -169,6 +173,7 @@ function updatePersonaPreview(){
   const p=readPersonaForm();
   const f=fontStyle(p.font_family);
   const banner=p.banner_url?'<div class="banner" style="background-image:url('+JSON.stringify(p.banner_url)+')"></div>':'';
+  const bottomBanner=p.bottom_banner_url?'<div class="banner bottom-banner" style="background-image:url('+JSON.stringify(p.bottom_banner_url)+')"></div>':'';
   const avatar=p.avatar_url?'background-image:url('+JSON.stringify(p.avatar_url)+')':'';
   const scopeId='persona-preview';
   const scope='[data-persona-style="'+scopeId+'"]';
@@ -179,5 +184,6 @@ function updatePersonaPreview(){
     '<div class="post-head"><div class="avatar" style="background-color:'+esc(p.accent_color)+';'+avatar+'"></div><div class="post-name" style="'+f+'">'+esc(p.name||'unnamed')+'</div><div class="post-meta">preview</div></div>'+
     '<div class="post-body" style="'+f+'"><p>This is how the persona speaks on the page.</p><blockquote>A line worth setting apart.</blockquote></div>'+
     (p.signature?'<div class="signature-block" style="'+f+'">'+md(p.signature)+'</div>':'')+
+    bottomBanner+
     '</article>';
 }
