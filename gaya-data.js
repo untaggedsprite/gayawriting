@@ -161,4 +161,4 @@ async function deletePersona(id){
   if(!data)throw new Error('Persona not found, or this account does not own it.');
 
   await loadPersonas();
-}/* GAYA Data Layer scaffold. */
+}
