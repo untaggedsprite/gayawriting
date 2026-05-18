@@ -10,6 +10,16 @@
   background-repeat:no-repeat;
 }
 
+.post[data-banner-fit="fit-width"] .banner{
+  background-size:100% auto;
+  background-repeat:no-repeat;
+}
+
+.post[data-banner-fit="fit-height"] .banner{
+  background-size:auto 100%;
+  background-repeat:no-repeat;
+}
+
 .post[data-banner-fit="stretch"] .banner{
   background-size:100% 100%;
   background-repeat:no-repeat;
@@ -21,13 +31,21 @@
 }
 
 .post[data-banner-fit="contain"] .top-banner,
-.post[data-banner-fit="contain"] .bottom-banner{
+.post[data-banner-fit="contain"] .bottom-banner,
+.post[data-banner-fit="fit-width"] .top-banner,
+.post[data-banner-fit="fit-width"] .bottom-banner,
+.post[data-banner-fit="fit-height"] .top-banner,
+.post[data-banner-fit="fit-height"] .bottom-banner{
   background-color:color-mix(in srgb,var(--persona-border,currentColor) 12%,transparent);
 }
 
 @supports not (color:color-mix(in srgb, red 10%, transparent)){
   .post[data-banner-fit="contain"] .top-banner,
-  .post[data-banner-fit="contain"] .bottom-banner{
+  .post[data-banner-fit="contain"] .bottom-banner,
+  .post[data-banner-fit="fit-width"] .top-banner,
+  .post[data-banner-fit="fit-width"] .bottom-banner,
+  .post[data-banner-fit="fit-height"] .top-banner,
+  .post[data-banner-fit="fit-height"] .bottom-banner{
     background-color:transparent;
   }
 }
