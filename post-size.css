@@ -5,8 +5,8 @@
   --gaya-post-line-height:1.58;
   --gaya-post-pad-x:1.35rem;
   --gaya-post-pad-y:1.15rem;
-  --gaya-banner-top-max-h:165px;
-  --gaya-banner-bottom-max-h:135px;
+  --gaya-banner-top-h:155px;
+  --gaya-banner-bottom-h:128px;
   --gaya-portrait-w:345px;
   --gaya-portrait-h:440px;
   --gaya-portrait-gap:2rem;
@@ -16,8 +16,8 @@
   --gaya-post-line-height:1.5;
   --gaya-post-pad-x:1rem;
   --gaya-post-pad-y:.85rem;
-  --gaya-banner-top-max-h:135px;
-  --gaya-banner-bottom-max-h:112px;
+  --gaya-banner-top-h:132px;
+  --gaya-banner-bottom-h:108px;
   --gaya-portrait-w:285px;
   --gaya-portrait-h:365px;
   --gaya-portrait-gap:1.25rem;
@@ -28,8 +28,8 @@
   --gaya-post-line-height:1.72;
   --gaya-post-pad-x:1.75rem;
   --gaya-post-pad-y:1.38rem;
-  --gaya-banner-top-max-h:190px;
-  --gaya-banner-bottom-max-h:155px;
+  --gaya-banner-top-h:178px;
+  --gaya-banner-bottom-h:148px;
   --gaya-portrait-w:380px;
   --gaya-portrait-h:485px;
   --gaya-portrait-gap:2.25rem;
@@ -67,6 +67,8 @@
 
 @media(max-width:760px){
   .post{
+    --gaya-banner-top-h:128px;
+    --gaya-banner-bottom-h:108px;
     --gaya-portrait-w:min(78vw,300px);
     --gaya-portrait-h:380px;
     --gaya-portrait-gap:1rem;
