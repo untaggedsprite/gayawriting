@@ -75,37 +75,6 @@ function renderPosts(){
   }).join('');
 }
 
-function renderComposer(){
-  const wrap=$('composer');
-
-  if(!state.mine.length){
-    wrap.innerHTML='<div class="composer"><h3>reply disabled</h3><p class="muted">No persona is visible for this account yet. Create one on the personas page.</p></div>';
-    return;
-  }
-
-  if(!state.mine.some(p=>p.id===state.selectedPersonaId))state.selectedPersonaId=state.mine[0].id;
-
-  wrap.innerHTML=
-    '<div class="composer"><h3>reply</h3><div class="row"><label style="margin:0">as</label><select id="persona-select">'+
-      state.mine.map(p=>'<option value="'+esc(p.id)+'" '+(p.id===state.selectedPersonaId?'selected':'')+'>'+esc(p.name)+'</option>').join('')+
-    '</select></div><textarea id="body" class="mt" placeholder="markdown welcome"></textarea><div class="spread mt"><p class="muted">markdown renders in the post</p><button id="post-btn">post</button></div></div>';
-
-  $('persona-select').onchange=e=>{state.selectedPersonaId=e.target.value;};
-  $('post-btn').onclick=()=>safe(async()=>{
-    const body=$('body').value.trim();
-    if(!body)return toast('write something first','err');
-    const btn=$('post-btn');
-    btn.disabled=true;
-    btn.textContent='posting…';
-    await createPost(body);
-    $('body').value='';
-    btn.disabled=false;
-    btn.textContent='post';
-    renderPosts();
-    toast('posted');
-  },'create post');
-}
-
 function renderNewThreadModal(){
   const wrap=document.createElement('div');
   wrap.className='modal-bg';
