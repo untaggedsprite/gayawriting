@@ -1,5 +1,6 @@
 /* Persona-controlled post density.
-   This now controls layout/spacing only. Story text size belongs to the thread. */
+   Controls layout spacing, portrait scale, and banner strip height.
+   Inline story text size belongs to post formatting, not persona density. */
 
 .post{
   --gaya-post-line-height:1.58;
