@@ -10,17 +10,19 @@
   const bannerFitOptions=[
     ['cover','cover','fills banner, may crop edges'],
     ['contain','contain','shows whole image'],
+    ['fit-width','fit width','preserves full width'],
+    ['fit-height','fit height','preserves full height'],
     ['stretch','stretch','fits exactly, may distort'],
     ['tile','tile','repeats horizontally']
   ];
 
   function normalizeBannerFit(value){
     value=String(value||'').toLowerCase();
-    return ['cover','contain','stretch','tile'].includes(value)?value:'cover';
+    return ['cover','contain','fit-width','fit-height','stretch','tile'].includes(value)?value:'cover';
   }
 
   function bannerFitFromCss(css){
-    const match=String(css||'').match(/\/\* GAYA_BANNER_FIT_START fit=(cover|contain|stretch|tile) \*\//i);
+    const match=String(css||'').match(/\/\* GAYA_BANNER_FIT_START fit=(cover|contain|fit-width|fit-height|stretch|tile) \*\//i);
     return normalizeBannerFit(match?.[1]||'cover');
   }
 
