@@ -8,50 +8,70 @@ function currentUserId(){
   return state && state.user && state.user.id ? state.user.id : null;
 }
 
+function dataWait(promise,label,ms=15000){
+  return withTimeout(promise,label,ms);
+}
+
 async function checkSession(){
-  const {data,error}=await supa.auth.getSession();
+  const {data,error}=await dataWait(supa.auth.getSession(),'session check',12000);
   if(error)throw error;
   state.session=data.session;
   state.user=data.session&&data.session.user?data.session.user:null;
 }
 
 async function loadThreads(){
-  const {data,error}=await supa.from('threads').select('*').order('updated_at',{ascending:false});
+  const {data,error}=await dataWait(
+    supa.from('threads').select('*').order('updated_at',{ascending:false}),
+    'thread list load',
+    15000
+  );
   if(error)throw error;
   state.threads=data||[];
 }
 
 async function loadPersonas(){
-  const {data,error}=await supa.from('personas').select('*').order('created_at',{ascending:true});
+  const {data,error}=await dataWait(
+    supa.from('personas').select('*').order('created_at',{ascending:true}),
+    'persona list load',
+    15000
+  );
   if(error)throw error;
   state.personas=data||[];
   state.mine=state.personas.filter(p=>p.user_id===state.user?.id);
 }
 
 async function loadPosts(id){
-  const {data,error}=await supa.from('posts')
-    .select('*, persona:personas(*)')
-    .eq('thread_id',id)
-    .order('created_at',{ascending:true});
+  const {data,error}=await dataWait(
+    supa.from('posts')
+      .select('*, persona:personas(*)')
+      .eq('thread_id',id)
+      .order('created_at',{ascending:true}),
+    'post list load',
+    20000
+  );
 
   if(error)throw error;
   state.posts=data||[];
 }
 
 async function loadAll(){
-  await Promise.all([loadThreads(),loadPersonas()]);
+  await dataWait(Promise.all([loadThreads(),loadPersonas()]),'site data load',22000);
 }
 
 async function magicLink(email){
   const redirectTo=window.location.origin+window.location.pathname;
-  return await supa.auth.signInWithOtp({
-    email,
-    options:{emailRedirectTo:redirectTo,shouldCreateUser:false}
-  });
+  return await dataWait(
+    supa.auth.signInWithOtp({
+      email,
+      options:{emailRedirectTo:redirectTo,shouldCreateUser:false}
+    }),
+    'magic link send',
+    15000
+  );
 }
 
 async function signOut(){
-  await supa.auth.signOut();
+  await dataWait(supa.auth.signOut(),'sign out',12000);
   Object.assign(state,{session:null,user:null,threads:[],posts:[],personas:[],mine:[],view:'threads',threadId:null});
   render();
 }
@@ -60,10 +80,14 @@ async function createThread(title,summary){
   const uid=currentUserId();
   if(!uid)throw new Error('No signed-in user for thread creation.');
 
-  const {data,error}=await supa.from('threads')
-    .insert({title,summary:summary||null,created_by:uid})
-    .select('*')
-    .single();
+  const {data,error}=await dataWait(
+    supa.from('threads')
+      .insert({title,summary:summary||null,created_by:uid})
+      .select('*')
+      .single(),
+    'thread create',
+    20000
+  );
 
   if(error)throw error;
   await loadThreads();
@@ -78,7 +102,7 @@ async function createPost(body){
   if(!state.threadId)throw new Error('No active thread selected.');
   if(!uid)throw new Error('No signed-in user for post.');
 
-  const insert=await withTimeout(
+  const insert=await dataWait(
     supa.from('posts').insert({
       thread_id:state.threadId,
       persona_id:personaId,
@@ -91,7 +115,7 @@ async function createPost(body){
 
   if(insert.error)throw insert.error;
 
-  const bump=await withTimeout(
+  const bump=await dataWait(
     supa.from('threads').update({updated_at:new Date().toISOString()}).eq('id',state.threadId),
     'thread activity update',
     12000
@@ -99,8 +123,8 @@ async function createPost(body){
 
   if(bump.error)console.warn('thread activity update failed',bump.error);
 
-  await withTimeout(loadPosts(state.threadId),'reload posts',30000);
-  await withTimeout(loadThreads(),'reload threads',30000).catch(e=>console.warn('thread reload failed',e));
+  await dataWait(loadPosts(state.threadId),'reload posts',30000);
+  await dataWait(loadThreads(),'reload threads',30000).catch(e=>console.warn('thread reload failed',e));
 
   return true;
 }
@@ -109,7 +133,7 @@ async function savePersona(payload,id){
   const uid=currentUserId();
   if(!uid)throw new Error('No signed-in user for persona save.');
 
-  const saveWait=(promise,label)=>withTimeout(promise,label,30000);
+  const saveWait=(promise,label)=>dataWait(promise,label,30000);
   const clean={...payload,updated_at:new Date().toISOString()};
 
   if(id){
@@ -150,12 +174,16 @@ async function deletePersona(id){
   const uid=currentUserId();
   if(!uid)throw new Error('No signed-in user for persona delete.');
 
-  const {data,error}=await supa.from('personas')
-    .delete()
-    .eq('id',id)
-    .eq('user_id',uid)
-    .select('id')
-    .maybeSingle();
+  const {data,error}=await dataWait(
+    supa.from('personas')
+      .delete()
+      .eq('id',id)
+      .eq('user_id',uid)
+      .select('id')
+      .maybeSingle(),
+    'persona delete',
+    20000
+  );
 
   if(error)throw error;
   if(!data)throw new Error('Persona not found, or this account does not own it.');
