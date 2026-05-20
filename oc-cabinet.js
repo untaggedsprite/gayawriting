@@ -66,7 +66,7 @@
         '<div><h3>Reference shelf</h3><p>OC images, face refs, outfit refs, symbols, props, and bot-ready URLs.</p></div>'+
         '<div><h3>Canon links</h3><p>Related post styles, Chronicle events, threads, arcs, relationships, locations.</p></div>'+
       '</div>'+
-      '<p class="muted cabinet-blueprint-note">For now, the cabinet is only the prop drawer plus this schema note. No duplicate post-style graveyard. I have been pelted with shoes and corrected.</p>'+
+      '<p class="muted cabinet-blueprint-note">This is the main cabinet shape. The uploader below is only a little utility drawer until the schema exists.</p>'+
     '</section>';
   }
 
@@ -151,7 +151,7 @@
   function renderUploadShelf(){
     const uploads=state.ocCabinetUploads||[];
     if(!uploads.length){
-      return '<div class="cabinet-empty-shelf"><h3>no props uploaded in this browser yet</h3><p class="muted">Upload a prop image to get a reusable public URL for posts, future OC profiles, or the Discord bot.</p></div>';
+      return '<div class="cabinet-empty-shelf"><p class="muted">No recent utility uploads in this browser yet.</p></div>';
     }
 
     return '<div class="cabinet-prop-grid">'+uploads.map(item=>{
@@ -164,14 +164,21 @@
     }).join('')+'</div>';
   }
 
+  function renderUtilityDrawer(){
+    return '<section class="cabinet-panel cabinet-props-panel cabinet-utility-panel">'+
+      '<div class="cabinet-panel-head"><div><p class="kicker">utility drawer</p><h2>Quick reusable URL</h2></div><button type="button" id="cabinet-pick-prop">＋ upload prop</button></div>'+
+      '<p class="muted">Small helper: upload an image to Supabase Storage, then copy the public URL for posts, future OC profiles, or the Discord bot.</p>'+
+      '<input id="cabinet-prop-file" class="cabinet-hidden-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/*">'+
+      '<div id="cabinet-upload-status" class="cabinet-upload-status"></div><div id="cabinet-upload-shelf" class="cabinet-upload-shelf">'+renderUploadShelf()+'</div></section>';
+  }
+
   function renderOcCabinet(){
     const main=$('main');
     if(!main)return;
     loadSavedUploads();
 
     main.innerHTML='<div class="header cabinet-header"><div><p class="kicker">OC archive</p><h1>OC Cabinet</h1></div></div>'+
-      '<section class="cabinet-panel cabinet-props-panel"><div class="cabinet-panel-head"><div><p class="kicker">props drawer</p><h2>Reusable image URLs</h2></div><button type="button" id="cabinet-pick-prop">＋ upload prop</button></div><p class="muted">No database table here yet. This uploads to Supabase Storage and keeps a local browser shelf of recent URLs so you can copy them into posts, future OC profiles, or the Discord bot.</p><input id="cabinet-prop-file" class="cabinet-hidden-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/*"><div id="cabinet-upload-status" class="cabinet-upload-status"></div><div id="cabinet-upload-shelf">'+renderUploadShelf()+'</div></section>'+
-      renderProfileBlueprint();
+      renderProfileBlueprint()+renderUtilityDrawer();
 
     const picker=$('cabinet-pick-prop');
     const input=$('cabinet-prop-file');
