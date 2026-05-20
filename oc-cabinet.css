@@ -1,0 +1,274 @@
+/* GAYA OC Cabinet */
+.cabinet-header{
+  align-items:flex-end;
+}
+
+.cabinet-personas-link{
+  display:inline-flex;
+  align-items:center;
+  min-height:40px;
+  padding:.45rem .9rem;
+  border-radius:999px;
+}
+
+.cabinet-panel{
+  margin:1.2rem 0 1.6rem;
+  padding:1.25rem;
+  border:1px solid rgba(169,133,77,.28);
+  border-radius:24px;
+  background:linear-gradient(180deg,rgba(255,249,237,.58),rgba(243,234,216,.42));
+  box-shadow:0 1px 0 rgba(255,249,237,.72) inset,0 12px 34px rgba(43,36,28,.06);
+}
+
+.cabinet-props-panel{
+  border-style:dashed;
+}
+
+.cabinet-panel-head{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:1rem;
+  margin-bottom:1rem;
+}
+
+.cabinet-panel-head h2{
+  color:var(--deep);
+}
+
+.cabinet-count{
+  display:inline-flex;
+  align-items:center;
+  min-height:28px;
+  padding:.2rem .7rem;
+  color:var(--soft);
+  border:1px solid rgba(169,133,77,.24);
+  border-radius:999px;
+  background:rgba(255,249,237,.58);
+  font-family:var(--fell);
+  font-size:.72rem;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+.cabinet-hidden-file{
+  display:none;
+}
+
+.cabinet-upload-status{
+  min-height:1.4rem;
+  margin:.5rem 0 .85rem;
+  color:var(--soft);
+  font-style:italic;
+}
+
+.cabinet-upload-status.ok{
+  color:var(--moss);
+}
+
+.cabinet-upload-status.err{
+  color:var(--wine);
+}
+
+.cabinet-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:1rem;
+}
+
+.cabinet-card{
+  position:relative;
+  overflow:hidden;
+  padding:1rem;
+  border:1px solid color-mix(in srgb,var(--cabinet-accent,#a9854d) 42%,var(--fog));
+  border-left-width:5px;
+  border-radius:20px;
+  background:linear-gradient(180deg,rgba(255,249,237,.88),rgba(246,237,219,.7));
+  box-shadow:0 1px 0 rgba(255,249,237,.72) inset,0 10px 26px rgba(43,36,28,.08);
+}
+
+.cabinet-card:after{
+  content:"❦";
+  position:absolute;
+  right:.85rem;
+  top:.65rem;
+  color:var(--cabinet-accent,#a9854d);
+  font-family:var(--fell);
+  font-size:1.15rem;
+  opacity:.28;
+  pointer-events:none;
+}
+
+.cabinet-card-head{
+  display:flex;
+  gap:.85rem;
+  align-items:center;
+  padding-bottom:.85rem;
+  margin-bottom:.85rem;
+  border-bottom:1px solid rgba(43,36,28,.14);
+}
+
+.cabinet-avatar{
+  width:66px;
+  height:66px;
+  flex:0 0 auto;
+  border:1px solid rgba(43,36,28,.22);
+  border-radius:16px;
+  background-size:cover;
+  background-position:center;
+  box-shadow:0 6px 16px rgba(43,36,28,.14);
+}
+
+.cabinet-owner{
+  margin:0 0 .18rem;
+  color:var(--gold);
+  font-family:var(--fell);
+  font-size:.68rem;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+
+.cabinet-card h2{
+  font-size:1.6rem;
+}
+
+.cabinet-blurb{
+  margin:.15rem 0 .85rem;
+  color:var(--soft);
+  font-style:italic;
+}
+
+.cabinet-profile{
+  margin:.65rem 0 .95rem;
+  padding:.7rem .8rem;
+  border:1px dashed rgba(169,133,77,.28);
+  border-radius:16px;
+  background:rgba(255,249,237,.44);
+}
+
+.cabinet-profile summary{
+  cursor:pointer;
+  color:var(--soft);
+  font-family:var(--fell);
+  font-size:.72rem;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+
+.cabinet-image-grid{
+  display:grid;
+  gap:.65rem;
+}
+
+.cabinet-image-tile{
+  display:grid;
+  grid-template-columns:84px minmax(0,1fr);
+  gap:.7rem;
+  align-items:center;
+  padding:.55rem;
+  border:1px solid rgba(169,133,77,.18);
+  border-radius:16px;
+  background:rgba(255,249,237,.42);
+}
+
+.cabinet-image-thumb,
+.cabinet-prop-img{
+  background-color:rgba(255,249,237,.6);
+  background-size:cover;
+  background-position:center;
+  border:1px solid rgba(43,36,28,.18);
+  box-shadow:0 6px 14px rgba(43,36,28,.10);
+}
+
+.cabinet-image-thumb{
+  width:84px;
+  height:64px;
+  border-radius:12px;
+}
+
+.cabinet-image-info span{
+  display:block;
+  color:var(--deep);
+  font-family:var(--fell);
+  font-size:.72rem;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+.cabinet-image-actions,
+.cabinet-card-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.35rem;
+  margin-top:.45rem;
+}
+
+.cabinet-copy,
+.cabinet-open-persona{
+  min-height:28px;
+  padding:.24rem .58rem;
+  font-size:.72rem;
+  line-height:1;
+  box-shadow:none;
+}
+
+.cabinet-no-images,
+.cabinet-empty-shelf{
+  padding:.9rem;
+  color:var(--faint);
+  border:1px dashed rgba(169,133,77,.28);
+  border-radius:16px;
+  background:rgba(255,249,237,.32);
+  font-style:italic;
+  text-align:center;
+}
+
+.cabinet-prop-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:1rem;
+}
+
+.cabinet-prop{
+  overflow:hidden;
+  border:1px solid rgba(169,133,77,.26);
+  border-radius:18px;
+  background:rgba(255,249,237,.58);
+  box-shadow:0 8px 22px rgba(43,36,28,.07);
+}
+
+.cabinet-prop-img{
+  height:168px;
+  border-width:0 0 1px;
+  border-radius:0;
+}
+
+.cabinet-prop-body{
+  padding:.85rem;
+}
+
+.cabinet-prop-body h3{
+  font-size:1.1rem;
+}
+
+.cabinet-prop-body input{
+  margin-top:.55rem;
+  font-size:.82rem;
+}
+
+@media(max-width:760px){
+  .cabinet-panel-head,
+  .cabinet-header{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .cabinet-image-tile{
+    grid-template-columns:72px minmax(0,1fr);
+  }
+
+  .cabinet-image-thumb{
+    width:72px;
+    height:56px;
+  }
+}
