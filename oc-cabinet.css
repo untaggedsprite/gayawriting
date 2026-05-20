@@ -24,6 +24,11 @@
   border-style:dashed;
 }
 
+.cabinet-blueprint-panel{
+  border-color:rgba(68,87,54,.26);
+  background:linear-gradient(180deg,rgba(255,249,237,.64),rgba(232,226,207,.42));
+}
+
 .cabinet-panel-head{
   display:flex;
   align-items:flex-end;
@@ -70,10 +75,35 @@
   color:var(--wine);
 }
 
+.cabinet-blueprint-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:.85rem;
+  margin-top:1rem;
+}
+
+.cabinet-blueprint-grid>div{
+  padding:.9rem;
+  border:1px solid rgba(169,133,77,.22);
+  border-radius:16px;
+  background:rgba(255,249,237,.5);
+}
+
+.cabinet-blueprint-grid h3{
+  font-size:1.12rem;
+  margin-bottom:.35rem;
+}
+
+.cabinet-blueprint-grid p,
+.cabinet-blueprint-note{
+  margin:.2rem 0 0;
+}
+
 .cabinet-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
   gap:1rem;
+  margin-top:1rem;
 }
 
 .cabinet-card{
@@ -85,6 +115,10 @@
   border-radius:20px;
   background:linear-gradient(180deg,rgba(255,249,237,.88),rgba(246,237,219,.7));
   box-shadow:0 1px 0 rgba(255,249,237,.72) inset,0 10px 26px rgba(43,36,28,.08);
+}
+
+.cabinet-style-card{
+  opacity:.96;
 }
 
 .cabinet-card:after{
