@@ -5,23 +5,45 @@
   window[MARK]=true;
 
   const STATUSES=['canon','draft','revised','retired','contradiction'];
+  const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   state.chronicleEvents=state.chronicleEvents||[];
   state.chronicleFilters=state.chronicleFilters||{q:'',era:'',character:'',status:''};
 
   function clean(v){return String(v||'').trim();}
 
+  function dateParts(value){
+    const match=String(value||'').match(/^(\d{4,})-(\d{2})-(\d{2})$/);
+    if(!match)return null;
+    return {
+      year:match[1],
+      month:Number(match[2]),
+      day:Number(match[3])
+    };
+  }
+
+  function rawDateSortValue(value){
+    const parts=dateParts(value);
+    if(!parts)return null;
+    return Number(parts.year)*10000+parts.month*100+parts.day;
+  }
+
+  function formatRawDate(value){
+    const parts=dateParts(value);
+    if(!parts)return '';
+    const month=MONTHS[parts.month-1]||String(parts.month).padStart(2,'0');
+    return month+' '+parts.day+', '+parts.year;
+  }
+
   function eventSortValue(ev){
     if(ev.sort_key!==null&&ev.sort_key!==undefined&&ev.sort_key!=='')return Number(ev.sort_key);
-    if(ev.event_date){
-      const t=new Date(ev.event_date+'T00:00:00').getTime();
-      if(!Number.isNaN(t))return t;
-    }
+    const rawSort=rawDateSortValue(ev.event_date);
+    if(rawSort!==null)return rawSort;
     return 9007199254740991;
   }
 
   function eventDisplayDate(ev){
     if(ev.date_label)return esc(ev.date_label);
-    if(ev.event_date)return esc(dateLabel(ev.event_date));
+    if(ev.event_date)return esc(formatRawDate(ev.event_date)||String(ev.event_date));
     return 'undated';
   }
 
@@ -138,7 +160,7 @@
   }
 
   function renderChronicleError(error){
-    $('main').innerHTML='<div class="header chronicle-header"><div><p class="kicker">shared story spine</p><h1>Chronicle</h1></div></div><div class="error chronicle-error"><h2>chronicle table not ready</h2><p class="muted">Run the Supabase SQL from <code>supabase/chronicle_timeline.sql</code>, then refresh this page.</p><pre>'+esc(error?.message||String(error||''))+'</pre></div>';
+    $('main').innerHTML='<div class="header chronicle-header"><div><p class="kicker">shared story spine</p><h1>Chronicle</h1></div></div><div class="error chronicle-error"><h2>chronicle table not ready</h2><p class="muted">Run the Supabase SQL from <code>docs/CHRONICLE_SQL.md</code>, then refresh this page.</p><pre>'+esc(error?.message||String(error||''))+'</pre></div>';
   }
 
   function renderChronicle(){
