@@ -25,25 +25,8 @@
     }catch(_e){}
   }
 
-  function styleImages(p){
-    return [
-      ['avatar',p.avatar_url],
-      ['top banner',p.banner_url],
-      ['bottom banner',p.bottom_banner_url]
-    ].filter(([,url])=>clean(url));
-  }
-
   function imageStyle(url){
     return 'background-image:url('+JSON.stringify(url)+')';
-  }
-
-  function ownerTag(p){
-    return p.user_id&&p.user_id===state.user?.id?'yours':'shared';
-  }
-
-  function compactSignature(value){
-    const text=clean(value).replace(/[#>*_`\[\]()]/g,'').replace(/\s+/g,' ');
-    return text.length>150?text.slice(0,147)+'…':text;
   }
 
   async function copyText(text,label){
@@ -74,58 +57,16 @@
     return '<button type="button" class="ghost cabinet-copy '+extraClass+'" data-cabinet-copy="'+esc(text)+'" data-cabinet-label="'+esc(label)+'">'+esc(label)+'</button>';
   }
 
-  function renderImageThumb(label,url){
-    return '<div class="cabinet-image-tile">'+
-      '<div class="cabinet-image-thumb" style="'+esc(imageStyle(url))+'"></div>'+
-      '<div class="cabinet-image-info"><span>'+esc(label)+'</span><div class="cabinet-image-actions">'+
-        copyButton(url,'copy URL')+
-        copyButton('[img]'+url+'[/img]','copy post tag')+
-      '</div></div></div>';
-  }
-
-  function renderPostStyleCard(p){
-    const images=styleImages(p);
-    const avatar=p.avatar_url?imageStyle(p.avatar_url):'';
-    const accent=p.accent_color||'#a9854d';
-    const signature=clean(p.signature);
-    const owned=p.user_id&&p.user_id===state.user?.id;
-
-    let body='<article class="cabinet-card cabinet-style-card" style="--cabinet-accent:'+esc(accent)+'">'+
-      '<div class="cabinet-card-head">'+
-        '<div class="cabinet-avatar" style="background-color:'+esc(accent)+';'+esc(avatar)+'"></div>'+
-        '<div><p class="cabinet-owner">post style · '+esc(ownerTag(p))+'</p><h2>'+esc(p.name||'Unnamed style')+'</h2></div>'+
-      '</div>';
-
-    if(signature){
-      body+='<p class="cabinet-blurb">'+esc(compactSignature(signature))+'</p>'+
-        '<details class="cabinet-profile"><summary>signature / style notes</summary>'+md(signature)+'</details>';
-    }else{
-      body+='<p class="cabinet-blurb muted">no signature or style notes yet</p>';
-    }
-
-    if(images.length){
-      body+='<div class="cabinet-image-grid">'+images.map(([label,url])=>renderImageThumb(label,url)).join('')+'</div>';
-    }else{
-      body+='<div class="cabinet-no-images">no avatar or banners pinned to this post style yet</div>';
-    }
-
-    body+='<div class="cabinet-card-actions">'+
-      (owned?'<a class="ghost cabinet-open-persona" href="#personas" data-edit-persona="'+esc(p.id)+'">edit post style</a>':'')+
-      (p.avatar_url?copyButton(p.avatar_url,'copy avatar URL','cabinet-main-copy'):'')+
-    '</div></article>';
-    return body;
-  }
-
   function renderProfileBlueprint(){
     return '<section class="cabinet-panel cabinet-blueprint-panel">'+
       '<div class="cabinet-panel-head"><div><p class="kicker">profile drawer</p><h2>Character profiles need their own table</h2></div><span class="cabinet-count">schema later</span></div>'+
-      '<p class="muted">Post styles are costumes: avatars, banners, colors, signatures, and CSS. Character profiles should be the actual OC cabinet: canon notes, reference images, props, aliases, timeline links, and whatever else belongs to the character instead of the posting skin.</p>'+
+      '<p class="muted">This tab should become the real OC archive: character records with canon notes, reference images, props, aliases, timeline links, relationships, locations, and links out to existing post styles. Post styles already have their own tab, so the cabinet should reference them only when a character profile needs one.</p>'+
       '<div class="cabinet-blueprint-grid">'+
         '<div><h3>Profile card</h3><p>Name, aliases, pronouns, role, species/type, status, short blurb, long notes.</p></div>'+
         '<div><h3>Reference shelf</h3><p>OC images, face refs, outfit refs, symbols, props, and bot-ready URLs.</p></div>'+
         '<div><h3>Canon links</h3><p>Related post styles, Chronicle events, threads, arcs, relationships, locations.</p></div>'+
       '</div>'+
-      '<p class="muted cabinet-blueprint-note">This PR keeps the cabinet honest until we add SQL. No more pretending personas are characters, because that was some goblin bookkeeping bullshit.</p>'+
+      '<p class="muted cabinet-blueprint-note">For now, the cabinet is only the prop drawer plus this schema note. No duplicate post-style graveyard. I have been pelted with shoes and corrected.</p>'+
     '</section>';
   }
 
@@ -210,7 +151,7 @@
   function renderUploadShelf(){
     const uploads=state.ocCabinetUploads||[];
     if(!uploads.length){
-      return '<div class="cabinet-empty-shelf"><h3>no props uploaded in this browser yet</h3><p class="muted">Upload a prop image to get a reusable public URL for posts, avatar fields, or the Discord bot.</p></div>';
+      return '<div class="cabinet-empty-shelf"><h3>no props uploaded in this browser yet</h3><p class="muted">Upload a prop image to get a reusable public URL for posts, future OC profiles, or the Discord bot.</p></div>';
     }
 
     return '<div class="cabinet-prop-grid">'+uploads.map(item=>{
@@ -228,15 +169,9 @@
     if(!main)return;
     loadSavedUploads();
 
-    const personas=[...(state.personas||[])].sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
-    const styleCards=personas.length
-      ? '<div class="cabinet-grid">'+personas.map(renderPostStyleCard).join('')+'</div>'
-      : '<div class="empty"><div><h2>no post styles yet</h2><p class="muted">Create personas first; later each character profile can link to one or more post styles.</p></div></div>';
-
-    main.innerHTML='<div class="header cabinet-header"><div><p class="kicker">OC archive</p><h1>OC Cabinet</h1></div><a class="ghost cabinet-personas-link" href="#personas">manage post styles</a></div>'+
-      '<section class="cabinet-panel cabinet-props-panel"><div class="cabinet-panel-head"><div><p class="kicker">props drawer</p><h2>Reusable image URLs</h2></div><button type="button" id="cabinet-pick-prop">＋ upload prop</button></div><p class="muted">No database table here yet. This uploads to Supabase Storage and keeps a local browser shelf of recent URLs so you can copy them into posts, post styles, future OC profiles, or the Discord bot.</p><input id="cabinet-prop-file" class="cabinet-hidden-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/*"><div id="cabinet-upload-status" class="cabinet-upload-status"></div><div id="cabinet-upload-shelf">'+renderUploadShelf()+'</div></section>'+
-      renderProfileBlueprint()+
-      '<section class="cabinet-panel"><div class="cabinet-panel-head"><div><p class="kicker">style drawer</p><h2>Post styles</h2></div><span class="cabinet-count">'+personas.length+' saved</span></div><p class="muted">These are the existing personas: useful OC-adjacent presentation skins, not the OC profiles themselves.</p>'+styleCards+'</section>';
+    main.innerHTML='<div class="header cabinet-header"><div><p class="kicker">OC archive</p><h1>OC Cabinet</h1></div></div>'+
+      '<section class="cabinet-panel cabinet-props-panel"><div class="cabinet-panel-head"><div><p class="kicker">props drawer</p><h2>Reusable image URLs</h2></div><button type="button" id="cabinet-pick-prop">＋ upload prop</button></div><p class="muted">No database table here yet. This uploads to Supabase Storage and keeps a local browser shelf of recent URLs so you can copy them into posts, future OC profiles, or the Discord bot.</p><input id="cabinet-prop-file" class="cabinet-hidden-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/*"><div id="cabinet-upload-status" class="cabinet-upload-status"></div><div id="cabinet-upload-shelf">'+renderUploadShelf()+'</div></section>'+
+      renderProfileBlueprint();
 
     const picker=$('cabinet-pick-prop');
     const input=$('cabinet-prop-file');
@@ -272,14 +207,6 @@
       if(btn.dataset.copyReady==='1')return;
       btn.dataset.copyReady='1';
       btn.onclick=()=>copyText(btn.dataset.cabinetCopy,btn.dataset.cabinetLabel||'copied');
-    });
-
-    document.querySelectorAll('[data-edit-persona]').forEach(link=>{
-      if(link.dataset.personaReady==='1')return;
-      link.dataset.personaReady='1';
-      link.onclick=()=>{
-        state.editPersonaId=link.dataset.editPersona;
-      };
     });
   }
 
