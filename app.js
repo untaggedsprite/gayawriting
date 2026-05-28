@@ -68,7 +68,6 @@ async function boot(){
 
       if(event==='TOKEN_REFRESHED'||sameUser){
         authUserId=nextUser;
-        await refreshRoute();
         return;
       }
 
