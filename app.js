@@ -4,6 +4,7 @@ const app=document.getElementById('app');
 const state={session:null,user:null,view:'threads',threadId:null,threads:[],posts:[],personas:[],mine:[],selectedPersonaId:null,editPersonaId:null,modal:null,fatal:null};
 let supa=null;
 let routeRun=0;
+let authUserId=null;
 
 function readRoute(){
   const h=(location.hash||'#threads').slice(1);
@@ -47,12 +48,32 @@ async function boot(){
     readRoute();
 
     await checkSession();
+    authUserId=state.user?.id||null;
 
     supa.auth.onAuthStateChange((event,session)=>safe(async()=>{
       if(event==='INITIAL_SESSION')return;
+
+      const nextUser=session?.user?.id||null;
+      const sameUser=nextUser&&nextUser===authUserId;
+
       state.session=session;
       state.user=session&&session.user?session.user:null;
-      if(session)await loadAll();
+
+      if(!session){
+        authUserId=null;
+        Object.assign(state,{threads:[],posts:[],personas:[],mine:[],view:'threads',threadId:null});
+        await refreshRoute();
+        return;
+      }
+
+      if(event==='TOKEN_REFRESHED'||sameUser){
+        authUserId=nextUser;
+        await refreshRoute();
+        return;
+      }
+
+      authUserId=nextUser;
+      await loadAll();
       await refreshRoute();
     },'auth change'));
 
