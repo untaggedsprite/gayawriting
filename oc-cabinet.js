@@ -177,8 +177,7 @@
     if(!main)return;
     loadSavedUploads();
 
-    main.innerHTML='<div class="header cabinet-header"><div><p class="kicker">OC archive</p><h1>OC Cabinet</h1></div></div>'+
-      renderProfileBlueprint()+renderUtilityDrawer();
+    main.innerHTML='<div class="header cabinet-header"><div><p class="kicker">OC archive</p><h1>OC Cabinet</h1></div></div>'+renderProfileBlueprint()+renderUtilityDrawer();
 
     const picker=$('cabinet-pick-prop');
     const input=$('cabinet-prop-file');
@@ -216,39 +215,6 @@
       btn.onclick=()=>copyText(btn.dataset.cabinetCopy,btn.dataset.cabinetLabel||'copied');
     });
   }
-
-  const originalReadRoute=readRoute;
-  readRoute=function(){
-    const h=(location.hash||'#threads').slice(1);
-    if(h==='cabinet'||h==='oc-cabinet'){
-      state.view='ocCabinet';
-      state.threadId=null;
-      return;
-    }
-    originalReadRoute();
-  };
-
-  const originalRefreshRoute=refreshRoute;
-  refreshRoute=async function(){
-    readRoute();
-    if(state.session&&state.view==='ocCabinet')return render();
-    return originalRefreshRoute();
-  };
-
-  const originalRenderShell=renderShell;
-  renderShell=function(){
-    const oldView=state.view;
-    originalRenderShell();
-    const nav=document.querySelector('.tabs');
-    if(nav&&!nav.querySelector('a[href="#cabinet"]')){
-      const a=document.createElement('a');
-      a.href='#cabinet';
-      a.textContent='OC cabinet';
-      a.className=oldView==='ocCabinet'?'active':'';
-      nav.appendChild(a);
-    }
-    if(oldView==='ocCabinet')renderOcCabinet();
-  };
 
   window.renderOcCabinet=renderOcCabinet;
 })();
