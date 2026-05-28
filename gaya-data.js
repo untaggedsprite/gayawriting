@@ -12,6 +12,30 @@ function dataWait(promise,label,ms=15000){
   return withTimeout(promise,label,ms);
 }
 
+function mergeThreadLocal(thread){
+  if(!thread||!thread.id)return;
+  const existing=(state.threads||[]).filter(t=>String(t.id)!==String(thread.id));
+  state.threads=[thread,...existing].sort((a,b)=>String(b.updated_at||b.created_at||'').localeCompare(String(a.updated_at||a.created_at||'')));
+}
+
+function personaForPost(personaId){
+  return (state.personas||[]).find(p=>String(p.id)===String(personaId))||null;
+}
+
+function mergePostLocal(post){
+  if(!post||!post.id)return;
+  const existing=(state.posts||[]).filter(p=>String(p.id)!==String(post.id));
+  state.posts=[...existing,post].sort((a,b)=>String(a.created_at||'').localeCompare(String(b.created_at||'')));
+}
+
+function refreshThreadsQuietly(label='thread refresh'){
+  return loadThreads().catch(e=>console.warn(label+' failed',e));
+}
+
+function refreshPostsQuietly(threadId,label='post refresh'){
+  return loadPosts(threadId).catch(e=>console.warn(label+' failed',e));
+}
+
 async function checkSession(){
   const {data,error}=await dataWait(supa.auth.getSession(),'session check',12000);
   if(error)throw error;
@@ -90,41 +114,58 @@ async function createThread(title,summary){
   );
 
   if(error)throw error;
-  await loadThreads();
+
+  mergeThreadLocal(data);
+  refreshThreadsQuietly('thread reload after create');
+
   return data;
 }
 
 async function createPost(body){
   const personaId=state.selectedPersonaId||state.mine[0]?.id;
   const uid=currentUserId();
+  const threadId=state.threadId;
 
   if(!personaId)throw new Error('No persona is visible for this account yet. Create one on the personas page first.');
-  if(!state.threadId)throw new Error('No active thread selected.');
+  if(!threadId)throw new Error('No active thread selected.');
   if(!uid)throw new Error('No signed-in user for post.');
 
   const insert=await dataWait(
-    supa.from('posts').insert({
-      thread_id:state.threadId,
-      persona_id:personaId,
-      author_id:uid,
-      body
-    }),
+    supa.from('posts')
+      .insert({
+        thread_id:threadId,
+        persona_id:personaId,
+        author_id:uid,
+        body
+      })
+      .select('*')
+      .single(),
     'post insert',
     30000
   );
 
   if(insert.error)throw insert.error;
 
+  const savedPost={
+    ...insert.data,
+    persona:personaForPost(personaId)
+  };
+  mergePostLocal(savedPost);
+
+  const now=new Date().toISOString();
+  const thread=state.threads.find(t=>String(t.id)===String(threadId));
+  if(thread)mergeThreadLocal({...thread,updated_at:now});
+
   const bump=await dataWait(
-    supa.from('threads').update({updated_at:new Date().toISOString()}).eq('id',state.threadId),
+    supa.from('threads').update({updated_at:now}).eq('id',threadId),
     'thread activity update',
     12000
   ).catch(e=>({error:e}));
 
   if(bump.error)console.warn('thread activity update failed',bump.error);
 
-  await dataWait(loadPosts(state.threadId),'reload posts',30000);
-  await dataWait(loadThreads(),'reload threads',30000).catch(e=>console.warn('thread reload failed',e));
+  refreshPostsQuietly(threadId,'post reload after create');
+  refreshThreadsQuietly('thread reload after post');
 
   return true;
 }
