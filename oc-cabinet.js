@@ -41,7 +41,10 @@
     state.ocProfileLoadError=null;
     try{await loadOcProfiles();state.ocProfilesLoaded=true;}
     catch(e){console.warn('OC profile load failed',e);state.ocProfiles=[];state.ocProfileLoadError=e;state.ocProfilesLoaded=true;}
-    finally{state.ocProfilesLoading=false;if(state.view==='ocCabinet')renderOcCabinet();}
+    finally{
+      state.ocProfilesLoading=false;
+      if(state.view==='ocCabinet'&&!state.editOcProfileId&&!$('cabinet-profile-form'))renderOcCabinet();
+    }
   }
 
   function profileInitial(name){return clean(name).charAt(0).toUpperCase()||'✦';}
