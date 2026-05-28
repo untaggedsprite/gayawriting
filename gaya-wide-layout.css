@@ -1,0 +1,35 @@
+/*
+  GAYA wide layout pass.
+  Centralizes the knobs that widen the greenhouse rail, content lane,
+  tab bar, masthead frame, page wash, and shelf alignment together.
+*/
+
+:root{
+  --gaya-wide-content-w:min(1200px,calc(100% - 2rem));
+  --gaya-wide-page-w:min(1280px,calc(100% - 1.4rem));
+  --gaya-wide-masthead-h:clamp(148px,25vw,300px);
+
+  --gaya-rail-w:var(--gaya-wide-content-w);
+  --gaya-masthead-h:var(--gaya-wide-masthead-h);
+}
+
+.main{
+  width:var(--gaya-wide-content-w);
+}
+
+.main:before{
+  width:var(--gaya-wide-page-w);
+}
+
+.top{
+  --masthead-w:var(--gaya-wide-content-w);
+  --masthead-h:var(--gaya-wide-masthead-h);
+}
+
+@media(max-width:760px){
+  :root{
+    --gaya-wide-content-w:calc(100% - .7rem);
+    --gaya-wide-page-w:calc(100% - .7rem);
+    --gaya-wide-masthead-h:clamp(105px,25vw,190px);
+  }
+}
