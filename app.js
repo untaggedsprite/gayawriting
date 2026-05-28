@@ -1,7 +1,7 @@
 const SUPABASE_URL='https://yunwwocryohmvnfwbjig.supabase.co';
 const SUPABASE_KEY='sb_publishable_XmVMsFZWZ_ZkMQVQyRnAmQ_FqllXED3';
 const app=document.getElementById('app');
-const state={session:null,user:null,view:'threads',threadId:null,threads:[],posts:[],personas:[],mine:[],selectedPersonaId:null,editPersonaId:null,modal:null,fatal:null};
+const state={session:null,user:null,view:'threads',threadId:null,threads:[],posts:[],personas:[],mine:[],ocProfiles:[],ocProfilesLoaded:false,ocProfilesLoading:false,ocProfileLoadError:null,selectedPersonaId:null,editPersonaId:null,editOcProfileId:null,modal:null,fatal:null};
 let supa=null;
 let routeRun=0;
 let authUserId=null;
@@ -61,7 +61,7 @@ async function boot(){
 
       if(!session){
         authUserId=null;
-        Object.assign(state,{threads:[],posts:[],personas:[],mine:[],view:'threads',threadId:null});
+        Object.assign(state,{threads:[],posts:[],personas:[],mine:[],ocProfiles:[],ocProfilesLoaded:false,ocProfilesLoading:false,ocProfileLoadError:null,view:'threads',threadId:null});
         await refreshRoute();
         return;
       }
