@@ -52,15 +52,14 @@ async function boot(){
       state.session=session;
       state.user=session&&session.user?session.user:null;
       if(session)await loadAll();
-      render();
+      await refreshRoute();
     },'auth change'));
 
     if(state.session){
       await loadAll();
-      if(state.view==='thread'&&state.threadId)await loadPosts(state.threadId);
     }
 
-    render();
+    await refreshRoute();
   },'boot');
 }
 
