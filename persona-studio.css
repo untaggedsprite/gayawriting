@@ -1,32 +1,10 @@
 /* Friendlier controls for the persona/post-style editor. */
 
-.persona-studio .preset-field{
-  margin-top:.35rem;
-}
-
-.persona-preset-grid,
 .persona-layout-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(155px,1fr));
   gap:.7rem;
   margin-top:.65rem;
-}
-
-.persona-preset{
-  display:grid;
-  grid-template-columns:auto 1fr;
-  grid-template-rows:auto auto;
-  gap:.12rem .55rem;
-  align-items:center;
-  min-height:74px;
-  padding:.68rem .72rem;
-  text-align:left;
-  color:var(--ink);
-  background:linear-gradient(180deg,rgba(255,250,241,.76),rgba(239,229,211,.56));
-  border:1px solid rgba(168,144,107,.28);
-  border-radius:18px;
-  box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 8px 20px rgba(47,42,39,.055);
-  cursor:pointer;
 }
 
 .persona-layout-choice{
@@ -43,8 +21,6 @@
   cursor:pointer;
 }
 
-.persona-preset:hover,
-.persona-preset:focus-visible,
 .persona-layout-choice:hover,
 .persona-layout-choice:focus-visible,
 .persona-layout-choice.active{
@@ -59,7 +35,6 @@
   box-shadow:0 0 0 2px rgba(169,133,77,.14),0 1px 0 rgba(255,255,255,.70) inset,0 12px 26px rgba(47,42,39,.085);
 }
 
-.persona-preset strong,
 .persona-layout-choice strong{
   display:block;
   max-width:100%;
@@ -72,16 +47,11 @@
   overflow-wrap:anywhere;
 }
 
-.persona-preset small,
 .persona-layout-choice small{
   display:block;
   color:var(--soft);
   font-size:.76rem;
   line-height:1.18;
-}
-
-.persona-preset small{
-  grid-column:2;
 }
 
 .layout-choice-label{
@@ -91,26 +61,6 @@
   font-size:.78rem;
   letter-spacing:.14em;
   text-transform:uppercase;
-}
-
-.preset-swatch{
-  grid-row:1 / span 2;
-  display:grid;
-  grid-template-columns:repeat(2,14px);
-  grid-auto-rows:14px;
-  gap:3px;
-  padding:5px;
-  border:1px solid rgba(47,42,39,.14);
-  border-radius:12px;
-  background:rgba(255,253,247,.54);
-}
-
-.preset-swatch i{
-  display:block;
-  width:14px;
-  height:14px;
-  border-radius:50%;
-  border:1px solid rgba(47,42,39,.18);
 }
 
 .persona-section-title{
@@ -400,7 +350,7 @@
 }
 
 @media(max-width:860px){
-  .persona-preset-grid,.persona-layout-grid{grid-template-columns:1fr}
+  .persona-layout-grid{grid-template-columns:1fr}
   .persona-section-title{display:block}
   .persona-section-title small{display:block;margin-top:.18rem}
 }
