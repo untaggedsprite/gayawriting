@@ -1,14 +1,13 @@
 /*
   GAYA Persona Section Drawers
-  Turns the long persona editor into labeled, collapsible drawers without
-  changing any of the underlying form controls.
+  Turns the long persona editor into labeled, collapsible drawers.
+  Section labels are injected by persona-polish.js and grouped here after all
+  persona editor enhancers have added their controls.
 */
 (function(){
   const MARK='__gayaPersonaSectionsInstalled';
   if(window[MARK])return;
   window[MARK]=true;
-
-  const hiddenSections=new Set(['preset']);
 
   function sectionTitleText(title){
     const span=title.querySelector('span');
@@ -43,7 +42,6 @@
     }
 
     title.replaceWith(drawer);
-    if(hiddenSections.has(name))drawer.remove();
   }
 
   function enhancePersonaSections(){
