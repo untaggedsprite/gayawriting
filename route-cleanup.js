@@ -14,15 +14,17 @@
     state.threadId=null;
   }
 
+  function moduleMissing(name){
+    const main=$('main');
+    if(main)main.innerHTML='<div class="error"><h2>'+esc(name)+' module not ready</h2><p class="muted">Refresh and try again.</p></div>';
+  }
+
   async function openChronicleView(){
     if(typeof window.openChronicle==='function'){
       await window.openChronicle();
       return;
     }
-    const main=$('main');
-    if(main){
-      main.innerHTML='<div class="error chronicle-error"><h2>chronicle module not ready</h2><p class="muted">Refresh and try again.</p></div>';
-    }
+    moduleMissing('chronicle');
   }
 
   readRoute=readKnownRoute;
@@ -64,7 +66,10 @@
       const main=$('main');
       if(main)main.innerHTML='<div class="empty"><div><h2>opening chronicle</h2><p class="muted">consulting the haunted municipal records…</p></div></div>';
     }
-    else if(state.view==='ocCabinet'&&typeof renderOcCabinet==='function')renderOcCabinet();
+    else if(state.view==='ocCabinet'){
+      if(typeof renderOcCabinet==='function')renderOcCabinet();
+      else moduleMissing('OC cabinet');
+    }
     else renderThreads();
     if(state.modal==='new-thread')renderNewThreadModal();
   };
