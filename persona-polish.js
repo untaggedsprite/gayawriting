@@ -110,10 +110,6 @@
 
   function addSectionLabels(){
     insertBeforeField('pe-name','identity','who is speaking');
-    const preset=document.querySelector('.persona-studio .preset-field');
-    if(preset&&!preset.previousElementSibling?.classList?.contains('persona-section-title')){
-      preset.insertAdjacentHTML('beforebegin',sectionHtml('preset','optional starting point'));
-    }
     const layout=document.querySelector('.persona-layout-field');
     if(layout&&!layout.previousElementSibling?.classList?.contains('persona-section-title')){
       layout.insertAdjacentHTML('beforebegin',sectionHtml('layout','standard or Gaia-style post framing'));
