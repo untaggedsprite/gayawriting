@@ -8,7 +8,7 @@
     linear-gradient(90deg,rgba(47,42,39,.10),transparent 14%,transparent 86%,rgba(47,42,39,.10)),
     linear-gradient(180deg,rgba(255,250,239,.10),rgba(47,42,39,.08)),
     url("assets/ornaments/repeatablelandscapebg.png") top left / auto var(--masthead-h) repeat-x,
-    linear-gradient(180deg,rgba(203,200,193,.94),rgba(184,180,173,.92));
+    linear-gradient(180deg,rgba(51,60,54,.74),rgba(51,60,54,.74));
 }
 
 .top:before{
