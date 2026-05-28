@@ -35,7 +35,10 @@
   }
 
   function eventSortValue(ev){
-    if(ev.sort_key!==null&&ev.sort_key!==undefined&&ev.sort_key!=='')return Number(ev.sort_key);
+    if(ev.sort_key!==null&&ev.sort_key!==undefined&&ev.sort_key!==''){
+      const manual=Number(ev.sort_key);
+      if(Number.isFinite(manual))return manual;
+    }
     const rawSort=rawDateSortValue(ev.event_date);
     if(rawSort!==null)return rawSort;
     return 9007199254740991;
@@ -163,6 +166,17 @@
     $('main').innerHTML='<div class="header chronicle-header"><div><p class="kicker">shared story spine</p><h1>Chronicle</h1></div></div><div class="error chronicle-error"><h2>chronicle table not ready</h2><p class="muted">Run the Supabase SQL from <code>docs/CHRONICLE_SQL.md</code>, then refresh this page.</p><pre>'+esc(error?.message||String(error||''))+'</pre></div>';
   }
 
+  function rerenderChronicleWithFocus(id,start,end){
+    renderChronicle();
+    const el=$(id);
+    if(!el)return;
+    el.focus();
+    if(typeof el.setSelectionRange==='function'&&start!==null&&start!==undefined){
+      const len=el.value.length;
+      el.setSelectionRange(Math.min(start,len),Math.min((end??start),len));
+    }
+  }
+
   function renderChronicle(){
     const main=$('main');
     if(!main)return;
@@ -215,7 +229,12 @@
 
     main.innerHTML=body;
     $('new-chronicle-event').onclick=()=>renderChronicleModal();
-    $('chronicle-q').oninput=e=>{state.chronicleFilters.q=e.target.value;renderChronicle();};
+    $('chronicle-q').oninput=e=>{
+      const start=e.target.selectionStart;
+      const end=e.target.selectionEnd;
+      state.chronicleFilters.q=e.target.value;
+      rerenderChronicleWithFocus('chronicle-q',start,end);
+    };
     $('chronicle-era').onchange=e=>{state.chronicleFilters.era=e.target.value;renderChronicle();};
     $('chronicle-character').onchange=e=>{state.chronicleFilters.character=e.target.value;renderChronicle();};
     $('chronicle-status').onchange=e=>{state.chronicleFilters.status=e.target.value;renderChronicle();};
@@ -287,13 +306,17 @@
     }
   }
 
-  async function openChronicle(){
+  async function openChronicle(expectedRun){
     const main=$('main');
-    if(main)main.innerHTML='<div class="empty"><div><h2>opening chronicle</h2><p class="muted">consulting the haunted municipal records…</p></div></div>';
+    if(main&&state.view==='chronicle')main.innerHTML='<div class="empty"><div><h2>opening chronicle</h2><p class="muted">consulting the haunted municipal records…</p></div></div>';
     try{
       await loadChronicleEvents();
+      if(expectedRun!==undefined&&expectedRun!==routeRun)return;
+      if(state.view!=='chronicle')return;
       renderChronicle();
     }catch(e){
+      if(expectedRun!==undefined&&expectedRun!==routeRun)return;
+      if(state.view!=='chronicle')return;
       console.error('chronicle load failed',e);
       renderChronicleError(e);
     }
