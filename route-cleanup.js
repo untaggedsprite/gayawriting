@@ -19,9 +19,9 @@
     if(main)main.innerHTML='<div class="error"><h2>'+esc(name)+' module not ready</h2><p class="muted">Refresh and try again.</p></div>';
   }
 
-  async function openChronicleView(){
+  async function openChronicleView(expectedRun){
     if(typeof window.openChronicle==='function'){
-      await window.openChronicle();
+      await window.openChronicle(expectedRun);
       return;
     }
     moduleMissing('chronicle');
@@ -47,7 +47,7 @@
     if(run!==routeRun)return;
 
     if(state.session&&state.view==='chronicle'){
-      await openChronicleView();
+      await openChronicleView(run);
       if(run!==routeRun)return;
     }
   };
