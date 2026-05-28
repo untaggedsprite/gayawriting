@@ -43,7 +43,7 @@
 .persona-studio .editor-grid{
   display:grid;
   grid-template-columns:repeat(12,minmax(0,1fr));
-  gap:.72rem .85rem;
+  gap:.62rem .85rem;
 }
 
 .persona-studio .field{
@@ -102,6 +102,88 @@
 
 .persona-section-title small{
   font-size:.68rem;
+}
+
+.persona-section-drawer{
+  display:block;
+  margin:.05rem 0;
+  padding:.58rem .7rem .7rem;
+  border:1px solid rgba(169,133,77,.22);
+  border-radius:18px;
+  background:linear-gradient(180deg,rgba(255,250,241,.58),rgba(246,237,219,.30));
+  box-shadow:0 1px 0 rgba(255,255,255,.45) inset;
+}
+
+.persona-section-drawer[open]{
+  padding-bottom:.82rem;
+}
+
+.persona-section-drawer>summary{
+  display:flex;
+  align-items:baseline;
+  gap:.55rem;
+  cursor:pointer;
+  list-style:none;
+  padding:.12rem .15rem;
+  color:var(--ink);
+  border-bottom:1px solid transparent;
+}
+
+.persona-section-drawer>summary::-webkit-details-marker{
+  display:none;
+}
+
+.persona-section-drawer>summary:before{
+  content:'▸';
+  color:var(--gold);
+  font-size:.68rem;
+  transform:translateY(-.04rem);
+  transition:transform .16s ease;
+}
+
+.persona-section-drawer[open]>summary:before{
+  transform:rotate(90deg) translateX(.03rem);
+}
+
+.persona-section-drawer>summary span{
+  font-family:var(--fell);
+  font-size:.78rem;
+  letter-spacing:.19em;
+  text-transform:uppercase;
+}
+
+.persona-section-drawer>summary small{
+  color:var(--faint);
+  font-size:.68rem;
+  font-style:italic;
+  letter-spacing:.02em;
+}
+
+.persona-section-drawer[open]>summary{
+  margin-bottom:.52rem;
+  padding-bottom:.42rem;
+  border-bottom-color:rgba(169,133,77,.22);
+}
+
+.persona-section-body{
+  display:grid;
+  grid-template-columns:repeat(12,minmax(0,1fr));
+  gap:.6rem .75rem;
+}
+
+.persona-section-body>.field:not(.full),
+.persona-section-body>.persona-polish-field{
+  grid-column:span 6;
+}
+
+.persona-section-body>.field.full,
+.persona-section-body>.persona-layout-field,
+.persona-section-body>.persona-post-size-field{
+  grid-column:1 / -1;
+}
+
+.persona-section-preset:not([open]){
+  padding-bottom:.58rem;
 }
 
 .persona-help details{
@@ -255,7 +337,9 @@
     grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
   }
 
-  .persona-studio .field:not(.full){
+  .persona-studio .field:not(.full),
+  .persona-section-body>.field:not(.full),
+  .persona-section-body>.persona-polish-field{
     grid-column:1 / -1;
   }
 
