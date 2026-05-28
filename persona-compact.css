@@ -1,0 +1,265 @@
+/*
+  Persona Studio compression pass.
+  Keeps Babytooth's walkthrough intact, but makes the editor stop taking
+  one Victorian hallway per control group.
+*/
+
+.persona-layout{
+  grid-template-columns:240px minmax(0,1fr);
+  gap:1.35rem;
+}
+
+.persona-layout aside h3{
+  margin-bottom:.55rem;
+}
+
+.persona-list{
+  gap:.45rem;
+}
+
+.persona-card{
+  min-height:46px;
+  padding:.62rem .75rem;
+  border-radius:15px;
+  font-size:.96rem;
+  line-height:1.25;
+}
+
+.persona-studio.editor{
+  padding:1.35rem 1.55rem 1.65rem;
+  border-radius:20px;
+}
+
+.persona-studio.editor:before{
+  inset:.42rem;
+  border-radius:15px;
+}
+
+.persona-studio h2{
+  margin-bottom:.2rem;
+  font-size:1.45rem;
+}
+
+.persona-studio .editor-grid{
+  display:grid;
+  grid-template-columns:repeat(12,minmax(0,1fr));
+  gap:.72rem .85rem;
+}
+
+.persona-studio .field{
+  min-width:0;
+}
+
+.persona-studio .field:not(.full){
+  grid-column:span 6;
+}
+
+.persona-studio .field.full{
+  grid-column:1 / -1;
+}
+
+.persona-studio label{
+  margin-bottom:.22rem;
+  font-size:.66rem;
+  letter-spacing:.16em;
+}
+
+.persona-studio input,
+.persona-studio textarea,
+.persona-studio select,
+.persona-studio .persona-font-select{
+  min-height:38px;
+  padding:.48rem .68rem;
+  border-radius:12px;
+  font-size:.92rem;
+  line-height:1.25;
+}
+
+.persona-studio textarea{
+  min-height:104px;
+}
+
+.persona-studio input[type=color]{
+  height:38px;
+  min-height:38px;
+}
+
+.persona-studio .preview-note{
+  margin:.24rem 0 0;
+  font-size:.78rem;
+  line-height:1.28;
+}
+
+.persona-section-title{
+  margin:.72rem 0 -.18rem;
+  padding:.12rem .1rem .28rem;
+}
+
+.persona-section-title span{
+  font-size:.72rem;
+  letter-spacing:.18em;
+}
+
+.persona-section-title small{
+  font-size:.68rem;
+}
+
+.persona-help details{
+  padding:.58rem .78rem;
+  border-radius:15px;
+}
+
+.persona-help summary{
+  font-size:.72rem;
+  letter-spacing:.14em;
+}
+
+.persona-help-grid{
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:.45rem .7rem;
+  margin-top:.55rem;
+}
+
+.persona-help p{
+  font-size:.78rem;
+  line-height:1.3;
+}
+
+.persona-preset-grid,
+.persona-layout-grid{
+  gap:.45rem;
+  margin-top:.42rem;
+}
+
+.persona-preset-grid{
+  grid-template-columns:repeat(auto-fit,minmax(128px,1fr));
+}
+
+.persona-layout-grid{
+  grid-template-columns:repeat(auto-fit,minmax(132px,1fr));
+}
+
+.persona-preset,
+.persona-layout-choice{
+  min-height:46px;
+  padding:.46rem .55rem;
+  border-radius:14px;
+  box-shadow:0 1px 0 rgba(255,255,255,.55) inset,0 6px 14px rgba(47,42,39,.045);
+}
+
+.persona-preset{
+  grid-template-columns:auto 1fr;
+  gap:.04rem .42rem;
+}
+
+.persona-preset strong,
+.persona-layout-choice strong{
+  font-size:.67rem;
+  line-height:1.05;
+  letter-spacing:.11em;
+}
+
+.persona-preset small,
+.persona-layout-choice small{
+  font-size:.68rem;
+  line-height:1.12;
+}
+
+.preset-swatch{
+  grid-template-columns:repeat(2,10px);
+  grid-auto-rows:10px;
+  gap:2px;
+  padding:4px;
+  border-radius:9px;
+}
+
+.preset-swatch i{
+  width:10px;
+  height:10px;
+}
+
+.layout-choice-label{
+  margin:.55rem 0 -.18rem;
+  font-size:.66rem;
+  letter-spacing:.16em;
+}
+
+.persona-font-sample{
+  margin-top:.36rem;
+  padding:.48rem .64rem;
+  border-radius:13px;
+  font-size:.95rem;
+  line-height:1.25;
+}
+
+.image-upload-controls{
+  gap:.32rem;
+  margin-top:.32rem;
+}
+
+.image-upload-pick,
+.image-upload-clear{
+  padding:.28rem .54rem;
+  font-size:.68rem;
+}
+
+.image-upload-status{
+  font-size:.7rem;
+}
+
+.color-pair{
+  grid-template-columns:48px 1fr;
+  gap:.4rem;
+}
+
+.persona-polish-field select{
+  min-height:38px;
+}
+
+.persona-studio .spread.mt{
+  position:sticky;
+  bottom:.75rem;
+  z-index:4;
+  margin:.95rem -.2rem 0;
+  padding:.55rem .62rem;
+  border:1px solid rgba(168,144,107,.22);
+  border-radius:999px;
+  background:rgba(255,250,241,.82);
+  backdrop-filter:blur(10px);
+  box-shadow:0 10px 30px rgba(47,42,39,.08);
+}
+
+.persona-studio .spread.mt button{
+  padding:.52rem 1rem;
+}
+
+.persona-preview-wrap{
+  margin-top:.85rem;
+}
+
+.persona-preview-wrap h3{
+  margin-left:.25rem;
+}
+
+.persona-preview-wrap .post{
+  margin-top:.55rem;
+}
+
+@media(max-width:960px){
+  .persona-layout{
+    grid-template-columns:1fr;
+  }
+
+  .persona-list{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  }
+
+  .persona-studio .field:not(.full){
+    grid-column:1 / -1;
+  }
+
+  .persona-studio .spread.mt{
+    border-radius:22px;
+  }
+}
