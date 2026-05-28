@@ -28,12 +28,22 @@ function mergePostLocal(post){
   state.posts=[...existing,post].sort((a,b)=>String(a.created_at||'').localeCompare(String(b.created_at||'')));
 }
 
+function mergeOcProfileLocal(profile){
+  if(!profile||!profile.id)return;
+  const existing=(state.ocProfiles||[]).filter(p=>String(p.id)!==String(profile.id));
+  state.ocProfiles=[profile,...existing].sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
+}
+
 function refreshThreadsQuietly(label='thread refresh'){
   return loadThreads().catch(e=>console.warn(label+' failed',e));
 }
 
 function refreshPostsQuietly(threadId,label='post refresh'){
   return loadPosts(threadId).catch(e=>console.warn(label+' failed',e));
+}
+
+function refreshOcProfilesQuietly(label='OC profile refresh'){
+  return loadOcProfiles().catch(e=>console.warn(label+' failed',e));
 }
 
 async function checkSession(){
@@ -62,6 +72,17 @@ async function loadPersonas(){
   if(error)throw error;
   state.personas=data||[];
   state.mine=state.personas.filter(p=>p.user_id===state.user?.id);
+}
+
+async function loadOcProfiles(){
+  const {data,error}=await dataWait(
+    supa.from('oc_profiles').select('*').order('name',{ascending:true}),
+    'OC profile list load',
+    15000
+  );
+  if(error)throw error;
+  state.ocProfiles=data||[];
+  return state.ocProfiles;
 }
 
 async function loadPosts(id){
@@ -96,7 +117,7 @@ async function magicLink(email){
 
 async function signOut(){
   await dataWait(supa.auth.signOut(),'sign out',12000);
-  Object.assign(state,{session:null,user:null,threads:[],posts:[],personas:[],mine:[],view:'threads',threadId:null});
+  Object.assign(state,{session:null,user:null,threads:[],posts:[],personas:[],mine:[],ocProfiles:[],ocProfilesLoaded:false,ocProfilesLoading:false,ocProfileLoadError:null,view:'threads',threadId:null});
   render();
 }
 
@@ -230,4 +251,68 @@ async function deletePersona(id){
   if(!data)throw new Error('Persona not found, or this account does not own it.');
 
   await loadPersonas();
+}
+
+async function saveOcProfile(payload,id){
+  const uid=currentUserId();
+  if(!uid)throw new Error('No signed-in user for OC profile save.');
+
+  const saveWait=(promise,label)=>dataWait(promise,label,30000);
+  const clean={...payload,updated_at:new Date().toISOString()};
+
+  if(id){
+    const {data,error}=await saveWait(
+      supa.from('oc_profiles')
+        .update(clean)
+        .eq('id',id)
+        .eq('user_id',uid)
+        .select('*')
+        .maybeSingle(),
+      'OC profile update'
+    );
+
+    if(error)throw error;
+    if(!data)throw new Error('OC profile not found, or this account does not own it.');
+
+    mergeOcProfileLocal(data);
+    refreshOcProfilesQuietly('OC profile reload after update');
+    return data;
+  }
+
+  clean.user_id=uid;
+
+  const {data,error}=await saveWait(
+    supa.from('oc_profiles')
+      .insert(clean)
+      .select('*')
+      .single(),
+    'OC profile insert'
+  );
+
+  if(error)throw error;
+
+  mergeOcProfileLocal(data);
+  refreshOcProfilesQuietly('OC profile reload after create');
+  return data;
+}
+
+async function deleteOcProfile(id){
+  const uid=currentUserId();
+  if(!uid)throw new Error('No signed-in user for OC profile delete.');
+
+  const {data,error}=await dataWait(
+    supa.from('oc_profiles')
+      .delete()
+      .eq('id',id)
+      .eq('user_id',uid)
+      .select('id')
+      .maybeSingle(),
+    'OC profile delete',
+    20000
+  );
+
+  if(error)throw error;
+  if(!data)throw new Error('OC profile not found, or this account does not own it.');
+
+  state.ocProfiles=(state.ocProfiles||[]).filter(p=>String(p.id)!==String(id));
 }
