@@ -8,7 +8,7 @@
   if(window[MARK])return;
   window[MARK]=true;
 
-  const defaultClosed=new Set(['preset']);
+  const hiddenSections=new Set(['preset']);
 
   function sectionTitleText(title){
     const span=title.querySelector('span');
@@ -31,7 +31,7 @@
     const slug=name.replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'section';
     const drawer=document.createElement('details');
     drawer.className='field full persona-section-drawer persona-section-'+slug;
-    if(!defaultClosed.has(name))drawer.open=true;
+    drawer.open=true;
     drawer.innerHTML=makeSummary(title)+'<div class="persona-section-body"></div>';
 
     const body=drawer.querySelector('.persona-section-body');
@@ -43,6 +43,7 @@
     }
 
     title.replaceWith(drawer);
+    if(hiddenSections.has(name))drawer.remove();
   }
 
   function enhancePersonaSections(){
