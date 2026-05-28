@@ -299,36 +299,8 @@
     }
   }
 
-  const originalReadRoute=readRoute;
-  readRoute=function(){
-    const h=(location.hash||'#threads').slice(1);
-    if(h==='chronicle'){state.view='chronicle';state.threadId=null;return;}
-    originalReadRoute();
-  };
-
-  const originalRefreshRoute=refreshRoute;
-  refreshRoute=async function(){
-    readRoute();
-    if(state.session&&state.view==='chronicle')return openChronicle();
-    return originalRefreshRoute();
-  };
-
-  const originalRenderShell=renderShell;
-  renderShell=function(){
-    const oldView=state.view;
-    originalRenderShell();
-    const nav=document.querySelector('.tabs');
-    if(nav&&!nav.querySelector('a[href="#chronicle"]')){
-      const a=document.createElement('a');
-      a.href='#chronicle';
-      a.textContent='chronicle';
-      a.className=oldView==='chronicle'?'active':'';
-      nav.appendChild(a);
-    }
-    if(oldView==='chronicle')openChronicle();
-  };
-
   window.loadChronicleEvents=loadChronicleEvents;
   window.renderChronicle=renderChronicle;
   window.saveChronicleEvent=saveChronicleEvent;
+  window.openChronicle=openChronicle;
 })();
