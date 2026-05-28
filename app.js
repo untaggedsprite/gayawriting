@@ -48,7 +48,8 @@ async function boot(){
 
     await checkSession();
 
-    supa.auth.onAuthStateChange((_event,session)=>safe(async()=>{
+    supa.auth.onAuthStateChange((event,session)=>safe(async()=>{
+      if(event==='INITIAL_SESSION')return;
       state.session=session;
       state.user=session&&session.user?session.user:null;
       if(session)await loadAll();
