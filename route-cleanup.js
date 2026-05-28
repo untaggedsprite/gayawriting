@@ -15,20 +15,13 @@
   }
 
   async function openChronicleView(){
+    if(typeof window.openChronicle==='function'){
+      await window.openChronicle();
+      return;
+    }
     const main=$('main');
-    if(main)main.innerHTML='<div class="empty"><div><h2>opening chronicle</h2><p class="muted">consulting the haunted municipal records…</p></div></div>';
-    try{
-      if(typeof loadChronicleEvents!=='function'||typeof renderChronicle!=='function'){
-        throw new Error('Chronicle module is not available. Refresh and try again.');
-      }
-      await loadChronicleEvents();
-      renderChronicle();
-    }catch(error){
-      console.error('chronicle load failed',error);
-      const target=$('main');
-      if(target){
-        target.innerHTML='<div class="header chronicle-header"><div><p class="kicker">shared story spine</p><h1>Chronicle</h1></div></div><div class="error chronicle-error"><h2>chronicle table not ready</h2><p class="muted">Run the Supabase SQL from <code>docs/CHRONICLE_SQL.md</code>, then refresh this page.</p><pre>'+esc(error?.message||String(error||''))+'</pre></div>';
-      }
+    if(main){
+      main.innerHTML='<div class="error chronicle-error"><h2>chronicle module not ready</h2><p class="muted">Refresh and try again.</p></div>';
     }
   }
 
